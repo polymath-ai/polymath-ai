@@ -55,16 +55,20 @@ function maxBits(bits, maxTokens) {
   return includedBits;
 }
 
-// Given an array of info objects, remove the duplicates
-function removeDuplicateInfo(infos) {
-  let seen = new Set();
-  return infos.filter((item) => {
-    if (!seen.has(item.url)) {
-      seen.add(item.url);
-      return true;
-    }
-    return false;
-  });
+// Given the array of bits, return info objects ordered by the most similarity, no duplicates
+function infoSortedBySimilarity(bits) {
+  const uniqueInfos = [];
+  return bits
+    .sort((a, b) => b.similarity - a.similarity)
+    .filter((bit) => {
+      const info = bit.info;
+      if (!uniqueInfos.some((ui) => ui.url === info.url)) {
+        uniqueInfos.push(info);
+        return true;
+      }
+      return false;
+    })
+    .map((bit) => bit.info);
 }
 
 // --------------------------------------------------------------------------
@@ -183,9 +187,7 @@ class Polymath {
       // returning the first option for now
       return {
         bits: polymathResults.bits,
-        infos: removeDuplicateInfo(
-          polymathResults.bits.map((entry) => entry.info)
-        ),
+        infos: infoSortedBySimilarity(polymathResults.bits),
         completion: response.data.choices[0].text.trim(),
       };
     } catch (error) {
