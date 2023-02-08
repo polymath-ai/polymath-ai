@@ -54,7 +54,7 @@ When you setup a polymath object you have to pass in some options:
 ```js
 let polymath = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,
-    libraryFiles: ['/library/knowledge.json'],
+    libraryFiles: ['./libraries/knowledge-string.json'],
     promptTemplate: "Answer using the context below please.\n\nContext: {context}\n\nQuestion: {prompt}\n\nAnswer:"
 });
 ```
