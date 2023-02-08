@@ -1,8 +1,8 @@
 {
   "name": "@polymath-ai/client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A JavaScript client library to run Polymath",
-  "main": "index.js",
+  "main": "main.js",
   "module": "main.js",
   "type": "module",
   "scripts": {
