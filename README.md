@@ -71,10 +71,10 @@ We are just getting started here, lots to do!
 
 For example:
 
-- []: Implement `servers` vs. local libraries so the client makes a network call
-- []: Implement access control so the library omit's private information
-- []: Be smarter with the number of tokens
-- []: Allow configuration of more of the OpenAI settings for completion (e.g. `stop:'\n'`)
-- []: Load configuration (from host.SECRET.json, env variables, Firestore)
-- []: Have multiple library loading options, so `pinecone` becomes a library option vs. in memory via JSON
-- []: Create a CLI
+- [ ]: Implement `servers` vs. local libraries so the client makes a network call
+- [ ]: Implement access control so the library omit's private information
+- [ ]: Be smarter with the number of tokens
+- [ ]: Allow configuration of more of the OpenAI settings for completion (e.g. `stop:'\n'`)
+- [ ]: Load configuration (from host.SECRET.json, env variables, Firestore)
+- [ ]: Have multiple library loading options, so `pinecone` becomes a library option vs. in memory via JSON
+- [ ]: Create a CLI
