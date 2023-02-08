@@ -8,12 +8,20 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-js-client.git"
+  },
   "keywords": [
     "polymath",
     "ai"
   ],
   "author": "Dion Almaer",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-js-client/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-js-client#readme",
   "dependencies": {
     "esm": "^3.2.25",
     "openai": "^3.1.0"
