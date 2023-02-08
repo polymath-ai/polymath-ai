@@ -1,5 +1,5 @@
 {
-  "name": "@polymathai/client",
+  "name": "@polymath-ai/client",
   "version": "1.0.0",
   "description": "A JavaScript client library to run Polymath",
   "main": "index.js",
