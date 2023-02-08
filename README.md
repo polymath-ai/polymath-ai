@@ -1,4 +1,4 @@
-# @polymathai/client
+# @polymath-ai/client
 
 `polymath` is a utility that uses AI to intelligently answer free-form 
 questions based on a particular library of content.
