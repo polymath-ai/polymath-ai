@@ -1,10 +1,16 @@
 import { Configuration, OpenAIApi } from "openai";
+import { encode } from "gpt-3-encoder";
 import fs from "fs";
 
 // --------------------------------------------------------------------------
 //  Time for some help
 // --------------------------------------------------------------------------
-const DEFAULT_TOKEN_COUNT = 4000; // max tokens for text-davinci-003
+const DEFAULT_MAX_TOKENS_COMPLETION = 1024; // tokens reserved for the answer
+const DEFAULT_MODEL_TOKEN_COUNT = 4000; // max tokens for text-davinci-003
+const MAX_TOKENS_FOR_MODEL = {
+    "text-davinci-003": 4000,
+    "text-embedding-ada-002": 8191
+}
 
 function encodeEmbedding(data) {
   return Buffer.from(new Float32Array(data).buffer).toString("base64");
@@ -40,35 +46,8 @@ function cosineSimilarity(vecA, vecB) {
   return dotProduct(vecA, vecB) / (magnitude(vecA) * magnitude(vecB));
 }
 
-// Return as many bits as can fit the number of tokens
-function maxBits(bits, maxTokens) {
-  let totalTokens = 0;
-  const includedBits = [];
-  for (let i = 0; i < bits.length; i++) {
-    const bit = bits[i];
-    if (totalTokens + bit.token_count > maxTokens) {
-      return includedBits;
-    }
-    totalTokens += bit.token_count;
-    includedBits.push(bit);
-  }
-  return includedBits;
-}
-
-// Given the array of bits, return info objects ordered by the most similarity, no duplicates
-function infoSortedBySimilarity(bits) {
-  const uniqueInfos = [];
-  return bits
-    .sort((a, b) => b.similarity - a.similarity)
-    .filter((bit) => {
-      const info = bit.info;
-      if (!uniqueInfos.some((ui) => ui.url === info.url)) {
-        uniqueInfos.push(info);
-        return true;
-      }
-      return false;
-    })
-    .map((bit) => bit.info);
+function getMaxTokensForModel(model) {
+    return MAX_TOKENS_FOR_MODEL[model] || DEFAULT_MAX_TOKENS_FOR_MODEL;
 }
 
 // --------------------------------------------------------------------------
@@ -141,12 +120,7 @@ class Polymath {
   async results(query) {
     let queryEmbedding = await this.generateEmbedding(query);
 
-    let bits = this.similarBits(queryEmbedding);
-
-    return {
-      bits: bits,
-      context: bits.map((bit) => bit.text).join("\n"),
-    };
+    return new PolymathResults(this.similarBits(queryEmbedding));
   }
 
   // Given input text such as the users query, return an embedding
@@ -172,22 +146,24 @@ class Polymath {
       polymathResults = await this.results(query);
     }
 
-    let prompt = this.promptTemplate
-      .replace("{context}", polymathResults.context)
-      .replace("{query}", query);
+    // How much room do we have for the content?
+    // 4000 - 1024 - tokens for the prompt with the query without the context 
+    let contextTokenCount = DEFAULT_MODEL_TOKEN_COUNT - DEFAULT_MAX_TOKENS_COMPLETION - this.getPromptTokenCount(query);
+
+    let prompt = this.getPrompt(query, polymathResults.context(contextTokenCount));
 
     try {
       const response = await this.openai.createCompletion({
         model: "text-davinci-003",
         prompt: prompt,
         temperature: 0,
-        max_tokens: 250,
+        max_tokens: DEFAULT_MAX_TOKENS_COMPLETION,
       });
 
       // returning the first option for now
       return {
-        bits: polymathResults.bits,
-        infos: infoSortedBySimilarity(polymathResults.bits),
+        bits: polymathResults.bits(),
+        infos: polymathResults.infoSortedBySimilarity(),
         completion: response.data.choices[0].text.trim(),
       };
     } catch (error) {
@@ -197,20 +173,86 @@ class Polymath {
     }
   }
 
-  // Given an embedding, find the bits with the most similar embeddings
-  similarBits(embedding, maxTokens = DEFAULT_TOKEN_COUNT) {
-    const sortedBits = this.libraryBits
-      .map((bit) => {
-        return {
-          ...bit,
-          similarity: cosineSimilarity(embedding, bit.embedding),
-        };
-      })
-      // sort by similarity descending
-      .sort((a, b) => b.similarity - a.similarity);
-
-    return maxBits(sortedBits, maxTokens);
+  getPrompt(query, context) {
+    return this.promptTemplate
+      .replace("{context}", context)
+      .replace("{query}", query);
   }
+
+  // given the query, add the prompt template and return the encoded total
+  getPromptTokenCount(query) {
+    return encode(query + this.promptTemplate).length;
+  }
+
+  // Given an embedding, find the bits with the most similar embeddings
+  similarBits(embedding) {
+    return (
+      this.libraryBits
+        .map((bit) => {
+          return {
+            ...bit,
+            similarity: cosineSimilarity(embedding, bit.embedding),
+          };
+        })
+        // sort by similarity descending
+        .sort((a, b) => b.similarity - a.similarity)
+    );
+  }
+}
+
+//
+// A container for the resulting bits
+//
+// 
+// let p = new Polymath({..})
+// let pr = await p.results("How long is a piece of string?");
+// pr.context(DEFAULT_MAX_TOKENS_COMPLETION) // return the string of context limited to 1025 tokens
+//
+class PolymathResults {
+  constructor(bits) {
+    this._bits = bits;
+  }
+
+  bits(maxTokensWorth = 0) {
+    let bits = (maxTokensWorth > 0) ? this.maxBits(maxTokensWorth) : this._bits;
+    return bits;
+  }
+
+  context(maxTokensWorth = 0) {
+    return this.bits(maxTokensWorth).map((bit) => bit.text).join("\n");
+  }
+
+  // Return as many bits as can fit the number of tokens
+  maxBits(maxTokens = DEFAULT_MODEL_TOKEN_COUNT) {
+    let totalTokens = 0;
+    const includedBits = [];
+    for (let i = 0; i < this._bits.length; i++) {
+      const bit = this._bits[i];
+      if (totalTokens + bit.token_count > maxTokens) {
+        return includedBits;
+      }
+      totalTokens += bit.token_count;
+      includedBits.push(bit);
+    }
+    return includedBits;
+  }
+
+  // Return info objects ordered by the most similarity, no duplicates
+  infoSortedBySimilarity() {
+    const uniqueInfos = [];
+    return this._bits
+      .sort((a, b) => b.similarity - a.similarity)
+      .filter((bit) => {
+        const info = bit.info;
+        if (!uniqueInfos.some((ui) => ui.url === info.url)) {
+          uniqueInfos.push(info);
+          return true;
+        }
+        return false;
+      })
+      .map((bit) => bit.info);
+  }
+  
 }
 
 // Polymath, go back and help people!

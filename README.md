@@ -18,14 +18,16 @@ let polymathResults = await polymath.results("How long is a piece of string?");
 
 `polymathResults` is an object that contains:
 
-- `bits`: an array of all of the bits that matched. Each bit contains:
+- `bits`: a function that returns an array of all of the bits that matched. Each bit contains:
   - `text`: string;
   - `embedding`: Vector;
   - `similarity?`: number;
   - `token_count`: number;
 
-- `context`: A helpful string of all of the text to easily be used in 
-  a completion request.
+- `context(tokenLength)`: A function that returns a helpful string of all of the text to easily be used in 
+  a completion request. Can limit the context by passing in the `tokenLength` limit.
+
+- `maxBits(tokenLength)`: A function that returns the bits that fit into a given token length
 
 ## Get me a completion from a given query
 
@@ -38,7 +40,7 @@ let completionResult = await polymath.completion("How long is a piece of string?
 
 `completionResult` is an object that contains:
 
-- `bits`: an array of all of the bits that matched. Same as above from `polymathResults`
+- `bits`: a function that returns an array of all of the bits that matched. Same as above from `polymathResults`
 
 - `infos`: An array with all of the info entries (without duplicates). They contain:
   - `url`: pointing to the source
@@ -59,22 +61,9 @@ let polymath = new Polymath({
 });
 ```
 
-# Sample
+# Tests
 
-You will see a sample.js file that you can run locally and play around to see the output.
+Tests are located in `tests/`. We use [ava](https://github.com/avajs/ava) for a simple test library.
 
-It uses a simple library `libraries/knowledge-string.json` that you can poke at too.
-
-# Tasks
-
-We are just getting started here, lots to do!
-
-For example:
-
-- [ ]  Implement `servers` vs. local libraries so the client makes a network call
-- [ ]  Implement access control so the library omit's private information
-- [ ]  Be smarter with the number of tokens
-- [ ]  Allow configuration of more of the OpenAI settings for completion (e.g. `stop:'\n'`)
-- [ ]  Load configuration (from host.SECRET.json, env variables, Firestore)
-- [ ]  Have multiple library loading options, so `pinecone` becomes a library option vs. in memory via JSON
-- [ ]  Create a CLI
+To run them you will want to set your OpenAI API Key environment variable first, and some of the tests will
+use the simple library `libraries/knowledge-string.json` that you can poke at too.
