@@ -40,7 +40,7 @@ let completionResult = await polymath.completion("How long is a piece of string?
 
 `completionResult` is an object that contains:
 
-- `bits`: a function that returns an array of all of the bits that matched. Same as above from `polymathResults`
+- `bits`: an array of all of the bits that matched. Same as above from `polymathResults`
 
 - `infos`: An array with all of the info entries (without duplicates). They contain:
   - `url`: pointing to the source

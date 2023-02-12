@@ -237,6 +237,11 @@ class PolymathResults {
     return includedBits;
   }
 
+  // Add the new bits, resort, and re-max
+  mergeBits(bits) {
+    this._bits = [...this._bits, ...bits];
+  }
+
   // Return info objects ordered by the most similarity, no duplicates
   infoSortedBySimilarity() {
     const uniqueInfos = [];
