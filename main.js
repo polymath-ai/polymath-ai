@@ -8,9 +8,9 @@ import fs from "fs";
 const DEFAULT_MAX_TOKENS_COMPLETION = 1024; // tokens reserved for the answer
 const DEFAULT_MODEL_TOKEN_COUNT = 4000; // max tokens for text-davinci-003
 const MAX_TOKENS_FOR_MODEL = {
-    "text-davinci-003": 4000,
-    "text-embedding-ada-002": 8191
-}
+  "text-davinci-003": 4000,
+  "text-embedding-ada-002": 8191,
+};
 
 function encodeEmbedding(data) {
   return Buffer.from(new Float32Array(data).buffer).toString("base64");
@@ -47,7 +47,7 @@ function cosineSimilarity(vecA, vecB) {
 }
 
 function getMaxTokensForModel(model) {
-    return MAX_TOKENS_FOR_MODEL[model] || DEFAULT_MAX_TOKENS_FOR_MODEL;
+  return MAX_TOKENS_FOR_MODEL[model] || DEFAULT_MAX_TOKENS_FOR_MODEL;
 }
 
 // --------------------------------------------------------------------------
@@ -79,7 +79,7 @@ class Polymath {
 
     // An array of JSON library filenames
     if (Array.isArray(options.libraryFiles)) {
-        this.libraryBits = this.loadLibraryBits(options.libraryFiles);
+      this.libraryBits = this.loadLibraryBits(options.libraryFiles);
     }
 
     // An array of Polymath server endpoints
@@ -128,17 +128,20 @@ class Polymath {
 
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
-        for (let server of this.servers) {
-            let ps = new PolymathServer(server);
-            let results = await ps.results(queryEmbedding);
-            bits = bits.concat(results.bits);
-        }    
+      for (let server of this.servers) {
+        let ps = new PolymathServer(server);
+        let results = await ps.results(queryEmbedding);
+        // console.log("Results: ", results);
+        if (results.bits) {
+          bits = bits.concat(results.bits);
+        }
+      }
     }
 
     // Now, look for local bits
     if (Array.isArray(this.libraryBits)) {
-        // console.log("Local Library:", this.libraryBits.length);
-        bits = bits.concat(this.similarBits(queryEmbedding));
+      // console.log("Local Library:", this.libraryBits.length);
+      bits = bits.concat(this.similarBits(queryEmbedding));
     }
 
     let pr = new PolymathResults(bits);
@@ -170,10 +173,16 @@ class Polymath {
     }
 
     // How much room do we have for the content?
-    // 4000 - 1024 - tokens for the prompt with the query without the context 
-    let contextTokenCount = DEFAULT_MODEL_TOKEN_COUNT - DEFAULT_MAX_TOKENS_COMPLETION - this.getPromptTokenCount(query);
+    // 4000 - 1024 - tokens for the prompt with the query without the context
+    let contextTokenCount =
+      DEFAULT_MODEL_TOKEN_COUNT -
+      DEFAULT_MAX_TOKENS_COMPLETION -
+      this.getPromptTokenCount(query);
 
-    let prompt = this.getPrompt(query, polymathResults.context(contextTokenCount));
+    let prompt = this.getPrompt(
+      query,
+      polymathResults.context(contextTokenCount)
+    );
 
     try {
       const response = await this.openai.createCompletion({
@@ -225,7 +234,7 @@ class Polymath {
 
 //
 // A container for the resulting bits
-// 
+//
 // let p = new Polymath({..})
 // let pr = await p.results("How long is a piece of string?");
 // pr.context(DEFAULT_MAX_TOKENS_COMPLETION) // return the string of context limited to 1025 tokens
@@ -236,12 +245,14 @@ class PolymathResults {
   }
 
   bits(maxTokensWorth = 0) {
-    let bits = (maxTokensWorth > 0) ? this.maxBits(maxTokensWorth) : this._bits;
+    let bits = maxTokensWorth > 0 ? this.maxBits(maxTokensWorth) : this._bits;
     return bits;
   }
 
   context(maxTokensWorth = 0) {
-    return this.bits(maxTokensWorth).map((bit) => bit.text).join("\n");
+    return this.bits(maxTokensWorth)
+      .map((bit) => bit.text)
+      .join("\n");
   }
 
   // Return as many bits as can fit the number of tokens
@@ -284,33 +295,34 @@ class PolymathResults {
       })
       .map((bit) => bit.info);
   }
-  
 }
 
 //
 // Talk to remote servers and ask for their bits
 //
 class PolymathServer {
-    constructor(server) {
-      this._server = server;
-    }
+  constructor(server) {
+    this._server = server;
+  }
 
-    async results(queryEmbedding) {
-        // make a request to the remote polymath server and ask for their bits
-        const form = new FormData();
-        form.append('version', '1');
-        form.append('query_embedding_model', 'openai.com:text-embedding-ada-002');
-        form.append('query_embedding', queryEmbedding);
+  async results(queryEmbedding) {
+    // make a request to the remote polymath server and ask for their bits
+    const form = new FormData();
+    form.append("version", "1");
+    form.append("query_embedding_model", "openai.com:text-embedding-ada-002");
+    form.append("query_embedding", encodeEmbedding(queryEmbedding));
 
-        const url = new URL(this._server);
-        const result = await (await fetch(url, {
-          method: 'POST',
-          body: form
-        })).json();
+    const url = new URL(this._server);
+    const result = await (
+      await fetch(url, {
+        method: "POST",
+        body: form,
+      })
+    ).json();
 
-        return result;
-    }
-}  
+    return result;
+  }
+}
 
 // Polymath, go back and help people!
 export { Polymath };
