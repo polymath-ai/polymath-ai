@@ -13,7 +13,7 @@ given a query, it will return a subset of the library bits that represent
 good context for that given query. 
 
 ```js
-let polymathResults = await polymath.results("How long is a piece of string?");
+let polymathResults = await polymath.ask("How long is a piece of string?");
 ```
 
 `polymathResults` is an object that contains:

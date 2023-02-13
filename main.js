@@ -62,7 +62,7 @@ function getMaxTokensForModel(model) {
 //    libraryFiles: ['./libraries/knowledge-string.json']
 // });
 //
-// let r = await p.results("How long is a piece of string?");
+// let r = await p.ask("How long is a piece of string?");
 // console.log("Context: ", r.context);
 //
 class Polymath {
@@ -120,7 +120,7 @@ class Polymath {
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
-  async results(query) {
+  async ask(query) {
     let queryEmbedding = await this.generateEmbedding(query);
 
     // For each server and/or local library, get the results and merge it all together!
@@ -130,7 +130,7 @@ class Polymath {
     if (Array.isArray(this.servers)) {
       for (let server of this.servers) {
         let ps = new PolymathServer(server);
-        let results = await ps.results(queryEmbedding);
+        let results = await ps.ask(queryEmbedding);
         // console.log("Results: ", results);
         if (results.bits) {
           bits = bits.concat(results.bits);
@@ -169,7 +169,7 @@ class Polymath {
   async completion(query, polymathResults) {
     if (!polymathResults) {
       // get the polymath results here
-      polymathResults = await this.results(query);
+      polymathResults = await this.ask(query);
     }
 
     // How much room do we have for the content?
@@ -236,7 +236,7 @@ class Polymath {
 // A container for the resulting bits
 //
 // let p = new Polymath({..})
-// let pr = await p.results("How long is a piece of string?");
+// let pr = await p.ask("How long is a piece of string?");
 // pr.context(DEFAULT_MAX_TOKENS_COMPLETION) // return the string of context limited to 1025 tokens
 //
 class PolymathResults {
@@ -305,7 +305,7 @@ class PolymathServer {
     this._server = server;
   }
 
-  async results(queryEmbedding) {
+  async ask(queryEmbedding) {
     // make a request to the remote polymath server and ask for their bits
     const form = new FormData();
     form.append("version", "1");

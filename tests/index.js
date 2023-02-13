@@ -3,7 +3,7 @@ import { Polymath } from "../main.js";
 
 test("Polymath requires an OpenAI API Key", (t) => {
   try {
-    let p = new Polymath({
+    let client = new Polymath({
       apiKey: "sk-fake-api-key",
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
@@ -24,12 +24,12 @@ test("Polymath errors without an OpenAI API Key", (t) => {
 });
 
 test("Polymath can get embeddings", async (t) => {
-  let p = new Polymath({
+  let client = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,
     libraryFiles: ["./libraries/knowledge-string.json"],
   });
 
-  let embedding = await p.generateEmbedding("ePiano");
+  let embedding = await client.generateEmbedding("ePiano");
 
   if (embedding.length == 1536) {
     t.pass();
@@ -40,12 +40,12 @@ test("Polymath can get embeddings", async (t) => {
 
 test("Polymath gets results", async (t) => {
   try {
-    let p = new Polymath({
+    let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let r = await p.results("How long is a piece of string?");
+    let r = await client.ask("How long is a piece of string?");
 
     if (r.context()) {
       t.pass();
@@ -57,12 +57,12 @@ test("Polymath gets results", async (t) => {
 
 test("Polymath gets server results", async (t) => {
   try {
-    let p = new Polymath({
+    let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: ["https://polymath.almaer.com/"],
     });
 
-    let r = await p.results(
+    let r = await client.ask(
       "What is the best side effect of using an AI assistant?"
     );
 
@@ -79,12 +79,12 @@ test("Polymath gets server results", async (t) => {
 
 test("Polymath gets local completions", async (t) => {
   try {
-    let p = new Polymath({
+    let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let r = await p.completion("How long is a piece of string?");
+    let r = await client.completion("How long is a piece of string?");
 
     if (r.completion) {
       t.pass();
@@ -96,12 +96,12 @@ test("Polymath gets local completions", async (t) => {
 
 test("Polymath gets server completions", async (t) => {
   try {
-    let p = new Polymath({
+    let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: ["https://polymath.almaer.com/"],
     });
 
-    let r = await p.completion(
+    let r = await client.completion(
       "What is the best side effect of using an AI assistant?"
     );
 
@@ -116,7 +116,7 @@ test("Polymath gets server completions", async (t) => {
 
 test("Polymath gets multiple server completions", async (t) => {
   try {
-    let p = new Polymath({
+    let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: [
         "https://remix.polymath.chat/",
@@ -124,7 +124,7 @@ test("Polymath gets multiple server completions", async (t) => {
       ]
     });
 
-    let r = await p.completion("Can you use Remix with Preact?");
+    let r = await client.completion("Can you use Remix with Preact?");
 
     if (r.completion) {
       t.pass();
