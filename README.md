@@ -74,6 +74,20 @@ let polymath = new Polymath({
 });
 ```
 
+And why not ask multiple polymath servers?
+
+```js
+let polymath = new Polymath({
+  apiKey: process.env.OPENAI_API_KEY,
+  servers: [
+    "https://remix.polymath.chat/",
+    "https://preact.polymath.chat/",
+  ],
+});
+
+let results = await polymath.completion("Can you use Remix with Preact?");
+```
+
 You can also pass in other optional info such as overriding the prompt that you wish to use:
 
 ```js
