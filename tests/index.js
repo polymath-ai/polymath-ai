@@ -120,8 +120,8 @@ test("Polymath gets multiple server completions", async (t) => {
       apiKey: process.env.OPENAI_API_KEY,
       servers: [
         "https://remix.polymath.chat/",
-        "https://preact.polymath.chat/",
-      ],
+        "https://preact.polymath.chat/"
+      ]
     });
 
     let r = await p.completion("Can you use Remix with Preact?");

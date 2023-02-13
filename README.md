@@ -81,8 +81,8 @@ let polymath = new Polymath({
   apiKey: process.env.OPENAI_API_KEY,
   servers: [
     "https://remix.polymath.chat/",
-    "https://preact.polymath.chat/",
-  ],
+    "https://preact.polymath.chat/"
+  ]
 });
 
 let results = await polymath.completion("Can you use Remix with Preact?");
