@@ -78,10 +78,13 @@ class Polymath {
     );
 
     // An array of JSON library filenames
-    this.libraryBits = this.loadLibraryBits(options.libraryFiles);
+    if (Array.isArray(options.libraryFiles)) {
+        this.libraryBits = this.loadLibraryBits(options.libraryFiles);
+    }
 
     // An array of Polymath server endpoints
     this.servers = options.servers;
+
     if (!this.libraryBits && !options.servers) {
       throw new Error("Polymath requires at least one library or server");
     }
@@ -120,7 +123,25 @@ class Polymath {
   async results(query) {
     let queryEmbedding = await this.generateEmbedding(query);
 
-    return new PolymathResults(this.similarBits(queryEmbedding));
+    // For each server and/or local library, get the results and merge it all together!
+    let bits = [];
+
+    // First, let's ask each of the servers
+    if (Array.isArray(this.servers)) {
+        for (let server of this.servers) {
+            let ps = new PolymathServer(server);
+            let results = await ps.results(queryEmbedding);
+            bits = bits.concat(results.bits);
+        }    
+    }
+
+    // Now, look for local bits
+    if (Array.isArray(this.libraryBits)) {
+        // console.log("Local Library:", this.libraryBits.length);
+        bits = bits.concat(this.similarBits(queryEmbedding));
+    }
+
+    return new PolymathResults(bits);
   }
 
   // Given input text such as the users query, return an embedding
@@ -202,7 +223,6 @@ class Polymath {
 
 //
 // A container for the resulting bits
-//
 // 
 // let p = new Polymath({..})
 // let pr = await p.results("How long is a piece of string?");
@@ -239,7 +259,7 @@ class PolymathResults {
 
   // Add the new bits, resort, and re-max
   mergeBits(bits) {
-    this._bits = [...this._bits, ...bits];
+    this._bits = this._bits.concat(bits);
   }
 
   // Return info objects ordered by the most similarity, no duplicates
@@ -259,6 +279,31 @@ class PolymathResults {
   }
   
 }
+
+//
+// Talk to remote servers and ask for their bits
+//
+class PolymathServer {
+    constructor(server) {
+      this._server = server;
+    }
+
+    async results(queryEmbedding) {
+        // make a request to the remote polymath server and ask for their bits
+        const form = new FormData();
+        form.append('version', '1');
+        form.append('query_embedding_model', 'openai.com:text-embedding-ada-002');
+        form.append('query_embedding', queryEmbedding);
+
+        const url = new URL(this._server);
+        const result = await (await fetch(url, {
+          method: 'POST',
+          body: form
+        })).json();
+
+        return result;
+    }
+}  
 
 // Polymath, go back and help people!
 export { Polymath };

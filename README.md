@@ -51,7 +51,11 @@ let completionResult = await polymath.completion("How long is a piece of string?
 
 ## Setting up the Polymath
 
-When you setup a polymath object you have to pass in some options:
+When you setup a polymath object you have to pass in some options.
+
+You *have* to pass in an Open AI API key, and then you need to tell it where you want to ask for information.
+
+This can be locally via library files such as:
 
 ```js
 let polymath = new Polymath({
@@ -60,6 +64,26 @@ let polymath = new Polymath({
     promptTemplate: "Answer using the context below please.\n\nContext: {context}\n\nQuestion: {prompt}\n\nAnswer:"
 });
 ```
+
+And/or you can point to a remote server URL for a Polymath:
+
+```js
+let polymath = new Polymath({
+    apiKey: process.env.OPENAI_API_KEY,
+    servers: ["https://polymath.almaer.com/"],
+});
+```
+
+You can also pass in other optional info such as overriding the prompt that you wish to use:
+
+```js
+let polymath = new Polymath({
+    apiKey: process.env.OPENAI_API_KEY,
+    libraryFiles: ['./libraries/knowledge-string.json'],
+    promptTemplate: "Answer using the context below please.\n\nContext: {context}\n\nQuestion: {prompt}\n\nAnswer:"
+});
+```
+
 
 # Tests
 

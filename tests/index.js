@@ -23,6 +23,21 @@ test("Polymath errors without an OpenAI API Key", (t) => {
   }
 });
 
+test("Polymath can get embeddings", async (t) => {
+	let p = new Polymath({
+	  apiKey: process.env.OPENAI_API_KEY,
+	  libraryFiles: ["./libraries/knowledge-string.json"],
+	});
+  
+	let embedding = await p.generateEmbedding("ePiano");
+  
+	if (embedding.length == 1536) {
+	  t.pass();
+	} else {
+	  t.fail();
+	}
+  });
+  
 test("Polymath gets results", async (t) => {
   try {
     let p = new Polymath({
@@ -40,7 +55,29 @@ test("Polymath gets results", async (t) => {
   }
 });
 
-test("Polymath gets completions", async (t) => {
+test("Polymath gets server results", async (t) => {
+  try {
+    let p = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      servers: ["https://polymath.almaer.com/"],
+    });
+
+    let r = await p.results(
+      "What is the best side effect of using an AI assistant?"
+    );
+
+    // console.log("CONTEXT:", r.context());
+
+    if (r.context()) {
+      t.pass();
+    }
+  } catch (e) {
+    console.log("ERROR:", e);
+    t.fail();
+  }
+});
+
+test("Polymath gets local completions", async (t) => {
   try {
     let p = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
@@ -57,17 +94,19 @@ test("Polymath gets completions", async (t) => {
   }
 });
 
-test("Polymath can get embeddings", async (t) => {
-  let p = new Polymath({
-    apiKey: process.env.OPENAI_API_KEY,
-    libraryFiles: ["./libraries/knowledge-string.json"],
-  });
+test("Polymath gets server completions", async (t) => {
+  try {
+    let p = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      servers: ["https://polymath.almaer.com/"],
+    });
 
-  let embedding = await p.generateEmbedding("ePiano");
+    let r = await p.completion("What is the best side effect of using an AI assistant?");
 
-  if (embedding.length == 1536) {
-	t.pass();
-  } else {
-	t.fail();
+    if (r.completion) {
+      t.pass();
+    }
+  } catch (e) {
+    t.fail();
   }
 });
