@@ -141,7 +141,9 @@ class Polymath {
         bits = bits.concat(this.similarBits(queryEmbedding));
     }
 
-    return new PolymathResults(bits);
+    let pr = new PolymathResults(bits);
+    pr.sortBitsBySimilarity();
+    return pr;
   }
 
   // Given input text such as the users query, return an embedding
@@ -248,6 +250,7 @@ class PolymathResults {
     const includedBits = [];
     for (let i = 0; i < this._bits.length; i++) {
       const bit = this._bits[i];
+      if (!bit.token_count) bit.token_count = encode(bit.text).length; // TODO: no token_count huh?
       if (totalTokens + bit.token_count > maxTokens) {
         return includedBits;
       }
@@ -260,6 +263,10 @@ class PolymathResults {
   // Add the new bits, resort, and re-max
   mergeBits(bits) {
     this._bits = this._bits.concat(bits);
+  }
+
+  sortBitsBySimilarity() {
+    this._bits = this._bits.sort((a, b) => b.similarity - a.similarity);
   }
 
   // Return info objects ordered by the most similarity, no duplicates

@@ -107,6 +107,7 @@ test("Polymath gets server completions", async (t) => {
       t.pass();
     }
   } catch (e) {
+	// console.log("ERROR:", e);
     t.fail();
   }
 });
