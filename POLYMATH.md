@@ -8,7 +8,7 @@ When it's time to look for answers, I have options.
 First, I can go to my own library at home, and look through my notebooks.
 
 ```js
-let p = new Polymath({
+let client = new Polymath({
     apiKey: "the-key-to-the-wise-one",
     libraryFiles: ['./library/knowledge.json']
 });
@@ -23,12 +23,12 @@ When it comes to anything science related, I get some context from two others.
 I take my query and I ask `Poly` and I ask `Math`.
 
 ```js
-let p = new Polymath({
+let client = new Polymath({
     apiKey: "the-key-to-the-wise-one",
     servers: ['https://poly.polymath.host', 'https://math.polymath.host']
 });
 
-let results = await p.results("How long is a piece of string?");
+let results = await client.ask("How long is a piece of string?");
 ```
 
 ## The Completion
@@ -38,7 +38,7 @@ and ask `ePiano`, the ultimate oracle, for The Completion, handing over all of
 the context.
 
 ```js
-p.completion(query, results);
+client.completion(query, results);
 ```
 
 ## The Curator
