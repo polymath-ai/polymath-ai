@@ -94,6 +94,9 @@ class Polymath {
     this.promptTemplate =
       options.promptTemplate ||
       'Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don\'t know"\n\nnContext:{context}\n\nestion: {query}\n\nAnswer:';
+
+    // `debug; true` was passed in
+    this.debug = options.debug ? (output) => console.log("DEBUG: " + output) : () => {};
   }
 
   // Load up all of the library bits from the given library JSON files
@@ -128,10 +131,13 @@ class Polymath {
 
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
+        this.debug("Asking servers: " + this.servers.join("\n"));
       for (let server of this.servers) {
         let ps = new PolymathServer(server);
         let results = await ps.ask(queryEmbedding);
-        // console.log("Results: ", results);
+
+        this.debug("Results: " + results);
+
         if (results.bits) {
           bits = bits.concat(results.bits);
         }
@@ -140,7 +146,7 @@ class Polymath {
 
     // Now, look for local bits
     if (Array.isArray(this.libraryBits)) {
-      // console.log("Local Library:", this.libraryBits.length);
+      this.debug("Looking to match with the local library that contains " + this.libraryBits.length + " bits.");
       bits = bits.concat(this.similarBits(queryEmbedding));
     }
 

@@ -98,6 +98,16 @@ let polymath = new Polymath({
 });
 ```
 
+And if you want some debugging info, just pass in `debug: true`:
+
+```js
+let polymath = new Polymath({
+    apiKey: process.env.OPENAI_API_KEY,
+    libraryFiles: ['./libraries/knowledge-string.json'],
+    debug: true
+});
+```
+
 
 # Tests
 

@@ -5,7 +5,7 @@ test("Polymath requires an OpenAI API Key", (t) => {
   try {
     let client = new Polymath({
       apiKey: "sk-fake-api-key",
-      libraryFiles: ["./libraries/knowledge-string.json"],
+      libraryFiles: ["./libraries/knowledge-string.json"]
     });
 
     t.pass();
@@ -26,7 +26,7 @@ test("Polymath errors without an OpenAI API Key", (t) => {
 test("Polymath can get embeddings", async (t) => {
   let client = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,
-    libraryFiles: ["./libraries/knowledge-string.json"],
+    libraryFiles: ["./libraries/knowledge-string.json"]
   });
 
   let embedding = await client.generateEmbedding("ePiano");
@@ -43,6 +43,7 @@ test("Polymath gets results", async (t) => {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
+	  debug: true
     });
 
     let r = await client.ask("How long is a piece of string?");
@@ -59,14 +60,12 @@ test("Polymath gets server results", async (t) => {
   try {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
-      servers: ["https://polymath.almaer.com/"],
+      servers: ["https://polymath.almaer.com/"]
     });
 
     let r = await client.ask(
       "What is the best side effect of using an AI assistant?"
     );
-
-    // console.log("CONTEXT:", r.context());
 
     if (r.context()) {
       t.pass();
@@ -81,7 +80,7 @@ test("Polymath gets local completions", async (t) => {
   try {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
-      libraryFiles: ["./libraries/knowledge-string.json"],
+      libraryFiles: ["./libraries/knowledge-string.json"]
     });
 
     let r = await client.completion("How long is a piece of string?");
@@ -98,7 +97,7 @@ test("Polymath gets server completions", async (t) => {
   try {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
-      servers: ["https://polymath.almaer.com/"],
+      servers: ["https://polymath.almaer.com/"]
     });
 
     let r = await client.completion(
