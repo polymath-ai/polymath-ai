@@ -1,6 +1,11 @@
 import { Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
+import { PineconeClient } from "pinecone-client";
+import * as dotenv from "dotenv";
 import fs from "fs";
+
+// Initialize .env variables
+dotenv.config();
 
 // --------------------------------------------------------------------------
 //  Time for some help
@@ -85,8 +90,13 @@ class Polymath {
     // An array of Polymath server endpoints
     this.servers = options.servers;
 
-    if (!this.libraryBits && !options.servers) {
-      throw new Error("Polymath requires at least one library or server");
+    // A Pinecone config
+    this.pinecone = options.pinecone;
+
+    if (!this.libraryBits && !options.servers && !options.pinecone) {
+      throw new Error(
+        "Polymath requires at least one library or polymath server or pinecone server"
+      );
     }
 
     // The prompt template. {context} and {query} will be replaced
@@ -96,7 +106,9 @@ class Polymath {
       'Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don\'t know"\n\nnContext:{context}\n\nestion: {query}\n\nAnswer:';
 
     // `debug; true` was passed in
-    this.debug = options.debug ? (output) => console.log("DEBUG: " + output) : () => {};
+    this.debug = options.debug
+      ? (output) => console.log("DEBUG: " + output)
+      : () => {};
   }
 
   // Load up all of the library bits from the given library JSON files
@@ -131,12 +143,12 @@ class Polymath {
 
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
-        this.debug("Asking servers: " + this.servers.join("\n"));
+      this.debug("Asking servers: " + this.servers.join("\n"));
       for (let server of this.servers) {
         let ps = new PolymathServer(server);
         let results = await ps.ask(queryEmbedding);
 
-        this.debug("Results: " + results);
+        this.debug("Server Results: " + results);
 
         if (results.bits) {
           bits = bits.concat(results.bits);
@@ -144,9 +156,25 @@ class Polymath {
       }
     }
 
+    // Second, let's ask pinecone for some
+    if (this.pinecone) {
+      let ps = new PineconeServer(this.pinecone);
+      let results = await ps.ask(queryEmbedding);
+
+      this.debug("Pinecone Results: " + results);
+
+      if (results) {
+        bits = bits.concat(results);
+      }
+    }
+
     // Now, look for local bits
     if (Array.isArray(this.libraryBits)) {
-      this.debug("Looking to match with the local library that contains " + this.libraryBits.length + " bits.");
+      this.debug(
+        "Looking to match with the local library that contains " +
+          this.libraryBits.length +
+          " bits."
+      );
       bits = bits.concat(this.similarBits(queryEmbedding));
     }
 
@@ -327,6 +355,27 @@ class PolymathServer {
     ).json();
 
     return result;
+  }
+}
+
+//
+// Talk to Pinecone to do the vector search
+//
+class PineconeServer {
+  constructor(config) {
+    this._pinecone = new PineconeClient(config);
+  }
+
+  async ask(queryEmbedding) {
+    const result = await this._pinecone.query({
+      vector: queryEmbedding,
+      topK: 10,
+      includeMetadata: true,
+    });
+
+    // console.log("Pinecone Results: ", result);
+
+    return result?.matches;
   }
 }
 

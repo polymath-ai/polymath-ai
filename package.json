@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/client",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A JavaScript client library to run Polymath",
   "main": "main.js",
   "module": "main.js",
@@ -23,9 +23,11 @@
   },
   "homepage": "https://github.com/polymath-ai/polymath-js-client#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "esm": "^3.2.25",
     "gpt-3-encoder": "^1.1.4",
-    "openai": "^3.1.0"
+    "openai": "^3.1.0",
+    "pinecone-client": "^1.0.1"
   },
   "devDependencies": {
     "ava": "^5.2.0"

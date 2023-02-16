@@ -43,7 +43,7 @@ test("Polymath gets results", async (t) => {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
-	  debug: true
+      debug: true
     });
 
     let r = await client.ask("How long is a piece of string?");
@@ -130,6 +130,28 @@ test("Polymath gets multiple server completions", async (t) => {
     }
   } catch (e) {
     // console.log("ERROR MULTI:", e);
+    t.fail();
+  }
+});
+
+test("Polymath gets pinecone results", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      pinecone: {
+        apiKey: process.env.PINECONE_API_KEY,
+        baseUrl: process.env.PINECONE_BASE_URL,
+        namespace: process.env.PINECONE_NAMESPACE
+      }
+    });
+
+    let r = await client.ask("How long is a piece of string?");
+
+    if (r.context()) {
+      t.pass();
+    }
+  } catch (e) {
+	console.log("ERROR: ", e);
     t.fail();
   }
 });
