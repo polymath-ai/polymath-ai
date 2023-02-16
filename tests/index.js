@@ -5,7 +5,7 @@ test("Polymath requires an OpenAI API Key", (t) => {
   try {
     let client = new Polymath({
       apiKey: "sk-fake-api-key",
-      libraryFiles: ["./libraries/knowledge-string.json"]
+      libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
     t.pass();
@@ -26,7 +26,7 @@ test("Polymath errors without an OpenAI API Key", (t) => {
 test("Polymath can get embeddings", async (t) => {
   let client = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,
-    libraryFiles: ["./libraries/knowledge-string.json"]
+    libraryFiles: ["./libraries/knowledge-string.json"],
   });
 
   let embedding = await client.generateEmbedding("ePiano");
@@ -43,7 +43,7 @@ test("Polymath gets results", async (t) => {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
-      debug: true
+      debug: true,
     });
 
     let r = await client.ask("How long is a piece of string?");
@@ -60,7 +60,7 @@ test("Polymath gets server results", async (t) => {
   try {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
-      servers: ["https://polymath.almaer.com/"]
+      servers: ["https://polymath.almaer.com/"],
     });
 
     let r = await client.ask(
@@ -80,7 +80,7 @@ test("Polymath gets local completions", async (t) => {
   try {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
-      libraryFiles: ["./libraries/knowledge-string.json"]
+      libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
     let r = await client.completion("How long is a piece of string?");
@@ -97,7 +97,7 @@ test("Polymath gets server completions", async (t) => {
   try {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
-      servers: ["https://polymath.almaer.com/"]
+      servers: ["https://polymath.almaer.com/"],
     });
 
     let r = await client.completion(
@@ -119,8 +119,8 @@ test("Polymath gets multiple server completions", async (t) => {
       apiKey: process.env.OPENAI_API_KEY,
       servers: [
         "https://remix.polymath.chat/",
-        "https://preact.polymath.chat/"
-      ]
+        "https://preact.polymath.chat/",
+      ],
     });
 
     let r = await client.completion("Can you use Remix with Preact?");
@@ -141,8 +141,8 @@ test("Polymath gets pinecone results", async (t) => {
       pinecone: {
         apiKey: process.env.PINECONE_API_KEY,
         baseUrl: process.env.PINECONE_BASE_URL,
-        namespace: process.env.PINECONE_NAMESPACE
-      }
+        namespace: process.env.PINECONE_NAMESPACE,
+      },
     });
 
     let r = await client.ask("How long is a piece of string?");
@@ -151,7 +151,7 @@ test("Polymath gets pinecone results", async (t) => {
       t.pass();
     }
   } catch (e) {
-	console.log("ERROR: ", e);
+    console.log("ERROR: ", e);
     t.fail();
   }
 });
