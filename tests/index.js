@@ -142,6 +142,7 @@ test("Polymath gets pinecone results", async (t) => {
         apiKey: process.env.PINECONE_API_KEY,
         baseUrl: process.env.PINECONE_BASE_URL,
         namespace: process.env.PINECONE_NAMESPACE,
+        topK: 11,
       },
     });
 

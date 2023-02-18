@@ -364,12 +364,13 @@ class PolymathServer {
 class PineconeServer {
   constructor(config) {
     this._pinecone = new PineconeClient(config);
+    this._topK = config.topK || 10;
   }
 
   async ask(queryEmbedding) {
     const result = await this._pinecone.query({
       vector: queryEmbedding,
-      topK: 10,
+      topK: this._topK,
       includeMetadata: true,
     });
 
