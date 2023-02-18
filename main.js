@@ -193,6 +193,7 @@ class Polymath {
 
       return response.data.data[0].embedding;
     } catch (error) {
+      this.debug(`Embedding Error: ${JSON.stringify(error)}`);
       return {
         error: error,
       };
@@ -243,6 +244,7 @@ class Polymath {
         completion: response.data.choices[0].text.trim(),
       };
     } catch (error) {
+      this.debug(`Completion Error: ${JSON.stringify(error)}`);
       return {
         error: error,
       };
