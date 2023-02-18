@@ -145,7 +145,7 @@ class Polymath {
     if (Array.isArray(this.servers)) {
       this.debug("Asking servers: " + this.servers.join("\n"));
       for (let server of this.servers) {
-        let ps = new PolymathServer(server);
+        let ps = new PolymathEndpoint(server);
         let results = await ps.ask(queryEmbedding);
 
         this.debug("Server Results: " + results);
@@ -346,7 +346,7 @@ class PolymathResults {
 //
 // Talk to remote servers and ask for their bits
 //
-class PolymathServer {
+class PolymathEndpoint {
   constructor(server) {
     this._server = server;
   }
@@ -393,4 +393,4 @@ class PineconeServer {
 }
 
 // Polymath, go back and help people!
-export { Polymath };
+export { Polymath, PolymathEndpoint };
