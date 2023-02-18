@@ -222,8 +222,18 @@ class Polymath {
       const response = await this.openai.createCompletion({
         model: "text-davinci-003",
         prompt: prompt,
-        temperature: 0,
-        max_tokens: DEFAULT_MAX_TOKENS_COMPLETION,
+        temperature: this.completionOptions?.temperature || 0,
+        max_tokens:
+          this.completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
+        top_p: this.completionOptions?.top_p || 1,
+        n: this.completionOptions?.n || 1,
+        stream: this.completionOptions?.stream || false,
+        logprobs: this.completionOptions?.stream || null,
+        echo: this.completionOptions?.echo || false,
+        stop: this.completionOptions?.stop || null,
+        presence_penalty: this.completionOptions?.presence_penalty || 0,
+        frequency_penalty: this.completionOptions?.frequency_penalty || 0,
+        best_of: this.completionOptions?.best_of || 1,
       });
 
       // returning the first option for now
