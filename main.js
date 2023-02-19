@@ -351,13 +351,36 @@ class PolymathEndpoint {
     this._server = server;
   }
 
-  async ask(queryEmbedding) {
-    // make a request to the remote polymath server and ask for their bits
+  async ask(queryEmbedding, otherOptions) {
+    if (!queryEmbedding || queryEmbedding.trim().length == 0) {
+      throw new Error("You need to ask a question of the Polymath");
+    }
+
+    // Configure all of the options
     const form = new FormData();
-    form.append("version", "1");
-    form.append("query_embedding_model", "openai.com:text-embedding-ada-002");
+    form.append("version", otherOptions?.version || "1");
+    form.append(
+      "query_embedding_model",
+      otherOptions?.query_embedding_model || "openai.com:text-embedding-ada-002"
+    );
     form.append("query_embedding", encodeEmbedding(queryEmbedding));
 
+    if (otherOptions?.count) form.append("count", "" + otherOptions?.count);
+
+    // TODO: let the consumer know if passing in something that isn't valid (not token nor bit)
+    if (
+      otherOptions?.count_type == "token" ||
+      otherOptions?.count_type == "bit"
+    )
+      form.append("count_type", otherOptions?.count_type);
+
+    // TODO: validate that the string is a list of valid items to omit (e.g. "embeddings,similarity")
+    if (otherOptions?.omit) form.append("omit", "" + otherOptions?.omit);
+
+    if (otherOptions?.access_token)
+      form.append("access_token", "" + otherOptions?.access_token);
+
+    // Send it all over to the Endpoint
     const url = new URL(this._server);
     const result = await (
       await fetch(url, {
