@@ -1,4 +1,4 @@
-# Polymatb Remix Client & Endpoint
+# Polymath Remix Client & Endpoint
 
 This is a Polymath Client and Endpoint.
 
