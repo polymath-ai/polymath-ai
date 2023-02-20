@@ -5,30 +5,54 @@ import { Link } from "@remix-run/react";
 
 export default function Index() {
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}>
-      <h1>Polymath</h1>
+    <main className="p-4">
+      <h1 className="text-2xl px-4">Welcome to this Polymath!</h1>
 
-      <h2>Clients</h2>
+      <p className="p-4">
+        Here are of the things I can do. I'm a work in progress.
+      </p>
 
-      <ul>
-        <li><Link to="/client/local">Ask this endpoint for context</Link></li>
-        <li><Link to="/client/single">Single Client</Link></li>
-        <li><Link to="/client/multi">Multi Client</Link></li>
-      </ul>
-      
-      <h2>Endpoint</h2>
+      <div className="p-4">
+        <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
+          Clients
+        </h2>
 
-      <ul>
-        <li><Link to="/endpoint">Endpoint</Link></li>
-      </ul>
+        <ul role="list" className="divide-y divide-gray-200">
+          <li className="py-2">
+            <Link to="/client/local">Ask this endpoint for context</Link>
+          </li>
+          <li className="py-2">
+            <Link to="/client/single">Single Client</Link>
+          </li>
+          <li className="py-2">
+            <Link to="/client/multi">Multi Client</Link>
+          </li>
+        </ul>
+      </div>
 
-      <h2>Completion</h2>
+      <div className="p-4">
+        <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
+          Endpoint
+        </h2>
 
-      <ul>
-        <li><Link to="/completion">Endpoint</Link></li>
-      </ul>
-    </div>
+        <ul role="list" className="divide-y divide-gray-200">
+          <li className="py-2">
+            <Link to="/endpoint">Endpoint</Link>
+          </li>
+        </ul>
+      </div>
+
+      <div className="p-4">
+        <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
+          Completion
+        </h2>
+
+        <ul role="list" className="divide-y divide-gray-200">
+          <li className="py-2">
+            <Link to="/completion">Endpont Completion</Link>
+          </li>
+        </ul>
+      </div>
+    </main>
   );
 }
-
-
