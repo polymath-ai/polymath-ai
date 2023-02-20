@@ -6,3 +6,6 @@ node_modules
 /build
 /public/build
 .env
+
+# Ensure that no one checks in the secret config
+*.SECRET.*
