@@ -1,5 +1,6 @@
 import { ActionArgs, json } from "@remix-run/node";
 import { Polymath } from "~/utils/polymath.server";
+import { polymathHostConfig } from "~/utils/polymath.config";
 
 export async function loader() {
   // TODO: explain what the Endpoint is, settings, etc
@@ -19,12 +20,11 @@ export async function action({ request }: ActionArgs) {
     if (pair[0] !== "query") otherOptions[pair[0]] = pair[1];
   }
 
-  // TODO: get these settings from a config file
-  let client = new Polymath({
-    apiKey: process.env.OPENAI_API_KEY,
-    libraryFiles: ["./libraries/knowledge-string.json"],
-    debug: true,
-  });
+  // TODO: get these settings from a config file and switch to configuration system when ready
+  let clientOptions: any = polymathHostConfig.client_options;
+  clientOptions.apiKey =
+    polymathHostConfig.default_api_key || process.env.OPENAI_API_KEY;
+  let client = new Polymath(clientOptions);
 
   let results = await client.ask(query, otherOptions);
 
