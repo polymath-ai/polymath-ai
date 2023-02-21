@@ -134,6 +134,47 @@ test("Polymath gets multiple server completions", async (t) => {
   }
 });
 
+test("Polymath sends with extra otherOptions to limit count to 1 bit", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      servers: ["https://remix.polymath.chat/"],
+    });
+
+    let r = await client.ask("When should you use a Button vs. a Link?", {
+      count: 1,
+    });
+
+    if (r.bits().length == 1) {
+      t.pass();
+    }
+  } catch (e) {
+    console.log("ERROR OTHER OPTIONS:", e);
+    t.fail();
+  }
+});
+
+test("Polymath sends with extra otherOptions to omit embeddings", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      servers: ["https://remix.polymath.chat/"],
+    });
+
+    let r = await client.ask("When should you use a Button vs. a Link?", {
+      omit: "info,embedding",
+      count: 1,
+    });
+
+    if (!r.bits()[0].embedding) {
+      t.pass();
+    }
+  } catch (e) {
+    console.log("ERROR OTHER OPTIONS EMBEDDINGS:", e);
+    t.fail();
+  }
+});
+
 test("Polymath gets pinecone results", async (t) => {
   try {
     let client = new Polymath({
@@ -152,7 +193,7 @@ test("Polymath gets pinecone results", async (t) => {
       t.pass();
     }
   } catch (e) {
-    console.log("ERROR: ", e);
+    // console.log("ERROR: ", e);
     t.fail();
   }
 });

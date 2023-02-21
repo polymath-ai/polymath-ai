@@ -135,7 +135,7 @@ class Polymath {
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
-  async ask(query) {
+  async ask(query, otherOptions) {
     let queryEmbedding = await this.generateEmbedding(query);
 
     // For each server and/or local library, get the results and merge it all together!
@@ -146,7 +146,7 @@ class Polymath {
       this.debug("Asking servers: " + this.servers.join("\n"));
       for (let server of this.servers) {
         let ps = new PolymathEndpoint(server);
-        let results = await ps.ask(queryEmbedding);
+        let results = await ps.ask(queryEmbedding, otherOptions);
 
         this.debug("Server Results: " + results);
 
@@ -159,7 +159,7 @@ class Polymath {
     // Second, let's ask pinecone for some
     if (this.pinecone) {
       let ps = new PineconeServer(this.pinecone);
-      let results = await ps.ask(queryEmbedding);
+      let results = await ps.ask(queryEmbedding, otherOptions);
 
       this.debug("Pinecone Results: " + results);
 
@@ -201,10 +201,10 @@ class Polymath {
   }
 
   // Given a users query, return a completion with polymath results and the answer
-  async completion(query, polymathResults) {
+  async completion(query, polymathResults, otherOptions) {
     if (!polymathResults) {
       // get the polymath results here
-      polymathResults = await this.ask(query);
+      polymathResults = await this.ask(query, otherOptions);
     }
 
     // How much room do we have for the content?
@@ -352,7 +352,7 @@ class PolymathEndpoint {
   }
 
   async ask(queryEmbedding, otherOptions) {
-    if (!queryEmbedding || queryEmbedding.trim().length == 0) {
+    if (!queryEmbedding) {
       throw new Error("You need to ask a question of the Polymath");
     }
 
