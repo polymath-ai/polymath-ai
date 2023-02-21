@@ -1,4 +1,4 @@
-import polymathHostConfig from "~/host.SECRET.json";
+import { polymathHostConfig } from "~/utils/polymath.config";
 
 import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import {
@@ -12,7 +12,7 @@ import {
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: (polymathHostConfig.info.headername || "") + " Polymath",
+  title: polymathHostConfig?.info?.headername + " Polymath",
   viewport: "width=device-width,initial-scale=1",
 });
 
@@ -55,7 +55,7 @@ function Header() {
       </a>
       <div className="px-5 float-right border-b-0">
         <h1 className="text-2xl md:text-3xl text-center font-bold">
-          {polymathHostConfig.info.headername || ""} Polymath
+          {polymathHostConfig?.info?.headername} Polymath
         </h1>
         <div className="w-full border-t-0 text-sm md:text-base">
           This is a{" "}

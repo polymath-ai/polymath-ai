@@ -1,5 +1,7 @@
-import { Form, useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher } from "@remix-run/react";
 import { json } from "@remix-run/node";
+import { polymathHostConfig } from "~/utils/polymath.config";
+import { useState } from "react";
 
 export const loader = async () => {
   // if there is a query param, load it up and return
@@ -40,6 +42,17 @@ function Results(props: { bits: any }) {
 export default function ClientLocal(): JSX.Element {
   const { not } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
+  const [queryValue, setQueryValue] = useState("");
+  const funQueries = polymathHostConfig?.info?.fun_queries;
+
+  const randomFunQuery = () => {
+    let validFunQueries = funQueries.filter((query) => query !== queryValue);
+
+    const randomFunQuery =
+      validFunQueries[Math.floor(Math.random() * validFunQueries.length)];
+
+    setQueryValue(randomFunQuery);
+  };
 
   return (
     <main className="p-4">
@@ -51,27 +64,34 @@ export default function ClientLocal(): JSX.Element {
             <input
               type="text"
               name="query"
-              placeholder="Question here please!"
-              defaultValue="How long is a piece of string?"
+              placeholder={
+                polymathHostConfig?.info?.placeholder ||
+                "Give us a question here, please!"
+              }
               id="query"
               className="w-full input-primary"
+              value={queryValue}
+              onChange={(e) => setQueryValue(e.target.value)}
             />
             <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-              <svg
-                id="random-query"
-                className="h-5 w-5 text-gray-400 hover:brightness-110 active:brightness-110 hover:cursor-pointer"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
-                />
-              </svg>
+              {funQueries && (
+                <svg
+                  id="random-query"
+                  className="h-5 w-5 text-gray-400 hover:brightness-110 active:brightness-110 hover:cursor-pointer"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                  onClick={randomFunQuery}
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zM12 2.25V4.5m5.834.166l-1.591 1.591M20.25 10.5H18M7.757 14.743l-1.59 1.59M6 10.5H3.75m4.007-4.243l-1.59-1.59"
+                  />
+                </svg>
+              )}
             </div>
           </div>
           <div className="py-4">
