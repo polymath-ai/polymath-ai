@@ -180,6 +180,10 @@ class Polymath {
 
     let pr = new PolymathResults(bits);
     pr.sortBitsBySimilarity();
+    if (otherOptions?.omit) pr.omit(otherOptions.omit);
+    if (otherOptions?.count)
+      pr.trim(otherOptions.count, otherOptions?.count_type);
+
     return pr;
   }
 
@@ -320,6 +324,23 @@ class PolymathResults {
   // Add the new bits, resort, and re-max
   mergeBits(bits) {
     this._bits = this._bits.concat(bits);
+  }
+
+  omit(omitString) {
+    // this._bits = this._bits.filter((bit) => bit.text !== omitString);
+    const omitKeys = omitString.split(/\s*,\s*/);
+    for (let i = 0; i < this._bits.length; i++) {
+      for (let j = 0; j < omitKeys.length; j++) {
+        delete this._bits[i][omitKeys[j]];
+      }
+    }
+  }
+
+  trim(count, countType = "bits") {
+    if (countType != "bits") {
+      throw new Error("Only bits are supported at this time");
+    }
+    this._bits = this._bits.slice(0, count);
   }
 
   sortBitsBySimilarity() {

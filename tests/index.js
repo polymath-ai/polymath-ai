@@ -175,6 +175,27 @@ test("Polymath sends with extra otherOptions to omit embeddings", async (t) => {
   }
 });
 
+test("Polymath gets one result with embedding omited locally", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      libraryFiles: ["./libraries/knowledge-string.json"],
+      debug: true,
+    });
+
+    let r = await client.ask("How long is a piece of string?", {
+      omit: "embedding",
+      count: 1,
+    });
+
+    if (!r.bits()[0].embedding) {
+      t.pass();
+    }
+  } catch (e) {
+    t.fail();
+  }
+});
+
 test("Polymath gets pinecone results", async (t) => {
   try {
     let client = new Polymath({
