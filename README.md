@@ -10,4 +10,4 @@ it vends a couple things:
 - /client/multi: query multiple endpoints
 
 - /endpoint/ask: return Polymath results as json
-- /endpoint/completion: return Polymath results AND 
+- /endpoint/complete: return Polymath results AND

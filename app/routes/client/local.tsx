@@ -1,4 +1,9 @@
-import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
+import {
+  useLoaderData,
+  useFetcher,
+  useSearchParams,
+  FetcherWithComponents,
+} from "@remix-run/react";
 import { json, LoaderArgs } from "@remix-run/node";
 import { polymathHostConfig } from "~/utils/polymath.config";
 import { useEffect, useRef, useState } from "react";
@@ -7,43 +12,70 @@ export const loader = async ({ request }: LoaderArgs) => {
   // if there is a query param, load it up and return
   const url = new URL(request.url);
   const queryParam = url.searchParams.get("query");
+  let endpointResults = {};
 
-  return json({
-    loadQuery: queryParam,
-  });
+  if (queryParam) {
+    let formdata = new FormData();
+    formdata.append("query", queryParam);
+    formdata.append("omit", "embedding");
+    let results = await fetch(new URL(request.url).origin + "/endpoint/ask", {
+      method: "POST",
+      body: formdata,
+    });
+    endpointResults = await results.json();
+  }
+
+  return json(endpointResults);
 };
 
-function Results(props: { bits: any }) {
+function Results(props: { bits: any; fetcher: FetcherWithComponents<any> }) {
   const bits = props.bits;
+  const fetcher = props.fetcher;
+
+  if (!bits) {
+    return null;
+  }
+
+  let isFetchingClass = fetcher.state === "submitting" ? "opacity-20" : "";
 
   return (
-    <ul role="list" className="divide-y divide-gray-200">
-      {bits.map(
-        (
-          bit: { text: string; info: { title: any; url: any } },
-          index: string
-        ) => (
-          <li className="flex py-4" key={index}>
-            <div className="ml-3">
-              <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
-                Text: {bit.text}
-              </p>
-              <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
-                Source:{" "}
-                <a href="{bit?.info?.url}">
-                  {bit?.info?.title || bit?.info?.url}
-                </a>
-              </p>
-            </div>
-          </li>
-        )
-      )}
-    </ul>
+    <>
+      <div id="results" className="py-4 mt-4">
+        <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
+          Context Results
+        </h2>
+      </div>
+
+      <ul role="list" className="divide-y divide-gray-200 {isFetchingClass}">
+        {bits.map(
+          (
+            bit: { text: string; info: { title: any; url: any } },
+            index: string
+          ) => (
+            <li className="flex py-4" key={index}>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
+                  Text: {bit.text}
+                </p>
+                <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
+                  Source:{" "}
+                  <a href="{bit?.info?.url}">
+                    {bit?.info?.title || bit?.info?.url}
+                  </a>
+                </p>
+              </div>
+            </li>
+          )
+        )}
+      </ul>
+    </>
   );
 }
 
 export default function ClientLocal(): JSX.Element {
-  let { loadQuery } = useLoaderData<typeof loader>();
+  // let json = useLoaderData<typeof loader>();
+  let json = useLoaderData() as any;
+
   const fetcher = useFetcher();
 
   let submitRef = useRef<HTMLButtonElement>(null);
@@ -70,26 +102,30 @@ export default function ClientLocal(): JSX.Element {
       fetcher.data?.bits &&
       queryParam != queryValue
     ) {
-      console.log("setSearchParams:", queryValue);
+      // console.log("setSearchParams:", queryValue);
       setSearchParams({ query: queryValue });
     }
   }, [fetcher]);
 
   // once when the page loads, if there is a query param, submit the form and get the results
-  useEffect(() => {
-    if (fetcher.type === "init" && queryValue === loadQuery) {
-      console.log("submit the form?:", queryValue);
-      loadQuery = "";
-      console.log("Current:", formRef.current);
-      fetcher.submit(formRef.current);
-    }
-  }, [fetcher]);
+  // useEffect(() => {
+  //   if (fetcher.type === "init" && queryValue === loadQuery) {
+  //     console.log("submit the form?:", queryValue);
+  //     loadQuery = "";
+  //     console.log("Current:", formRef.current);
+  //     fetcher.submit(formRef.current, { method: "post" });
+  //     // fetcher.submit(
+  //     //   { query: "how long is a piece of string?" },
+  //     //   { method: "post", action: "/endpoint" }
+  //     // );
+  //   }
+  // }, [fetcher]);
 
   return (
     <main className="p-4">
       <h3 className="text-l italic p-2">Local Endpoint Context Client</h3>
 
-      <fetcher.Form method="post" action="/endpoint" ref={formRef}>
+      <fetcher.Form method="post" action="/endpoint/ask" ref={formRef}>
         <input type="hidden" name="omit" value="embedding" />
         <div>
           <div className="relative mt-1 rounded-md shadow-sm">
@@ -138,14 +174,7 @@ export default function ClientLocal(): JSX.Element {
         </div>
       </fetcher.Form>
 
-      {fetcher?.data?.bits && (
-        <div id="results" className="py-4 mt-4">
-          <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
-            Context Results
-          </h2>
-        </div>
-      )}
-      {fetcher?.data?.bits && <Results bits={fetcher?.data?.bits} />}
+      <Results bits={fetcher?.data?.bits || json.bits} fetcher={fetcher} />
     </main>
   );
 }
