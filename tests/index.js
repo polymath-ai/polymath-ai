@@ -1,6 +1,15 @@
 import test from "ava";
 import { Polymath } from "../main.js";
 
+//
+// Most of these tests are more of the intergration variety.
+// Later, we will split up into unit and integrations tests.
+//
+// npm run test # runs them all
+// npm run test -- --watch # runs them all and watches for changes
+// npx ava -m "Polymath gets one result with embedding omited locally" # runs a single test
+//
+
 test("Polymath requires an OpenAI API Key", (t) => {
   try {
     let client = new Polymath({
