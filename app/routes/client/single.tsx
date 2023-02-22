@@ -61,7 +61,14 @@ function Results(props: {
         </h2>
         <ul role="list" className="divide-y divide-gray-200 {isFetchingClass}">
           {completion?.infos?.map(
-            (info: { title: any; url: any }, index: string) => (
+            (
+              info: {
+                description: any;
+                title: any;
+                url: any;
+              },
+              index: string
+            ) => (
               <li className="flex py-4" key={index}>
                 <div className="ml-3">
                   <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
