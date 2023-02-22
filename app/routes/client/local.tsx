@@ -1,12 +1,15 @@
 import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
-import { json } from "@remix-run/node";
+import { json, LoaderArgs } from "@remix-run/node";
 import { polymathHostConfig } from "~/utils/polymath.config";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderArgs) => {
   // if there is a query param, load it up and return
+  const url = new URL(request.url);
+  const queryParam = url.searchParams.get("query");
+
   return json({
-    not: "Yet",
+    loadQuery: queryParam,
   });
 };
 
@@ -40,8 +43,11 @@ function Results(props: { bits: any }) {
 }
 
 export default function ClientLocal(): JSX.Element {
-  const { not } = useLoaderData<typeof loader>();
+  let { loadQuery } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
+
+  let submitRef = useRef<HTMLButtonElement>(null);
+  let formRef = useRef<HTMLFormElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get("query");
@@ -59,9 +65,23 @@ export default function ClientLocal(): JSX.Element {
   };
 
   useEffect(() => {
-    if (fetcher.type === "done" && fetcher.data?.bits) {
+    if (
+      fetcher.type === "done" &&
+      fetcher.data?.bits &&
+      queryParam != queryValue
+    ) {
       console.log("setSearchParams:", queryValue);
       setSearchParams({ query: queryValue });
+    }
+  }, [fetcher]);
+
+  // once when the page loads, if there is a query param, submit the form and get the results
+  useEffect(() => {
+    if (fetcher.type === "init" && queryValue === loadQuery) {
+      console.log("submit the form?:", queryValue);
+      loadQuery = "";
+      console.log("Current:", formRef.current);
+      fetcher.submit(formRef.current);
     }
   }, [fetcher]);
 
@@ -69,7 +89,8 @@ export default function ClientLocal(): JSX.Element {
     <main className="p-4">
       <h3 className="text-l italic p-2">Local Endpoint Context Client</h3>
 
-      <fetcher.Form method="post" action="/endpoint">
+      <fetcher.Form method="post" action="/endpoint" ref={formRef}>
+        <input type="hidden" name="omit" value="embedding" />
         <div>
           <div className="relative mt-1 rounded-md shadow-sm">
             <input
