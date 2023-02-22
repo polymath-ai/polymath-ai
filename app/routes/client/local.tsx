@@ -1,7 +1,7 @@
-import { useLoaderData, useFetcher } from "@remix-run/react";
+import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
 import { json } from "@remix-run/node";
 import { polymathHostConfig } from "~/utils/polymath.config";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const loader = async () => {
   // if there is a query param, load it up and return
@@ -42,9 +42,13 @@ function Results(props: { bits: any }) {
 export default function ClientLocal(): JSX.Element {
   const { not } = useLoaderData<typeof loader>();
   const fetcher = useFetcher();
-  const [queryValue, setQueryValue] = useState("");
-  const funQueries = polymathHostConfig?.info?.fun_queries;
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const queryParam = searchParams.get("query");
+
+  const [queryValue, setQueryValue] = useState(queryParam || "");
+
+  const funQueries = polymathHostConfig?.info?.fun_queries;
   const randomFunQuery = () => {
     let validFunQueries = funQueries.filter((query) => query !== queryValue);
 
@@ -53,6 +57,13 @@ export default function ClientLocal(): JSX.Element {
 
     setQueryValue(randomFunQuery);
   };
+
+  useEffect(() => {
+    if (fetcher.type === "done" && fetcher.data?.bits) {
+      console.log("setSearchParams:", queryValue);
+      setSearchParams({ query: queryValue });
+    }
+  }, [fetcher]);
 
   return (
     <main className="p-4">
