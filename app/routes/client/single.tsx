@@ -68,17 +68,31 @@ function Results(props: {
                 url: any;
               },
               index: string
-            ) => (
-              <li className="flex py-4" key={index}>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
-                    <a href="{info.url}" title="{info?.title}">
-                      {info?.title || info?.description || info?.url}
-                    </a>
-                  </p>
-                </div>
-              </li>
-            )
+            ) => {
+              let prefix = "";
+              let sourcePrefixes = polymathHostConfig?.info?.source_prefixes;
+
+              if (sourcePrefixes) {
+                for (let url in sourcePrefixes) {
+                  if (info.url.startsWith(url)) {
+                    prefix = sourcePrefixes[url];
+                    break;
+                  }
+                }
+              }
+
+              return (
+                <li className="flex py-4" key={index}>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
+                      <a href="{info.url}" title="{info?.title}">
+                        {prefix} {info?.title || info?.description || info?.url}
+                      </a>
+                    </p>
+                  </div>
+                </li>
+              );
+            }
           )}
         </ul>
       </div>
