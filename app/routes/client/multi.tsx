@@ -32,13 +32,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 function Results(props: {
-  completion: any;
+  response: any;
   fetcher: FetcherWithComponents<any>;
 }) {
-  const completion = props.completion;
+  const completion = props.response;
   const fetcher = props.fetcher;
 
-  if (!completion) {
+  if (!response?.completion) {
     return null;
   }
 
@@ -51,7 +51,7 @@ function Results(props: {
           Results
         </h2>
         <div id="completion" className="p-2">
-          {completion.completion}
+          {response.completion}
         </div>
       </div>
 
@@ -223,7 +223,7 @@ export default function ClientMulti(): JSX.Element {
         </div>
       </fetcher.Form>
 
-      <Results completion={fetcher?.data || json} fetcher={fetcher} />
+      <Results response={fetcher?.data || json} fetcher={fetcher} />
     </main>
   );
 }

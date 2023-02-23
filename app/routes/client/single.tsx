@@ -32,13 +32,13 @@ export const loader = async ({ request }: LoaderArgs) => {
 };
 
 function Results(props: {
-  completion: any;
+  response: any;
   fetcher: FetcherWithComponents<any>;
 }) {
-  const completion = props.completion;
+  const response = props.response;
   const fetcher = props.fetcher;
 
-  if (!completion) {
+  if (!response?.completion) {
     return null;
   }
 
@@ -51,7 +51,7 @@ function Results(props: {
           Results
         </h2>
         <div id="completion" className="p-2">
-          {completion.completion}
+          {response.completion}
         </div>
       </div>
 
@@ -60,7 +60,7 @@ function Results(props: {
           Sources
         </h2>
         <ul role="list" className="divide-y divide-gray-200 {isFetchingClass}">
-          {completion?.infos?.map(
+          {response?.infos?.map(
             (
               info: {
                 description: any;
@@ -202,7 +202,7 @@ export default function ClientSingle(): JSX.Element {
         </div>
       </fetcher.Form>
 
-      <Results completion={fetcher?.data || json} fetcher={fetcher} />
+      <Results response={fetcher?.data || json} fetcher={fetcher} />
     </main>
   );
 }
