@@ -216,6 +216,7 @@ export default function ClientMulti(): JSX.Element {
               id="ask"
               type="submit"
               className="btn-primary disabled:opacity-50"
+              disabled={queryValue?.trim().length < 1}
             >
               Ask Me
             </button>
