@@ -43,10 +43,10 @@ function Results(props: {
     return null;
   }
 
-  let isFetchingClass = fetcher.state === "submitting" ? "opacity-20" : "";
+  let isFetchingClass = fetcher.state === "submitting" ? "opacity-50" : "";
 
   return (
-    <>
+    <div className={isFetchingClass}>
       <div id="results" className="py-4 mt-4">
         <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
           Results
@@ -60,7 +60,7 @@ function Results(props: {
         <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
           Sources
         </h2>
-        <ul role="list" className="divide-y divide-gray-200 {isFetchingClass}">
+        <ul role="list" className="divide-y divide-gray-200">
           {response?.infos?.map(
             (
               info: {
@@ -97,7 +97,7 @@ function Results(props: {
           )}
         </ul>
       </div>
-    </>
+    </div>
   );
 }
 
