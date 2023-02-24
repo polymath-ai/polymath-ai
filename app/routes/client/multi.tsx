@@ -86,7 +86,7 @@ function Results(props: {
                 <li className="flex py-4" key={index}>
                   <div className="ml-3">
                     <p className="text-sm font-medium text-gray-900 hover:text-indigo-700">
-                      <a href="{info.url}" title="{info?.title}">
+                      <a href={info.url} title={info?.title}>
                         {prefix} {info?.title || info?.description || info?.url}
                       </a>
                     </p>
