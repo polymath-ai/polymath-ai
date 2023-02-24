@@ -2,11 +2,11 @@ import { ActionArgs, json } from "@remix-run/node";
 import { Polymath } from "~/utils/polymath.server";
 import { polymathHostConfig } from "~/utils/polymath.config";
 
-// export async function loader() {
-//   console.log("Loader called.");
-//   // TODO: explain what the Endpoint is, settings, etc
-//   return json({ name: "Loader / GET" });
-// }
+export async function loader() {
+  console.log("GET: Ask Loader called.");
+  // TODO: explain what the Endpoint is, settings, etc
+  return json({ name: "Loader / GET" });
+}
 
 export async function action({ request }: ActionArgs) {
   if (request.method !== "POST") {
