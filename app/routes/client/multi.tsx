@@ -224,9 +224,7 @@ export default function ClientMulti(): JSX.Element {
         </div>
       </fetcher.Form>
 
-      {fetcher.state === "submitting" && (
-        <Loading>☎️ Giving the Polymaths a ring</Loading>
-      )}
+      {fetcher.state === "submitting" && <Loading />}
 
       <Results response={fetcher?.data || json} fetcher={fetcher} />
     </main>
