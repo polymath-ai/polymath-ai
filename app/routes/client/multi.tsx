@@ -192,24 +192,54 @@ export default function ClientMulti(): JSX.Element {
           </div>
           <div className="py-4">
             <label htmlFor="server">Polymath Endpoints</label>
-            <input
-              type="text"
-              name="server"
-              defaultValue="https://polymath.almaer.com/"
-              className="w-full input-primary"
-            />
-            <input
-              type="text"
-              name="server"
-              defaultValue="https://polymath.glazkov.com/"
-              className="w-full input-primary"
-            />
-            <input
-              type="text"
-              name="server"
-              defaultValue="https://polymath.komoroske.com/"
-              className="w-full input-primary"
-            />
+
+            <ul className="mt-2">
+              <li className="py-1 ml-3">
+                <input
+                  id="server1"
+                  name="server"
+                  type="checkbox"
+                  className="m-2"
+                  value="https://polymath.almaer.com/"
+                />
+                <label
+                  htmlFor="server1"
+                  className=" text-gray-900 hover:text-indigo-700"
+                >
+                  Dion's Polymath
+                </label>
+              </li>
+              <li className="py-1 ml-3">
+                <input
+                  id="server2"
+                  name="server"
+                  type="checkbox"
+                  className="m-2"
+                  value="https://polymath.glazkov.com/"
+                />
+                <label
+                  htmlFor="server2"
+                  className=" text-gray-900 hover:text-indigo-700"
+                >
+                  Dimitri's Polymath
+                </label>
+              </li>
+              <li className="py-1 ml-3">
+                <input
+                  id="server3"
+                  name="server"
+                  type="checkbox"
+                  className="m-2"
+                  value="https://polymath.komoroske.com/"
+                />
+                <label
+                  htmlFor="server3"
+                  className=" text-gray-900 hover:text-indigo-700"
+                >
+                  Alex's Polymath
+                </label>
+              </li>
+            </ul>
           </div>
           <div className="py-4">
             <button
