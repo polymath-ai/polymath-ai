@@ -5,8 +5,9 @@ import {
   FetcherWithComponents,
 } from "@remix-run/react";
 import { json, LoaderArgs } from "@remix-run/node";
-import { polymathHostConfig } from "~/utils/polymath.config";
 import { useEffect, useRef, useState } from "react";
+import { polymathHostConfig } from "~/utils/polymath.config";
+import { Loading } from "~/components/loading";
 
 export const loader = async ({ request }: LoaderArgs) => {
   // if there is a query param, load it up and return
@@ -35,7 +36,7 @@ function Results(props: {
   response: any;
   fetcher: FetcherWithComponents<any>;
 }) {
-  const completion = props.response;
+  const response = props.response;
   const fetcher = props.fetcher;
 
   if (!response?.completion) {
@@ -60,7 +61,7 @@ function Results(props: {
           Sources
         </h2>
         <ul role="list" className="divide-y divide-gray-200 {isFetchingClass}">
-          {completion?.infos?.map(
+          {response?.infos?.map(
             (
               info: {
                 description: any;
@@ -152,7 +153,6 @@ export default function ClientMulti(): JSX.Element {
   return (
     <main className="p-4">
       <h3 className="text-l italic p-2">Multi Endpoint Completion Client</h3>
-
       <fetcher.Form method="post" action="/endpoint/complete" ref={formRef}>
         <input type="hidden" name="omit" value="embedding" />
         <div>
@@ -223,6 +223,10 @@ export default function ClientMulti(): JSX.Element {
           </div>
         </div>
       </fetcher.Form>
+
+      {fetcher.state === "submitting" && (
+        <Loading>☎️ Giving the Polymaths a ring</Loading>
+      )}
 
       <Results response={fetcher?.data || json} fetcher={fetcher} />
     </main>

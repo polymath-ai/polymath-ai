@@ -5,8 +5,9 @@ import {
   FetcherWithComponents,
 } from "@remix-run/react";
 import { json, LoaderArgs } from "@remix-run/node";
-import { polymathHostConfig } from "~/utils/polymath.config";
 import { useEffect, useRef, useState } from "react";
+import { polymathHostConfig } from "~/utils/polymath.config";
+import { Loading } from "~/components/loading";
 
 export const loader = async ({ request }: LoaderArgs) => {
   // if there is a query param, load it up and return
@@ -51,7 +52,7 @@ function Results(props: {
           Results
         </h2>
         <div id="completion" className="p-2">
-          {response.completion}
+          {response?.completion}
         </div>
       </div>
 
@@ -202,6 +203,10 @@ export default function ClientSingle(): JSX.Element {
           </div>
         </div>
       </fetcher.Form>
+
+      {fetcher.state === "submitting" && (
+        <Loading>☎️ Giving the Polymaths a ring</Loading>
+      )}
 
       <Results response={fetcher?.data || json} fetcher={fetcher} />
     </main>
