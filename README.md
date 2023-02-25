@@ -4,10 +4,8 @@ This is a Polymath Client and Endpoint.
 
 it vends a couple things:
 
-- /: links to the bits
-- /client/local: query for polymath results (context) locally
-- /client/single: query one endpoint
-- /client/multi: query multiple endpoints
+- /: The main client to ask questions of
+- /local: Just ask the polymath for results with context locally
 
 - /endpoint/ask: return Polymath results as json
-- /endpoint/complete: return Polymath results AND
+- /endpoint/complete: return Polymath results AND answers

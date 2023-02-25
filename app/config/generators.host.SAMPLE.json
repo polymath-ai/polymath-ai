@@ -6,6 +6,7 @@
   "default_api_key": "<Your OpenAI API Key>",
 
   "client_options": {
+    "libraryFiles": ["./libraries/knowledge-string.json"],
     "omit": "embedding",
     "debug": true
   },
@@ -44,6 +45,14 @@
       "What does gardening have to do with strategy?",
       "What do you think of the Web platform?",
       "How do Dion and Alex think differently about strategy?"
-    ]
+    ],
+    "source_prefixes": {
+      "https://komoroske.com/": "Alex: ",
+      "https://thecompendium.cards/": "Alex: ",
+      "https://glazgov.com/": "Dimitri: ",
+      "https://whatdimitrilearned.substack.com/": "Dimitri: ",
+      "https://blog.almaer.com/": "Dion: ",
+      "https://twitter.com/dalmaer/": "Dion: "
+    }
   }
 }
