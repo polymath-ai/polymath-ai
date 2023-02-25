@@ -88,12 +88,14 @@ export default function ClientLocal(): JSX.Element {
 
   const funQueries = polymathHostConfig?.info?.fun_queries;
   const randomFunQuery = () => {
-    let validFunQueries = funQueries.filter((query) => query !== queryValue);
+    if (funQueries) {
+      let validFunQueries = funQueries.filter((query) => query !== queryValue);
 
-    const randomFunQuery =
-      validFunQueries[Math.floor(Math.random() * validFunQueries.length)];
+      const randomFunQuery =
+        validFunQueries[Math.floor(Math.random() * validFunQueries.length)];
 
-    setQueryValue(randomFunQuery);
+      setQueryValue(randomFunQuery);
+    }
   };
 
   useEffect(() => {

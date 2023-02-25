@@ -16,17 +16,10 @@ export default function About() {
 
         <ul role="list" className="divide-y divide-gray-200">
           <li className="py-2">
-            <Link to="/client/local">
-              Client that ask this endpoint for Polymath Results
-            </Link>
+            <Link to="/">Client for full completions</Link>
           </li>
           <li className="py-2">
-            <Link to="/client/single">
-              Single Client asking for completions
-            </Link>
-          </li>
-          <li className="py-2">
-            <Link to="/client/multi">Multi Client asking for completions</Link>
+            <Link to="/local">Client for Polymath Results</Link>
           </li>
         </ul>
       </div>
