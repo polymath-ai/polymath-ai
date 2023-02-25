@@ -1,0 +1,49 @@
+{
+  "endpoint": "https://generators.polymath.chat",
+
+  "default_private_access_tag": "unpublished",
+
+  "default_api_key": "<Your OpenAI API Key>",
+
+  "client_options": {
+    "omit": "embedding",
+    "debug": true
+  },
+
+  "server_options": [
+    {
+      "url": "https://polymath.almaer.com/",
+      "name": "Dion's Polymath"
+    },
+    {
+      "url": "https://polymath.glazkov.com/",
+      "name": "Dimitri's Polymath"
+    },
+    {
+      "url": "https://polymath.komoroske.com/",
+      "name": "Alex's Polymath"
+    }
+  ],
+
+  "completions_options": {
+    "model": "text-davinci-003",
+    "prompt_template": "Answer the question as truthfully as possible using the provided context, and if don't have the answer, say \"I don't know\" and suggest looking for this information elsewhere.\n\nContext:\n{context} \n\nQuestion:\n{query}\n\nAnswer:",
+    "max_tokens": 256,
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "logprobs": null,
+    "debug": true
+  },
+
+  "info": {
+    "headername": "Generators",
+    "placeholder": "What do you want to learn from the Bits?",
+    "fun_queries": [
+      "What does gardening have to do with strategy?",
+      "What do you think of the Web platform?",
+      "How do Dion and Alex think differently about strategy?"
+    ]
+  }
+}

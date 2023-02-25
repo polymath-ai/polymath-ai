@@ -1,6 +1,6 @@
 // TODO: don't just return some JSON, but have a wrapper using the JSON store that returns DEFAULTS etc
 
-import polymathHostConfigJson from "~/host.SECRET.json";
+import polymathHostConfigJson from "~/config/host.SECRET.json";
 
 const polymathHostConfig: PolymathHostConfig = polymathHostConfigJson as PolymathHostConfig;
 

@@ -1,0 +1,34 @@
+{
+  "endpoint": "https://local.polymath.chat",
+
+  "default_private_access_tag": "unpublished",
+
+  "default_api_key": "<Your OpenAI API Key",
+
+  "client_options": {
+    "libraryFiles": ["./libraries/knowledge-string.json"],
+    "omit": "embedding",
+    "debug": true
+  },
+
+  "completions_options": {
+    "model": "text-davinci-003",
+    "prompt_template": "Answer the question as truthfully as possible using the provided context, and if don't have the answer, say \"I don't know\" and suggest looking for this information elsewhere.\n\nContext:\n{context} \n\nQuestion:\n{query}\n\nAnswer:",
+    "max_tokens": 256,
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "logprobs": null,
+    "debug": true
+  },
+
+  "info": {
+    "headername": "String",
+    "placeholder": "What do you want to learn about string?",
+    "fun_queries": [
+      "How long is a piece of string?",
+      "What is the size of some string?"
+    ]
+  }
+}

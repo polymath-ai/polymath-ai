@@ -1,0 +1,45 @@
+{
+  "endpoint": "https://polymath.almaer.com",
+
+  "default_private_access_tag": "unpublished",
+
+  "default_api_key": "<Your OpenAI API Key>",
+
+  "client_options": {
+    "pinecone": {
+      "apiKey": "<Your Pinecone Key>",
+      "baseUrl": "https://$host.svc.us-west1-gcp.pinecone.io",
+      "namespace": "dion",
+      "topK": 11
+    },
+    "omit": "embedding",
+    "debug": true
+  },
+
+  "completions_options": {
+    "model": "text-davinci-003",
+    "prompt_template": "Answer the question as truthfully as possible using the provided context, and if don't have the answer, say \"I don't know\" and suggest looking for this information elsewhere.\n\nContext:\n{context} \n\nQuestion:\n{query}\n\nAnswer:",
+    "max_tokens": 256,
+    "temperature": 0,
+    "top_p": 1,
+    "n": 1,
+    "stream": false,
+    "logprobs": null,
+    "debug": true
+  },
+
+  "info": {
+    "headername": "Dion's",
+    "placeholder": "What do you want to learn?",
+    "fun_queries": [
+      "What is the best side effect of using an AI assistant?",
+      "Tell me a story about OrderedJSON",
+      "What is an Ajaxian?",
+      "What happened to webOS?",
+      "What is progressive about the Web?",
+      "What is the difference between a developer advocate and an evangelist?",
+      "Who is that Ben guy?",
+      "What are Shopify developers like?"
+    ]
+  }
+}
