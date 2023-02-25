@@ -219,7 +219,9 @@ test("Polymath gets pinecone results", async (t) => {
 
     let r = await client.ask("How long is a piece of string?");
 
-    if (r.context()) {
+    // console.log("PINECONE RESULTS: ", JSON.stringify(r));
+
+    if (r.context() && r.bits()[0].info.url) {
       t.pass();
     }
   } catch (e) {

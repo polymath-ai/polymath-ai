@@ -161,7 +161,7 @@ class Polymath {
       let ps = new PineconeServer(this.pinecone);
       let results = await ps.ask(queryEmbedding, otherOptions);
 
-      this.debug("Pinecone Results: " + results);
+      this.debug("Pinecone Results: " + JSON.stringify(results, 2));
 
       if (results) {
         bits = bits.concat(results);
@@ -432,7 +432,30 @@ class PineconeServer {
 
     // console.log("Pinecone Results: ", result);
 
-    return result?.matches;
+    return result?.matches.map((pineconeResult) => {
+      return this.makeBit(pineconeResult);
+    });
+  }
+
+  makeBit(pineconeResult) {
+    let bit = {
+      id: pineconeResult.id,
+      info: { url: pineconeResult.metadata?.url },
+    };
+
+    if (pineconeResult.metadata?.text) bit.text = pineconeResult.metadata.text;
+    if (pineconeResult.metadata?.token_count)
+      bit.token_count = pineconeResult.metadata?.token_count;
+    if (pineconeResult.metadata?.access_tag)
+      bit.access_tag = pineconeResult.metadata?.access_tag;
+    if (pineconeResult.metadata?.image_url)
+      bit.info.image_url = pineconeResult.metadata.image_url;
+    if (pineconeResult.metadata?.title)
+      bit.info.title = pineconeResult.metadata.title;
+    if (pineconeResult.metadata?.description)
+      bit.info.description = pineconeResult.metadata.description;
+
+    return bit;
   }
 }
 
