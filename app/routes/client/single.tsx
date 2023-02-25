@@ -152,8 +152,6 @@ export default function ClientSingle(): JSX.Element {
 
   return (
     <main className="p-4">
-      <h3 className="text-l italic p-2">Single Endpoint Completion Client</h3>
-
       <fetcher.Form method="post" action="/endpoint/complete" ref={formRef}>
         <input type="hidden" name="omit" value="embedding" />
         <div>
