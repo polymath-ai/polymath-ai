@@ -37,13 +37,25 @@ export async function action({ request }: ActionArgs) {
   }
   let client = new Polymath(clientOptions);
 
+  if (!client.valid()) {
+    client.servers = [];
+    if (polymathHostConfig.server_options) {
+      polymathHostConfig.server_options.forEach((server) => {
+        if (server.default) client.servers.push(server.url);
+      });
+      if (client.servers.length < 1) {
+        // dire, use the first one
+        client.servers.push(polymathHostConfig.server_options[0].url);
+      }
+    }
+  }
+
   // results will contain:
   // {
   //     bits: polymathResults.bits(),
   //     infos: polymathResults.infoSortedBySimilarity(),
   //     completion: response.data.choices[0].text.trim(),
   // }
-
   let results = await client.completion(query, undefined, otherOptions);
 
   return json(results);

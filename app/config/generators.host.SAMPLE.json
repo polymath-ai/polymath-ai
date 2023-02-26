@@ -14,7 +14,8 @@
   "server_options": [
     {
       "url": "https://polymath.almaer.com/",
-      "name": "Dion's Polymath"
+      "name": "Dion's Polymath",
+      "default": true
     },
     {
       "url": "https://polymath.glazkov.com/",

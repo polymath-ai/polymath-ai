@@ -51,10 +51,12 @@ Your file should have some of:
 
   "// These server options will show up as check boxes for someone to select/de-select",
   "// If you want to always search these, you would just put the urls in client_options => servers array",
+  "// Set a default on at least one of the options for the case that nothing is sent through!",
   "server_options": [
     {
       "url": "https://polymath.almaer.com/",
-      "name": "Dion's Polymath"
+      "name": "Dion's Polymath",
+      "default": true
     },
     {
       "url": "https://polymath.glazkov.com/",

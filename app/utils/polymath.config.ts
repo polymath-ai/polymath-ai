@@ -5,6 +5,7 @@ import polymathHostConfigJson from "~/config/host.SECRET.json";
 const polymathHostConfig: PolymathHostConfig = polymathHostConfigJson as PolymathHostConfig;
 
 type ServerOption = {
+    default?: boolean;
     url: string;
     name: string;
   }
