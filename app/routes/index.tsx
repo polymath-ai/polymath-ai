@@ -74,7 +74,8 @@ function EndpointPicker(props: { checked: any }) {
       <ul className="mt-2">
         {polymathHostConfig.server_options.map((server, index) => {
           let serverId = "server" + index;
-          let isChecked = props.checked.includes(server.url);
+          let isChecked =
+            props.checked.length < 1 || props.checked.includes(server.url);
           return (
             <li className="py-1 ml-3" key={index}>
               <input
