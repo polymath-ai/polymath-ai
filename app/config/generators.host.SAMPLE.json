@@ -6,7 +6,7 @@
   "default_api_key": "<Your OpenAI API Key>",
 
   "client_options": {
-    "libraryFiles": ["./libraries/knowledge-string.json"],
+    "libraryFiles": ["./libraries/knowledge-generators.json"],
     "omit": "embedding",
     "debug": true
   },
@@ -49,9 +49,11 @@
     "source_prefixes": {
       "https://komoroske.com/": "Alex: ",
       "https://thecompendium.cards/": "Alex: ",
+      "https://medium.com/@komorama/": "Alex: ",
       "https://glazgov.com/": "Dimitri: ",
       "https://whatdimitrilearned.substack.com/": "Dimitri: ",
       "https://blog.almaer.com/": "Dion: ",
+      "https://medium.com/@dalmaer": "Dion: ",
       "https://twitter.com/dalmaer/": "Dion: "
     }
   }

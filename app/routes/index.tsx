@@ -13,12 +13,17 @@ export const loader = async ({ request }: LoaderArgs) => {
   // if there is a query param, load it up and return
   const url = new URL(request.url);
   const queryParam = url.searchParams.get("query");
+  const serverParams = url.searchParams.getAll("server");
+
   let endpointResults = {};
 
   if (queryParam) {
     let formdata = new FormData();
     formdata.append("query", queryParam);
     formdata.append("omit", "embedding");
+    serverParams.forEach((server) => {
+      formdata.append("server", server);
+    });
     let results = await fetch(
       new URL(request.url).origin + "/endpoint/complete",
       {
@@ -32,7 +37,21 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json(endpointResults);
 };
 
-function EndpointPicker() {
+// function areAllCheckboxesDisabled(formEl: HTMLFormElement | null): boolean {
+//   if (formEl === null) {
+//     return false;
+//   }
+//   const checkboxes = formEl.querySelectorAll('input[name="server"]');
+//   console.log("Boxes: ", checkboxes);
+//   for (let i = 0; i < checkboxes?.length; i++) {
+//     if ((checkboxes[i] as HTMLInputElement).checked) {
+//       return false; // if any checkbox is checked, return false
+//     }
+//   }
+//   return true; // if no checkboxes are checked, return true
+// }
+
+function EndpointPicker(props: { checked: any }) {
   if (!polymathHostConfig.server_options) {
     return null;
   }
@@ -55,6 +74,7 @@ function EndpointPicker() {
       <ul className="mt-2">
         {polymathHostConfig.server_options.map((server, index) => {
           let serverId = "server" + index;
+          let isChecked = props.checked.includes(server.url);
           return (
             <li className="py-1 ml-3" key={index}>
               <input
@@ -63,7 +83,7 @@ function EndpointPicker() {
                 type="checkbox"
                 className="m-2"
                 value={server.url}
-                defaultChecked={true}
+                defaultChecked={isChecked}
               />
               <label
                 htmlFor={serverId}
@@ -159,6 +179,7 @@ export default function ClientSingle(): JSX.Element {
 
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get("query");
+  const serverParams = searchParams.getAll("server");
 
   const [queryValue, setQueryValue] = useState(queryParam || "");
 
@@ -174,14 +195,25 @@ export default function ClientSingle(): JSX.Element {
     }
   };
 
+  let canAsk = queryValue?.trim().length < 1;
+
   useEffect(() => {
     if (
       fetcher.type === "done" &&
       fetcher.data?.bits &&
       queryParam != queryValue
     ) {
-      // console.log("setSearchParams:", queryValue);
-      setSearchParams({ query: queryValue });
+      //   console.log("setSearchParams:", queryValue);
+      let newSearchParams = [["query", queryValue]];
+
+      // add any checked <input type="checkbox" name="server" value="..." />
+      formRef.current?.querySelectorAll("input[name=server]").forEach((el) => {
+        if ((el as HTMLInputElement).checked) {
+          newSearchParams.push(["server", (el as HTMLInputElement).value]);
+        }
+      });
+
+      setSearchParams(new URLSearchParams(newSearchParams));
     }
   }, [fetcher]);
 
@@ -239,14 +271,14 @@ export default function ClientSingle(): JSX.Element {
             </div>
           </div>
 
-          <EndpointPicker />
+          <EndpointPicker checked={serverParams} />
 
           <div className="py-4">
             <button
               id="ask"
               type="submit"
               className="btn-primary disabled:opacity-50"
-              disabled={queryValue?.trim().length < 1}
+              disabled={canAsk}
             >
               Ask Me
             </button>
