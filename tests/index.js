@@ -32,6 +32,36 @@ test("Polymath errors without an OpenAI API Key", (t) => {
   }
 });
 
+test("Polymath tells you when it's invalid", (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: "sk-fake-api-key",
+    });
+
+    if (!client.valid()) {
+      t.pass();
+    }
+  } catch (e) {
+    t.fail();
+  }
+});
+
+test("Polymath tells you when it's invalid, allowing you to fix it later", (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: "sk-fake-api-key",
+    });
+
+    client.servers = ["https://polymath.almaer.com/"];
+
+    if (client.valid()) {
+      t.pass();
+    }
+  } catch (e) {
+    t.fail();
+  }
+});
+
 test("Polymath can get embeddings", async (t) => {
   let client = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,

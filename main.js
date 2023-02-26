@@ -93,12 +93,6 @@ class Polymath {
     // A Pinecone config
     this.pinecone = options.pinecone;
 
-    if (!this.libraryBits && !options.servers && !options.pinecone) {
-      throw new Error(
-        "Polymath requires at least one library or polymath server or pinecone server"
-      );
-    }
-
     // The prompt template. {context} and {query} will be replaced
     // The default is the classic from: https://github.com/openai/openai-cookbook/blob/main/examples/Question_answering_using_embeddings.ipynb
     this.promptTemplate =
@@ -109,6 +103,11 @@ class Polymath {
     this.debug = options.debug
       ? (output) => console.log("DEBUG: " + output)
       : () => {};
+  }
+
+  // Returns true if the Polymath is configured with at least one source
+  valid() {
+    return this.libraryBits || this.servers || this.pinecone;
   }
 
   // Load up all of the library bits from the given library JSON files
@@ -136,6 +135,12 @@ class Polymath {
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
   async ask(query, otherOptions) {
+    if (!this.valid()) {
+      throw new Error(
+        "Polymath requires at least one library or polymath server or pinecone server"
+      );
+    }
+
     let queryEmbedding = await this.generateEmbedding(query);
 
     // For each server and/or local library, get the results and merge it all together!
@@ -148,7 +153,7 @@ class Polymath {
         let ps = new PolymathEndpoint(server);
         let results = await ps.ask(queryEmbedding, otherOptions);
 
-        this.debug("Server Results: " + results);
+        this.debug("Server Results: " + JSON.stringify(results));
 
         if (results.bits) {
           bits = bits.concat(results.bits);
