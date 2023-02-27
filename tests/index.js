@@ -82,7 +82,40 @@ test("Polymath gets results", async (t) => {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
-      debug: true,
+    });
+
+    let r = await client.ask("How long is a piece of string?");
+
+    if (r.context()) {
+      t.pass();
+    }
+  } catch (e) {
+    t.fail();
+  }
+});
+
+test("Polymath gets results with glob library files", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      libraryFiles: ["./libraries/*.json"],
+    });
+
+    let r = await client.ask("How long is a piece of string?");
+
+    if (r.context()) {
+      t.pass();
+    }
+  } catch (e) {
+    t.fail();
+  }
+});
+
+test("Polymath gets results with directory", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      libraryFiles: ["./libraries"],
     });
 
     let r = await client.ask("How long is a piece of string?");
@@ -128,6 +161,7 @@ test("Polymath gets local completions", async (t) => {
       t.pass();
     }
   } catch (e) {
+    console.log("LOCAL ERROR:", e);
     t.fail();
   }
 });

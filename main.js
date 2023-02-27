@@ -3,6 +3,7 @@ import { encode } from "gpt-3-encoder";
 import { PineconeClient } from "pinecone-client";
 import * as dotenv from "dotenv";
 import fs from "fs";
+import { globbySync } from "globby";
 
 // Initialize .env variables
 dotenv.config();
@@ -83,9 +84,7 @@ class Polymath {
     );
 
     // An array of JSON library filenames
-    if (Array.isArray(options.libraryFiles)) {
-      this.libraryBits = this.loadLibraryBits(options.libraryFiles);
-    }
+    this.libraries = options.libraryFiles;
 
     // An array of Polymath server endpoints
     this.servers = options.servers;
@@ -107,30 +106,7 @@ class Polymath {
 
   // Returns true if the Polymath is configured with at least one source
   valid() {
-    return this.libraryBits || this.servers || this.pinecone;
-  }
-
-  // Load up all of the library bits from the given library JSON files
-  loadLibraryBits(libraryFiles) {
-    let libraryBits = [];
-    for (const filename of libraryFiles) {
-      try {
-        const data = fs.readFileSync(filename, "utf8");
-        const json = JSON.parse(data);
-        const bits = json.bits.map((bit) => {
-          return {
-            ...bit,
-            embedding: decodeEmbedding(bit.embedding),
-          };
-        });
-        libraryBits = [...libraryBits, ...bits];
-      } catch (e) {
-        console.error(
-          `Error reading or parsing library file "${filename}": ${e}`
-        );
-      }
-    }
-    return libraryBits;
+    return this.libraries || this.servers || this.pinecone;
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
@@ -174,15 +150,18 @@ class Polymath {
     }
 
     // Now, look for local bits
-    if (Array.isArray(this.libraryBits)) {
-      this.debug(
-        "Looking to match with the local library that contains " +
-          this.libraryBits.length +
-          " bits."
-      );
-      bits.push(...this.similarBits(queryEmbedding));
+    if (Array.isArray(this.libraries)) {
+      let ls = new PolymathLocal(this.libraries);
+      let results = ls.ask(queryEmbedding);
+
+      this.debug("Local Results: " + JSON.stringify(results, 2));
+
+      if (results) {
+        bits.push(...results);
+      }
     }
 
+    // Finally, clean up the results and return them!
     let pr = new PolymathResults(bits);
     pr.sortBitsBySimilarity();
     if (otherOptions?.omit) pr.omit(otherOptions.omit);
@@ -269,21 +248,6 @@ class Polymath {
   // given the query, add the prompt template and return the encoded total
   getPromptTokenCount(query) {
     return encode(query + this.promptTemplate).length;
-  }
-
-  // Given an embedding, find the bits with the most similar embeddings
-  similarBits(embedding) {
-    return (
-      this.libraryBits
-        .map((bit) => {
-          return {
-            ...bit,
-            similarity: cosineSimilarity(embedding, bit.embedding),
-          };
-        })
-        // sort by similarity descending
-        .sort((a, b) => b.similarity - a.similarity)
-    );
   }
 }
 
@@ -461,6 +425,84 @@ class PineconeServer {
       bit.info.description = pineconeResult.metadata.description;
 
     return bit;
+  }
+}
+
+//
+// Query a local library of bits
+//
+class PolymathLocal {
+  constructor(libraries) {
+    let expandedLibraries = this.expandLibraries(libraries);
+    this._libraryBits = this.loadLibraryBits(expandedLibraries);
+
+    // this.expandLibraries(libraries).then((expandedLibraries) => {
+    //   this._libraryBits = this.loadLibraryBits(expandedLibraries);
+    //   console.log("EX: ", expandedLibraries);
+    // });
+  }
+
+  // Expand any directories or globs in the list of libraries
+  // E.g. if you pass in ["./mybits/*.json", "./mybits2"], this will return
+  // ["./mybits/1.json", "./mybits/2.json", "./mybits2/1.json", "./mybits2/2.json"]
+  expandLibraries(libraries) {
+    let expandedLibraries = [];
+    for (const filepattern of libraries) {
+      const files = globbySync([filepattern, "!*.SECRET.*"], {
+        expandDirectories: {
+          extensions: ["json"],
+        },
+      });
+      expandedLibraries.push(...files);
+
+      // console.log("In: ", libraries);
+      // console.log("Out: ", expandedLibraries);
+
+      return expandedLibraries;
+    }
+  }
+
+  // Load up all of the library bits from the given library JSON files
+  loadLibraryBits(libraries) {
+    let libraryBits = [];
+    for (const filename of libraries) {
+      try {
+        const data = fs.readFileSync(filename, "utf8");
+        const json = JSON.parse(data);
+        const bits = json.bits.map((bit) => {
+          return {
+            ...bit,
+            embedding: decodeEmbedding(bit.embedding),
+          };
+        });
+        libraryBits.push(...bits);
+        // libraryBits = [...libraryBits, ...bits];
+      } catch (e) {
+        console.error(
+          `Error reading or parsing library file "${filename}": ${e}`
+        );
+      }
+    }
+    return libraryBits;
+  }
+
+  // Given an embedding, find the bits with the most similar embeddings
+  similarBits(embedding) {
+    return (
+      this._libraryBits
+        .map((bit) => {
+          return {
+            ...bit,
+            similarity: cosineSimilarity(embedding, bit.embedding),
+          };
+        })
+        // sort by similarity descending
+        .sort((a, b) => b.similarity - a.similarity)
+    );
+  }
+
+  ask(queryEmbedding) {
+    return this.similarBits(queryEmbedding);
   }
 }
 
