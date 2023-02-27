@@ -9,3 +9,40 @@ Because of this inversion, node modules aren't in the root directory, but are on
 The static files are in `public`, which is the root of the static site.
 
 In this particular setup, there is one function that handles all requests, called `api` (see `functions/api.js`).
+
+## To play around with this project
+
+1. Create a new project in the Firebase console.
+
+2. Install the Firebase CLI:
+
+```bash
+npm install -g firebase-tools
+```
+
+3. Login to the Firebase CLI:
+
+```bash
+firebase login
+```
+
+4. Initialize the project:
+
+```bash
+firebase use --add
+```
+
+5. Install the dependencies:
+
+```bash
+cd functions && npm install
+```
+
+6. Run the project:
+If you'd like you can stay in the `functions` dir when running this command.
+
+```bash
+firebase serve
+```
+
+To deploy, use `firebase deploy`.
