@@ -59,7 +59,10 @@ When you setup a polymath object you have to pass in some options.
 
 You _have_ to pass in an Open AI API key, and then you need to tell it where you want to ask for information.
 
-This can be locally via library files such as:
+This can be locally via library files. Place an array of files and/or file patterns that point to
+individual files, file globs (e.g. `./libraries/*.json`), or directories (.json files will be loaded).
+
+For example, with a specific file:
 
 ```js
 let client = new Polymath({
