@@ -1,8 +1,28 @@
 <!DOCTYPE html>
+<input type="text" value="What does it mean to garden platforms?">
+<button>Ask Alex</button>
+<pre style="white-space: break-spaces"></pre>
 <script type="module">
 
-  const response = await(await fetch('/api')).json();
-  const text = response.error ? JSON.stringify(response.error) : response.completion;    
-  document.body.append(text);
+  const button = document.querySelector('button');
+  const input = document.querySelector('input');
+  const output = document.querySelector('pre');
+
+  button.addEventListener('click', async () => {
+    button.disabled = true;
+    const response = await (await fetch('/api', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        query: input.value
+      })
+    })).json();
+    const text = response.error ? JSON.stringify(response.error, null, 4) : response.completion;
+    output.append(text);
+    button.disabled = false;
+  });
+
 
 </script>
