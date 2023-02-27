@@ -2,6 +2,7 @@
 <script type="module">
 
   const response = await(await fetch('/api')).json();
-  console.log(response);
+  const text = response.error ? JSON.stringify(response.error) : response.completion;    
+  document.body.append(text);
 
 </script>
