@@ -219,7 +219,6 @@ test("Polymath gets one result with embedding omited locally", async (t) => {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
-      debug: true,
     });
 
     let r = await client.ask("How long is a piece of string?", {

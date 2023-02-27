@@ -156,7 +156,7 @@ class Polymath {
         this.debug("Server Results: " + JSON.stringify(results));
 
         if (results.bits) {
-          bits = bits.concat(results.bits);
+          bits.push(...results.bits);
         }
       }
     }
@@ -169,7 +169,7 @@ class Polymath {
       this.debug("Pinecone Results: " + JSON.stringify(results, 2));
 
       if (results) {
-        bits = bits.concat(results);
+        bits.push(...results);
       }
     }
 
@@ -180,7 +180,7 @@ class Polymath {
           this.libraryBits.length +
           " bits."
       );
-      bits = bits.concat(this.similarBits(queryEmbedding));
+      bits.push(...this.similarBits(queryEmbedding));
     }
 
     let pr = new PolymathResults(bits);
@@ -328,7 +328,7 @@ class PolymathResults {
 
   // Add the new bits, resort, and re-max
   mergeBits(bits) {
-    this._bits = this._bits.concat(bits);
+    this._bits.push(...bits);
   }
 
   omit(omitString) {
