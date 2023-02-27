@@ -125,12 +125,16 @@ class Polymath {
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
       this.debug("Asking servers: " + this.servers.join("\n"));
-      for (let server of this.servers) {
-        let ps = new PolymathEndpoint(server);
-        let results = await ps.ask(queryEmbedding, otherOptions);
 
+      const promises = this.servers.map((server) => {
+        const ps = new PolymathEndpoint(server);
+        return ps.ask(queryEmbedding, otherOptions);
+      });
+
+      const resultsArray = await Promise.all(promises);
+
+      for (let results of resultsArray) {
         this.debug("Server Results: " + JSON.stringify(results));
-
         if (results.bits) {
           bits.push(...results.bits);
         }
@@ -149,7 +153,7 @@ class Polymath {
       }
     }
 
-    // Now, look for local bits
+    // Third, look for local bits
     if (Array.isArray(this.libraries)) {
       let ls = new PolymathLocal(this.libraries);
       let results = ls.ask(queryEmbedding);
