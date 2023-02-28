@@ -7,7 +7,7 @@ A Polymath CLI for interacting with all things Polymath.
 Download and install the `polymath` cli globally:
 
 ```shell
-npm -g @polymath-ai/cli
+npm install -g @polymath-ai/cli
 ```
 
 ## Commands
@@ -27,6 +27,8 @@ We have certain standard arguments that various command reuse:
 - `--input`: a type of input (e.g. medium)
 - `--output`: a type of output (e.g. pinecone)
 
+When arguments aren't given, we will prompt the user for them.
+
 Commands that we do ✅, and will ❌, support:
 
 ### Set the config to be used ❌
@@ -42,6 +44,8 @@ polymath set config path/to/configfile
 ```shell
 polymath query "how long is a piece of string?"
 ```
+
+If no query is given, we will ask for one.
 
 It takes arguments:
 
