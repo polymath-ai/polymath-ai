@@ -15,9 +15,9 @@ npm install -g @polymath-ai/cli
 Commands will look for options in the following order of precedence:
 
 - A given command line argument
-- The config that is setup via `polymath set config` or --config `path/to/config`
+- The config that is setup via `polymath set config` or --config `path/to/config` (If there isn't a config at that path, will also look for a config file at `~/.polymath/config/$VALUE.json`. E.g. `polymath -C polaris ...` will use `~/.polymath/config/polaris.json` if there)
 - Environment variables: e.g. `OPENAI_API_KEY`
-- `~/.polymath/config`: default config location
+- `~/.polymath/config/default.json`: default config location
 
 We have certain standard arguments that various command reuse:
 
