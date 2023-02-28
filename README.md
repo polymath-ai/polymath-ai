@@ -39,10 +39,10 @@ A default config to load if `--config` isn't passed in.
 polymath set config path/to/configfile
 ```
 
-### Query a polymath ❌
+### Ask a polymath for context ❌
 
 ```shell
-polymath query "how long is a piece of string?"
+polymath ask "how long is a piece of string?"
 ```
 
 If no query is given, we will ask for one.
@@ -53,6 +53,14 @@ It takes arguments:
 - `--server https://glazkov.com`: pass as many of these as you want
 - `--libraries path/to/libraryOrDirectory`: pass in more of these too
 - `--pinecone --pinecone-api-key="The Key" --pinecone-base-url="The URL" --pinecone-namespace=namespace`: use pinecone with all of it's sub settings. If not found, will also look in env / .env (e.g. PINECONE_API_KEY, PINECONE_BASE_URL, PINECONE_NAMESPACE)
+
+### Ask a polymath for a full completion ❌
+
+```shell
+polymath complete "how long is a piece of string?"
+```
+
+It takes the same arguments as `ask` but also uses OpenAI config options and other arguments to overrule them (e.g. `max_tokens`, `stop`, etc)
 
 ### Import content ❌
 
