@@ -231,11 +231,12 @@ class Polymath {
             role: "system",
             content: completionOptions.system,
           });
-          messages.push({
-            role: "user",
-            content: prompt,
-          });
         }
+        messages.push({
+          role: "user",
+          content: prompt,
+        });
+
         response = await this.openai.createChatCompletion({
           model: model,
           messages: messages,
