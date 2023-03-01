@@ -16,6 +16,7 @@ const DEFAULT_MODEL_TOKEN_COUNT = 4000; // max tokens for text-davinci-003
 const MAX_TOKENS_FOR_MODEL = {
   "text-davinci-003": 4000,
   "text-embedding-ada-002": 8191,
+  "gpt-3.5-turbo": 4096,
 };
 
 function encodeEmbedding(data) {
