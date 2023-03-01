@@ -200,7 +200,7 @@ function normalizeClientOptions(rawConfig) {
 
   clientOptions.libraryFiles =
     programOptions.libraries ||
-    rawConfig.client_options.libraryFiles ||
+    rawConfig.client_options?.libraryFiles ||
     undefined;
 
   if (programOptions.pinecone) {
@@ -209,14 +209,14 @@ function normalizeClientOptions(rawConfig) {
       baseUrl: programOptions.pineconeBaseUrl,
       namespace: programOptions.pineconeNamespace,
     };
-  } else if (rawConfig.client_options.pinecone) {
+  } else if (rawConfig.client_options?.pinecone) {
     clientOptions.pinecone = rawConfig.client_options.pinecone;
   }
 
-  if (rawConfig.client_options.omit)
+  if (rawConfig.client_options?.omit)
     clientOptions.omit = rawConfig.client_options.omit;
 
-  if (rawConfig.client_options.debug)
+  if (rawConfig.client_options?.debug)
     clientOptions.debug = rawConfig.client_options.debug;
 
   return clientOptions;
