@@ -109,11 +109,7 @@ async function askOrComplete(question, options, command) {
       let sources = results.infos
         ?.map((info) => {
           return chalk.dim(
-            "Source: " +
-              (info.title || info.description) +
-              "\n(" +
-              info.url +
-              ")"
+            "Source: " + (info.title || info.description) + "\n" + info.url
           );
         })
         .join("\n\n");
