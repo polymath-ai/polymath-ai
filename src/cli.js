@@ -18,7 +18,7 @@ import { Command, Option } from "commander";
 //
 const program = new Command();
 
-// TODO Get the description and version from package.json
+// Get the description and version from our own package.json
 const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"));
 
 program
@@ -78,15 +78,9 @@ program
 
 program.parse();
 
-// console.log("OPTS", program.opts());
-
 //
 // HELPERS
 //
-
-function collect(value, previous) {
-  return previous.concat([value]);
-}
 
 async function askOrComplete(question, options, command) {
   let clientOptions = loadClientOptions(program.opts().config);
@@ -141,6 +135,7 @@ function debug(message) {
   }
 }
 
+// Hunt around the filesystem for a config file
 function loadClientOptions(configOption) {
   let rawConfig;
 
@@ -195,12 +190,7 @@ function loadClientOptions(configOption) {
   return normalizeClientOptions(rawConfig);
 }
 
-// Given a config and cli options, return a normalized options object
-// - `--openai-api-key="the openapi key"`: defaults to `$OPENAI_API_KEY` in env / .env
-// - `--server https://glazkov.com`: pass as many of these as you want
-// - `--libraries path/to/libraryOrDirectory`: pass in more of these too
-// - `--pinecone --pinecone-api-key="The Key" --pinecone-base-url="The URL" --pinecone-namespace=namespace`: use pinecone with all of it's sub settings. If not found, will also look in env / .env (e.g. PINECONE_API_KEY, PINECONE_BASE_URL, PINECONE_NAMESPACE)
-
+// Munge together a clientOptions object from the config file and the command line
 function normalizeClientOptions(rawConfig) {
   // convert a main host config into the bits needed for the Polymath
   let clientOptions = {};
@@ -236,6 +226,7 @@ function normalizeClientOptions(rawConfig) {
   return clientOptions;
 }
 
+// Ask the dear listener for a question as they didn't provide one to the CLI
 async function promptForQuestion() {
   let question = await inquirer.prompt({
     type: "input",
@@ -245,7 +236,12 @@ async function promptForQuestion() {
   return question.result;
 }
 
-// TODO: wrap the main in a function and allow this so folks could load it as a module
-export function cli(args) {
-  console.log(args);
+// Allowing multiple values for a single option, collecting them in an array
+function collect(value, previous) {
+  return previous.concat([value]);
 }
+
+// TODO: wrap the main in a function and allow this so folks could load it as a module
+// export function cli(args) {
+//   console.log(args);
+// }
