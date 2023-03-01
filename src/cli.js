@@ -9,13 +9,10 @@ import inquirer from "inquirer";
 import { Polymath } from "@polymath-ai/client";
 import { Command, Option } from "commander";
 
-//
-// MAIN
-//
-
-//
-// CONFIGURE OPTIONS
-//
+// Allowing multiple values for a single option, collecting them in an array
+const collect = (value, previous) => {
+  return previous.concat([value]);
+}
 
 class CLI {
   program
@@ -24,15 +21,19 @@ class CLI {
     this.program = new Command();
   }
 
-  initializeOptions() {
+  loadVersionInfo() {
     // Get the description and version from our own package.json
-    const packageJson = JSON.parse(fs.readFileSync("./package.json", "utf8"));
+    return JSON.parse(fs.readFileSync("./package.json", "utf8"));
+  }
+
+  run() {
     const program = this.program;
+    const { version, description } = this.loadVersionInfo();
 
     program
       .name("polymath")
-      .description(packageJson.description)
-      .version(packageJson.version);
+      .description(description)
+      .version(version);
 
     program.option("-d, --debug", "output extra debugging");
     program.option("-c, --config <path>", "config file");
@@ -42,7 +43,7 @@ class CLI {
     program.option(
       "-s, --server <endpoint>",
       "Polymath server endpoint",
-      this.collect.bind(this),
+      collect,
       []
     );
     program.option(
@@ -240,15 +241,9 @@ class CLI {
     return question.result;
   }
 
-  // Allowing multiple values for a single option, collecting them in an array
-  collect(value, previous) {
-    return previous.concat([value]);
-  }
-
 }
 
-const cli = new CLI();
-cli.initializeOptions();
+new CLI().run();
 
 // TODO: wrap the main in a function and allow this so folks could load it as a module
 // export function cli(args) {
