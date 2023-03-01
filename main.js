@@ -222,30 +222,52 @@ class Polymath {
     );
 
     try {
-      const response = await this.openai.createCompletion({
-        model: model,
-        prompt: prompt,
-        temperature: completionOptions?.temperature || 0,
-        max_tokens:
-          completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
-        top_p: completionOptions?.top_p || 1,
-        n: completionOptions?.n || 1,
-        stream: completionOptions?.stream || false,
-        logprobs: completionOptions?.stream || null,
-        echo: completionOptions?.echo || false,
-        stop: completionOptions?.stop || null,
-        presence_penalty: completionOptions?.presence_penalty || 0,
-        frequency_penalty: completionOptions?.frequency_penalty || 0,
-        best_of: completionOptions?.best_of || 1,
-      });
+      let response;
+      let responseText;
+      if (model == "gpt-3.5-turbo") {
+        response = await this.openai.createChatCompletion({
+          model: model,
+          messages: [{ role: "user", content: prompt }],
+          temperature: completionOptions?.temperature || 0,
+          max_tokens:
+            completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
+          top_p: completionOptions?.top_p || 1,
+          n: completionOptions?.n || 1,
+          stream: completionOptions?.stream || false,
+          stop: completionOptions?.stop || null,
+          presence_penalty: completionOptions?.presence_penalty || 0,
+          frequency_penalty: completionOptions?.frequency_penalty || 0,
+        });
+        responseText = response.data.choices[0].message.content;
+      } else {
+        // text-davinci-003
+        response = await this.openai.createCompletion({
+          model: model,
+          prompt: prompt,
+          temperature: completionOptions?.temperature || 0,
+          max_tokens:
+            completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
+          top_p: completionOptions?.top_p || 1,
+          n: completionOptions?.n || 1,
+          stream: completionOptions?.stream || false,
+          logprobs: completionOptions?.stream || null,
+          echo: completionOptions?.echo || false,
+          stop: completionOptions?.stop || null,
+          presence_penalty: completionOptions?.presence_penalty || 0,
+          frequency_penalty: completionOptions?.frequency_penalty || 0,
+          best_of: completionOptions?.best_of || 1,
+        });
+        responseText = response.data.choices[0].text;
+      }
 
       // returning the first option for now
       return {
         bits: polymathResults.bits(),
         infos: polymathResults.infoSortedBySimilarity(),
-        completion: response.data.choices[0].text.trim(),
+        completion: responseText?.trim(),
       };
     } catch (error) {
+      console.log("Error: ", error);
       this.debug(`Completion Error: ${JSON.stringify(error)}`);
       return {
         error: error,
