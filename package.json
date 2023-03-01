@@ -5,8 +5,8 @@
   "main": "src/cli.js",
   "type": "module",
   "bin": {
-    "@polymath-ai/c": "bin/polymath",
-    "polymath": "bin/polymath"
+    "@polymath-ai/cli": "src/cli.js",
+    "polymath": "src/cli.js"
   },
   "publishConfig": {
     "access": "public"

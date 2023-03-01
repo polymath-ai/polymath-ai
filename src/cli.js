@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -37,7 +39,7 @@ program.parse();
 //
 
 async function askOrComplete(question, options, command) {
-  let clientOptions = loadClientOptions(options.config);
+  let clientOptions = loadClientOptions(program.opts().config);
 
   if (!question) {
     question = await promptForQuestion();
@@ -150,5 +152,6 @@ async function promptForQuestion() {
 }
 
 // TODO: wrap the main in a function and allow this so folks could load it as a module
-// export function cli(args) {
-// }
+export function cli(args) {
+  console.log(args);
+}
