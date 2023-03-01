@@ -49,7 +49,7 @@ polymath [-c configfileorname] ask "how long is a piece of string?"
 
 If no query is given, we will ask for one.
 
-It will also takes arguments: ❌
+It will also takes arguments: ✅
 
 - `--openai-api-key="the openapi key"`: defaults to `$OPENAI_API_KEY` in env / .env
 - `--server https://glazkov.com`: pass as many of these as you want
