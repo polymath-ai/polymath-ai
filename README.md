@@ -75,3 +75,9 @@ polymath import --input=medium --input-directory=path/to/export-backup/ --output
 ```shell
 polymath export --input-library=... --output=pinecone --pinecone-api-key="The Key" --pinecone-base-url="The URL" --pinecone-namespace=namespace
 ```
+
+## Development
+
+To hack on the CLI, once you git clone, you will probably want to `npm link` in the root directory and then you will have access to running the `polymath` shell command.
+
+Setup at least a `~/.polymath/config/default.json` and you are off to the races.
