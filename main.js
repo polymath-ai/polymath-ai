@@ -225,9 +225,20 @@ class Polymath {
       let response;
       let responseText;
       if (model == "gpt-3.5-turbo") {
+        let messages = [];
+        if (completionOptions?.system) {
+          messages.push({
+            role: "system",
+            content: completionOptions.system,
+          });
+          messages.push({
+            role: "user",
+            content: prompt,
+          });
+        }
         response = await this.openai.createChatCompletion({
           model: model,
-          messages: [{ role: "user", content: prompt }],
+          messages: messages,
           temperature: completionOptions?.temperature || 0,
           max_tokens:
             completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
