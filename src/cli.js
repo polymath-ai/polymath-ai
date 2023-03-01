@@ -8,6 +8,7 @@ import chalk from "chalk";
 import inquirer from "inquirer";
 import { Polymath } from "@polymath-ai/client";
 import { Command, Option } from "commander";
+import { config } from "process";
 
 // Allowing multiple values for a single option, collecting them in an array
 const collect = (value, previous) => {
@@ -86,7 +87,6 @@ class CLI {
       .action(this.askOrComplete.bind(this));
 
     program.parse();
-
   }
 
   //
@@ -94,9 +94,10 @@ class CLI {
   //
 
   async askOrComplete(question, options, command) {
-    const program = this.program;
+    const configOption = this.program.opts().config;
 
-    let clientOptions = this.loadClientOptions(program.opts().config);
+    const rawConfig = this.loadRawConfig(configOption);
+    let clientOptions = this.normalizeClientOptions(this.program.opts(), rawConfig);
 
     // console.log("CLIENT OPTIONS", clientOptions);
 
@@ -146,17 +147,15 @@ class CLI {
 
 
   // Hunt around the filesystem for a config file
-  loadClientOptions(configOption) {
+  loadRawConfig(configOption) {
     let rawConfig;
-
-    const debug = this.debug.bind(this);
 
     // if there is a configOption:
     if (configOption) {
       // try to load it as a filename
       try {
         const filename = path.resolve(configOption);
-        debug(`Looking for config at: ${filename}`);
+        this.debug(`Looking for config at: ${filename}`);
 
         const config = fs.readFileSync(filename, "utf8");
         rawConfig = JSON.parse(config);
@@ -169,7 +168,7 @@ class CLI {
           "config",
           `${configOption}.json`
         );
-        debug(`Now, looking for config at: ${configPath}`);
+        this.debug(`Now, looking for config at: ${configPath}`);
 
         const config = fs.readFileSync(configPath, "utf8");
         rawConfig = JSON.parse(config);
@@ -184,22 +183,19 @@ class CLI {
         "default.json"
       );
 
-      debug(`Now, looking for a default config at ${configPath}`);
+      this.debug(`Now, looking for a default config at ${configPath}`);
 
       const config = fs.readFileSync(configPath, "utf8");
       rawConfig = JSON.parse(config);
     }
-
-    return this.normalizeClientOptions(rawConfig);
+    
+    return rawConfig;
   }
 
   // Munge together a clientOptions object from the config file and the command line
-  normalizeClientOptions(rawConfig) {
-    const program = this.program;
-
+  normalizeClientOptions(programOptions, rawConfig) {
     // convert a main host config into the bits needed for the Polymath
     let clientOptions = {};
-    let programOptions = program.opts();
 
     clientOptions.apiKey =
       programOptions.openaiApiKey || rawConfig.default_api_key;
