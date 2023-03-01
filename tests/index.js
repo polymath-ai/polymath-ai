@@ -38,7 +38,7 @@ test("Polymath tells you when it's invalid", (t) => {
       apiKey: "sk-fake-api-key",
     });
 
-    if (!client.valid()) {
+    if (!client.validate()) {
       t.pass();
     }
   } catch (e) {
@@ -54,7 +54,7 @@ test("Polymath tells you when it's invalid, allowing you to fix it later", (t) =
 
     client.servers = ["https://polymath.almaer.com/"];
 
-    if (client.valid()) {
+    if (client.validate()) {
       t.pass();
     }
   } catch (e) {
@@ -153,6 +153,27 @@ test("Polymath gets local completions", async (t) => {
     let client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
+    });
+
+    let r = await client.completion("How long is a piece of string?");
+
+    if (r.completion) {
+      t.pass();
+    }
+  } catch (e) {
+    console.log("LOCAL ERROR:", e);
+    t.fail();
+  }
+});
+
+test("Polymath gets local completions with the turbo model", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      libraryFiles: ["./libraries/knowledge-string.json"],
+      completionOptions: {
+        model: "gpt-3.5-turbo",
+      },
     });
 
     let r = await client.completion("How long is a piece of string?");

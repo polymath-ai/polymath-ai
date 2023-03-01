@@ -84,6 +84,12 @@ class Polymath {
       })
     );
 
+    // Reusable default ask options for embeddings
+    this.askOptions = options.askOptions;
+
+    // Reusable default completion options for completions
+    this.completionOptions = options.completionOptions;
+
     // An array of JSON library filenames
     this.libraries = options.libraryFiles;
 
@@ -106,13 +112,13 @@ class Polymath {
   }
 
   // Returns true if the Polymath is configured with at least one source
-  valid() {
+  validate() {
     return this.libraries || this.servers || this.pinecone;
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
-  async ask(query, otherOptions) {
-    if (!this.valid()) {
+  async ask(query, askOptions) {
+    if (!this.validate()) {
       throw new Error(
         "Polymath requires at least one library or polymath server or pinecone server"
       );
@@ -129,7 +135,7 @@ class Polymath {
 
       const promises = this.servers.map((server) => {
         const ps = new PolymathEndpoint(server);
-        return ps.ask(queryEmbedding, otherOptions);
+        return ps.ask(queryEmbedding, askOptions);
       });
 
       const resultsArray = await Promise.all(promises);
@@ -145,7 +151,7 @@ class Polymath {
     // Second, let's ask pinecone for some
     if (this.pinecone) {
       let ps = new PineconeServer(this.pinecone);
-      let results = await ps.ask(queryEmbedding, otherOptions);
+      let results = await ps.ask(queryEmbedding, askOptions);
 
       this.debug("Pinecone Results: " + JSON.stringify(results, 2));
 
@@ -169,9 +175,8 @@ class Polymath {
     // Finally, clean up the results and return them!
     let pr = new PolymathResults(bits);
     pr.sortBitsBySimilarity();
-    if (otherOptions?.omit) pr.omit(otherOptions.omit);
-    if (otherOptions?.count)
-      pr.trim(otherOptions.count, otherOptions?.count_type);
+    if (askOptions?.omit) pr.omit(askOptions.omit);
+    if (askOptions?.count) pr.trim(askOptions.count, askOptions?.count_type);
 
     return pr;
   }
@@ -194,16 +199,20 @@ class Polymath {
   }
 
   // Given a users query, return a completion with polymath results and the answer
-  async completion(query, polymathResults, otherOptions) {
+  async completion(query, polymathResults, askOptions, completionOptions) {
     if (!polymathResults) {
       // get the polymath results here
-      polymathResults = await this.ask(query, otherOptions);
+      polymathResults = await this.ask(query, askOptions);
     }
+
+    completionOptions ||= this.completionOptions;
+
+    let model = completionOptions?.model || "text-davinci-003";
 
     // How much room do we have for the content?
     // 4000 - 1024 - tokens for the prompt with the query without the context
     let contextTokenCount =
-      DEFAULT_MODEL_TOKEN_COUNT -
+      getMaxTokensForModel(model) -
       DEFAULT_MAX_TOKENS_COMPLETION -
       this.getPromptTokenCount(query);
 
@@ -214,20 +223,20 @@ class Polymath {
 
     try {
       const response = await this.openai.createCompletion({
-        model: "text-davinci-003",
+        model: model,
         prompt: prompt,
-        temperature: this.completionOptions?.temperature || 0,
+        temperature: completionOptions?.temperature || 0,
         max_tokens:
-          this.completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
-        top_p: this.completionOptions?.top_p || 1,
-        n: this.completionOptions?.n || 1,
-        stream: this.completionOptions?.stream || false,
-        logprobs: this.completionOptions?.stream || null,
-        echo: this.completionOptions?.echo || false,
-        stop: this.completionOptions?.stop || null,
-        presence_penalty: this.completionOptions?.presence_penalty || 0,
-        frequency_penalty: this.completionOptions?.frequency_penalty || 0,
-        best_of: this.completionOptions?.best_of || 1,
+          completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
+        top_p: completionOptions?.top_p || 1,
+        n: completionOptions?.n || 1,
+        stream: completionOptions?.stream || false,
+        logprobs: completionOptions?.stream || null,
+        echo: completionOptions?.echo || false,
+        stop: completionOptions?.stop || null,
+        presence_penalty: completionOptions?.presence_penalty || 0,
+        frequency_penalty: completionOptions?.frequency_penalty || 0,
+        best_of: completionOptions?.best_of || 1,
       });
 
       // returning the first option for now
@@ -346,34 +355,31 @@ class PolymathEndpoint {
     this._server = server;
   }
 
-  async ask(queryEmbedding, otherOptions) {
+  async ask(queryEmbedding, askOptions) {
     if (!queryEmbedding) {
       throw new Error("You need to ask a question of the Polymath");
     }
 
     // Configure all of the options
     const form = new FormData();
-    form.append("version", otherOptions?.version || "1");
+    form.append("version", askOptions?.version || "1");
     form.append(
       "query_embedding_model",
-      otherOptions?.query_embedding_model || "openai.com:text-embedding-ada-002"
+      askOptions?.query_embedding_model || "openai.com:text-embedding-ada-002"
     );
     form.append("query_embedding", encodeEmbedding(queryEmbedding));
 
-    if (otherOptions?.count) form.append("count", "" + otherOptions?.count);
+    if (askOptions?.count) form.append("count", "" + askOptions?.count);
 
     // TODO: let the consumer know if passing in something that isn't valid (not token nor bit)
-    if (
-      otherOptions?.count_type == "token" ||
-      otherOptions?.count_type == "bit"
-    )
-      form.append("count_type", otherOptions?.count_type);
+    if (askOptions?.count_type == "token" || askOptions?.count_type == "bit")
+      form.append("count_type", askOptions?.count_type);
 
     // TODO: validate that the string is a list of valid items to omit (e.g. "embeddings,similarity")
-    if (otherOptions?.omit) form.append("omit", "" + otherOptions?.omit);
+    if (askOptions?.omit) form.append("omit", "" + askOptions?.omit);
 
-    if (otherOptions?.access_token)
-      form.append("access_token", "" + otherOptions?.access_token);
+    if (askOptions?.access_token)
+      form.append("access_token", "" + askOptions?.access_token);
 
     // Send it all over to the Endpoint
     const url = new URL(this._server);
