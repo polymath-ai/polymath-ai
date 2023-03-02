@@ -1,5 +1,4 @@
-{
-  "name": "@polymath-ai/cli",
+{ "name": "@polymath-ai/cli",
   "version": "0.0.3",
   "description": "A CLI for Polymath",
   "main": "src/cli.js",
@@ -31,7 +30,7 @@
   },
   "homepage": "https://github.com/polymath-ai/cli#readme",
   "dependencies": {
-    "@polymath-ai/client": "^1.0.11",
+    "@polymath-ai/client": "^1.0.12",
     "chalk": "^5.2.0",
     "commander": "^10.0.0",
     "esm": "^3.2.25",
