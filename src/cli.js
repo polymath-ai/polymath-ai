@@ -81,17 +81,27 @@ class CLI {
       .command("complete")
       .description("Ask a Polymath for a completion")
       .argument("[question]", "The question to ask")
-      .option("-m, --completion-model", "the completion model to use")
+      .option("-m, --completion-model <model>", "the completion model to use")
       .option(
-        "--completion-system",
+        "--completion-system <system-message>",
         "add a system prompt for the chat message completion"
       )
-      .option("--completion-temperature", "the completion temperature (0-2)")
-      .option("--completion-max-tokens", "the max tokens for completion")
-      .option("--completion-top-p", "the top_p for completion")
-      .option("--completion-n", "the n for completion")
-      .option("--completion-stream", "the stream for completion")
-      .option("--completion-stop", "the stop for completion")
+      .option(
+        "--completion-temperature <temp>",
+        "the completion temperature (0-2)"
+      )
+      .option(
+        "--completion-max-tokens <max-tokens>",
+        "the max tokens for completion"
+      )
+      .option("--completion-top-p <top-p>", "the top_p for completion")
+      .option("--completion-n <n>", "the n for completion")
+      .option("--completion-stream <stream>", "the stream for completion")
+      .option("--completion-stop <stop>", "the stop for completion")
+      .option(
+        "--completion-prompt-template <prompt>",
+        "a prompt template to rewrite"
+      )
       .alias("completion")
       .action(this.askOrComplete.bind(this));
 
@@ -133,14 +143,13 @@ class CLI {
           options,
           rawConfig
         );
+
         let results = await client.completion(
           question,
           null,
           null,
           completionOptions
         );
-
-        // console.log("RESULTS: ", results);
 
         let sources = results.infos
           ?.map((info) => {
@@ -260,8 +269,6 @@ class CLI {
 
     completionOptions.model =
       commandOptions.completionModel || rawConfig.completions_options?.model;
-    completionOptions.system =
-      commandOptions.completionSystem || rawConfig.completions_options?.system;
     completionOptions.temperature =
       commandOptions.completionTemperature ||
       rawConfig.completions_options?.temperature;
@@ -274,10 +281,26 @@ class CLI {
     completionOptions.stream =
       commandOptions.completionStream || rawConfig.completions_options?.stream;
 
+    if (
+      commandOptions.completionSystem ||
+      rawConfig.completions_options?.system
+    )
+      completionOptions.system =
+        commandOptions.completionSystem ||
+        rawConfig.completions_options?.system;
+
     // if there isn't a stop, we don't want one at all!
     if (commandOptions.completionStop || rawConfig.completions_options?.stop)
       completionOptions.stop =
         commandOptions.completionStop || rawConfig.completions_options?.stop;
+
+    if (
+      commandOptions.completionPromptTemplate ||
+      rawConfig.completions_options?.promp_template
+    )
+      completionOptions.prompt_template =
+        commandOptions.completionPromptTemplate ||
+        rawConfig.completions_options?.promp_template;
 
     return completionOptions;
   }
