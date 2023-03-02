@@ -12,7 +12,7 @@ dotenv.config();
 //  Time for some help
 // --------------------------------------------------------------------------
 const DEFAULT_MAX_TOKENS_COMPLETION = 1024; // tokens reserved for the answer
-const DEFAULT_MODEL_TOKEN_COUNT = 4000; // max tokens for text-davinci-003
+const DEFAULT_MAX_TOKENS_FOR_MODEL = 4000; // max tokens for text-davinci-003
 const MAX_TOKENS_FOR_MODEL = {
   "text-davinci-003": 4000,
   "text-embedding-ada-002": 8191,
@@ -103,6 +103,7 @@ class Polymath {
     // The default is the classic from: https://github.com/openai/openai-cookbook/blob/main/examples/Question_answering_using_embeddings.ipynb
     this.promptTemplate =
       options.promptTemplate ||
+      options.completionOptions?.prompt_template ||
       'Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don\'t know".\n\nContext:{context}\n\nQuestion: {query}\n\nAnswer:';
 
     // `debug; true` was passed in
@@ -323,7 +324,7 @@ class PolymathResults {
   }
 
   // Return as many bits as can fit the number of tokens
-  maxBits(maxTokens = DEFAULT_MODEL_TOKEN_COUNT) {
+  maxBits(maxTokens = DEFAULT_MAX_TOKENS_FOR_MODEL) {
     let totalTokens = 0;
     const includedBits = [];
     for (let i = 0; i < this._bits.length; i++) {
