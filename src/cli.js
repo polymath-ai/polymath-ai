@@ -9,7 +9,9 @@ import inquirer from "inquirer";
 import { Polymath } from "@polymath-ai/client";
 import { Command, Option } from "commander";
 
-import { Options} from "./options.js";
+import { Options } from "./options.js";
+import { actor } from "./action.js";
+import { Ask } from "./actions/ask.js";
 
 // Allowing multiple values for a single option, collecting them in an array
 const collect = (value, previous) => {
@@ -77,7 +79,7 @@ class CLI {
       .command("ask")
       .description("Ask a question to a Polymath")
       .argument("[question]", "The question to ask")
-      .action(this.askOrComplete.bind(this));
+      .action(actor(Ask, program));
 
     program
       .command("complete")
