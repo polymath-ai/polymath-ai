@@ -103,7 +103,7 @@ class Polymath {
     // The default is the classic from: https://github.com/openai/openai-cookbook/blob/main/examples/Question_answering_using_embeddings.ipynb
     this.promptTemplate =
       options.promptTemplate ||
-      'Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don\'t know"\n\nnContext:{context}\n\nQuestion: {query}\n\nAnswer:';
+      'Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don\'t know".\n\nContext:{context}\n\nQuestion: {query}\n\nAnswer:';
 
     // `debug; true` was passed in
     this.debug = options.debug
