@@ -43,7 +43,7 @@ export class Ask extends Action {
         chalk.green("\nThe Polymath answered with:\n\n  ") + chalk.bold(output)
       );
     } catch (e) {
-      error(e);
+      error('Failed to Ask Polymath', e);
     }
   }
 
