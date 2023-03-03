@@ -70,10 +70,9 @@ export class Options extends Base {
     clientOptions.apiKey =
       programOptions.openaiApiKey || rawConfig.default_api_key;
 
-    clientOptions.servers = [].concat(
-      programOptions.server,
-      rawConfig.client_options?.servers
-    );
+    clientOptions.servers = []
+      .concat(programOptions.server, rawConfig.client_options?.servers)
+      .filter((item) => item);
 
     clientOptions.libraryFiles =
       programOptions.libraries ||
