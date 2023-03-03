@@ -23,8 +23,6 @@ export class Complete extends Action {
     try {
       let client = new Polymath(clientOptions);
 
-      let output;
-
       debug("completing...");
       // completion
       let completionOptions = this.completionOptions(options);
@@ -44,7 +42,7 @@ export class Complete extends Action {
         })
         .join("\n\n");
 
-      output = results.completion + "\n\n" + sources;
+      let output = results.completion + "\n\n" + sources;
       log("The Polymath answered with:\n\n", output);
     } catch (e) {
       error("Failed to Ask Polymath", e);
