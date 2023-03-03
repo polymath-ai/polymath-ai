@@ -1,14 +1,14 @@
 import chalk from "chalk";
 
 export class Action {
-  #isDebug;
+  isDebug;
 
   constructor({ debug }) {
-    this.#isDebug = debug;
+    this.isDebug = debug;
   }
 
   debug(message) {
-    if (this.#isDebug) {
+    if (this.isDebug) {
       console.log(chalk.blue(`DEBUG: ${message}`));
     }
   }
