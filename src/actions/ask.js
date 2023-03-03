@@ -15,13 +15,14 @@ export class Ask extends Action {
   async run({ args, options, command }) {
     const question = args[0];
     const configOption = this.opts.config;
+    const { debug, error } = this.say();
 
     const opts = new Options(this.isDebug);
 
     const rawConfig = opts.loadRawConfig(configOption);
     let clientOptions = opts.normalizeClientOptions(this.opts, rawConfig);
 
-    this.debug("Client options", JSON.stringify(clientOptions));
+    debug("Client options", JSON.stringify(clientOptions));
 
     if (!question) {
       question = await this.promptForQuestion();
@@ -34,7 +35,7 @@ export class Ask extends Action {
 
       let output;
 
-      this.debug("asking...");
+      debug("asking...");
       let results = await client.ask(question);
       output = results.context();
 
@@ -42,7 +43,7 @@ export class Ask extends Action {
         chalk.green("\nThe Polymath answered with:\n\n  ") + chalk.bold(output)
       );
     } catch (e) {
-      console.error(`ERROR: ${e}`);
+      error(e);
     }
   }
 

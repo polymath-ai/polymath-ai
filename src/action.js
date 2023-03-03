@@ -1,16 +1,9 @@
-import chalk from "chalk";
+import { Base } from "./base.js";
 
-export class Action {
-  isDebug;
+export class Action extends Base {
 
   constructor({ debug }) {
-    this.isDebug = debug;
-  }
-
-  debug(...args) {
-    if (this.isDebug) {
-      console.log(chalk.blue('DEBUG:', ...args));
-    }
+    super(debug);
   }
 }
 

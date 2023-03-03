@@ -1,31 +1,26 @@
-import chalk from "chalk";
 import fs from "fs";
 import os from "os";
 import path from "path";
 
-export class Options {
-  isDebug;
+import { Base } from "./base.js";
 
+export class Options extends Base {
+ 
   constructor(isDebug) {
-    this.isDebug = isDebug;
-  }
-
-  debug(...args) {
-    if (this.isDebug) {
-      console.log(chalk.blue("DEBUG:", ...args));
-    }
+    super(isDebug);
   }
 
   // Hunt around the filesystem for a config file
   loadRawConfig(configOption) {
     let rawConfig;
+    const { debug, error } = this.say();
 
     // if there is a configOption:
     if (configOption) {
       // try to load it as a filename
       try {
         const filename = path.resolve(configOption);
-        this.debug(`Looking for config at: ${filename}`);
+        debug(`Looking for config at: ${filename}`);
 
         const config = fs.readFileSync(filename, "utf8");
         rawConfig = JSON.parse(config);
@@ -39,12 +34,12 @@ export class Options {
             "config",
             `${configOption}.json`
           );
-          this.debug(`Now, looking for config at: ${configPath}`);
+          debug(`Now, looking for config at: ${configPath}`);
 
           const config = fs.readFileSync(configPath, "utf8");
           rawConfig = JSON.parse(config);
         } catch (e) {
-          console.error(`No config file at that location: ${e}`);
+          error('No config file at that location.', e);
           process.exit(1);
         }
       }
@@ -58,7 +53,7 @@ export class Options {
         "default.json"
       );
 
-      this.debug(`Now, looking for a default config at ${configPath}`);
+      debug(`Now, looking for a default config at ${configPath}`);
 
       const config = fs.readFileSync(configPath, "utf8");
       rawConfig = JSON.parse(config);
