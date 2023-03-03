@@ -1,17 +1,12 @@
 #!/usr/bin/env node
 
 import fs from "fs";
-import os from "os";
-import path from "path";
 
-import chalk from "chalk";
-import inquirer from "inquirer";
-import { Polymath } from "@polymath-ai/client";
 import { Command, Option } from "commander";
 
-import { Options } from "./options.js";
 import { actor } from "./action.js";
 import { Ask } from "./actions/ask.js";
+import { Complete } from "./actions/complete.js";
 
 // Allowing multiple values for a single option, collecting them in an array
 const collect = (value, previous) => {
@@ -84,7 +79,7 @@ class CLI {
     program
       .command("complete")
       .description("Ask a Polymath for a completion")
-      .argument("[question]", "The question to ask")
+      .argument("[question]", "Ask a Polymath for a completion")
       .option("-m, --completion-model <model>", "the completion model to use")
       .option(
         "--completion-system <system-message>",
@@ -107,83 +102,9 @@ class CLI {
         "a prompt template to rewrite"
       )
       .alias("completion")
-      .action(this.askOrComplete.bind(this));
+      .action(actor(Complete, program));
 
     program.parse();
-  }
-
-  //
-  // HELPERS
-  //
-
-  async askOrComplete(question, options, command) {
-    const configOption = this.program.opts().config;
-
-    const opts = new Options();
-
-    const rawConfig = opts.loadRawConfig(configOption);
-    let clientOptions = opts.normalizeClientOptions(
-      this.program.opts(),
-      rawConfig
-    );
-
-    // console.log("CLIENT OPTIONS", clientOptions);
-
-    if (!question) {
-      question = await this.promptForQuestion();
-    }
-
-    console.log(chalk.green("\nYou asked: ") + chalk.bold(question));
-
-    try {
-      let client = new Polymath(clientOptions);
-
-      let output;
-
-      if (command == "ask") {
-        let results = await client.ask(question);
-        output = results.context();
-      } else {
-        // completion
-        let completionOptions = opts.normalizeCompletionOptions(
-          options,
-          rawConfig
-        );
-
-        let results = await client.completion(
-          question,
-          null,
-          null,
-          completionOptions
-        );
-
-        let sources = results.infos
-          ?.map((info) => {
-            return chalk.dim(
-              "Source: " + (info.title || info.description) + "\n" + info.url
-            );
-          })
-          .join("\n\n");
-
-        output = results.completion + "\n\n" + sources;
-      }
-
-      console.log(
-        chalk.green("\nThe Polymath answered with:\n\n  ") + chalk.bold(output)
-      );
-    } catch (e) {
-      console.error(`ERROR: ${e}`);
-    }
-  }
-
-  // Ask the dear listener for a question as they didn't provide one to the CLI
-  async promptForQuestion() {
-    let question = await inquirer.prompt({
-      type: "input",
-      name: "result",
-      message: "What is your question?",
-    });
-    return question.result;
   }
 }
 

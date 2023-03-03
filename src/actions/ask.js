@@ -33,14 +33,4 @@ export class Ask extends Action {
       error("Failed to Ask Polymath", e);
     }
   }
-
-  // Ask the dear listener for a question as they didn't provide one to the CLI
-  async promptForQuestion() {
-    let question = await inquirer.prompt({
-      type: "input",
-      name: "result",
-      message: "What is your question?",
-    });
-    return question.result;
-  }
 }
