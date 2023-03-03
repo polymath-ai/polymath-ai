@@ -1,6 +1,5 @@
 import { Polymath } from "@polymath-ai/client";
 import { Action } from "../action.js";
-import chalk from "chalk"; // get this into base
 
 export class Complete extends Action {
   opts;
@@ -11,7 +10,7 @@ export class Complete extends Action {
 
   async run({ args, options, command }) {
     const question = args[0];
-    const { debug, error, log } = this.say;
+    const { debug, error, log, chalk } = this.say;
     const clientOptions = this.options();
 
     if (!question) {

@@ -12,6 +12,7 @@ export class Base {
       debug: this.#debug.bind(this),
       error,
       log,
+      chalk,
     };
   }
 
