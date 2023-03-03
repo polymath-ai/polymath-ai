@@ -56,6 +56,8 @@ export class Validate extends Action {
   // This is the main entry point for your action.
   // The arguments mirror that of the action handler in Commander.
   async run({ args, options, command }) {
+    const { log, error, debug } = this.say;
+    const options = this.options(); // these are your client options.
     // implement your action code here
   }
 }
