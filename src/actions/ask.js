@@ -1,7 +1,5 @@
 import { Polymath } from "@polymath-ai/client";
-
 import { Action } from "../action.js";
-import chalk from "chalk";
 
 export class Ask extends Action {
   opts;
