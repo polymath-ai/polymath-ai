@@ -5,7 +5,6 @@ import path from "path";
 import { Base } from "./base.js";
 
 export class Options extends Base {
- 
   constructor(isDebug) {
     super(isDebug);
   }
@@ -39,7 +38,7 @@ export class Options extends Base {
           const config = fs.readFileSync(configPath, "utf8");
           rawConfig = JSON.parse(config);
         } catch (e) {
-          error('No config file at that location.', e);
+          error("No config file at that location.", e);
           process.exit(1);
         }
       }

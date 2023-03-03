@@ -1,7 +1,6 @@
 import { Base } from "./base.js";
 
 export class Action extends Base {
-
   constructor({ debug }) {
     super(debug);
   }
@@ -13,5 +12,5 @@ export const actor = (cls, program) => {
     args = args.slice(0, -2);
     const ask = new cls(program.opts());
     ask.run({ args, options, command });
-  }
-}
+  };
+};
