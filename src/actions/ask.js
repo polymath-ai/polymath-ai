@@ -32,7 +32,7 @@ export class Ask extends Action {
 
       log("The Polymath answered with:\n\n", output);
     } catch (e) {
-      error('Failed to Ask Polymath', e);
+      error("Failed to Ask Polymath", e);
     }
   }
 
