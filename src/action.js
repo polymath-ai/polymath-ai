@@ -1,8 +1,26 @@
 import { Base } from "./base.js";
+import { Options } from "./options.js";
 
 export class Action extends Base {
-  constructor({ debug }) {
-    super(debug);
+  #options
+
+  constructor(options) {
+    super(options.debug);
+    this.#options = options;
+  }
+
+  options() {
+    const opts = new Options(this.isDebug);
+    const { debug } = this.say;
+
+    const configOption = this.#options.config;  
+    const rawConfig = opts.loadRawConfig(configOption);
+    const clientOptions = {
+      ...opts.normalizeClientOptions(this.#options, rawConfig),
+      debug: this.isDebug,
+    };
+    debug("Client options", JSON.stringify(clientOptions));
+    return clientOptions;
   }
 }
 

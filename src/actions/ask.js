@@ -1,7 +1,6 @@
 import { Polymath } from "@polymath-ai/client";
 
 import { Action } from "../action.js";
-import { Options } from "../options.js";
 import chalk from "chalk";
 
 export class Ask extends Action {
@@ -9,20 +8,12 @@ export class Ask extends Action {
 
   constructor(options) {
     super(options);
-    this.opts = options;
   }
 
   async run({ args, options, command }) {
     const question = args[0];
-    const configOption = this.opts.config;
     const { debug, error } = this.say;
-
-    const opts = new Options(this.isDebug);
-
-    const rawConfig = opts.loadRawConfig(configOption);
-    let clientOptions = opts.normalizeClientOptions(this.opts, rawConfig);
-
-    debug("Client options", JSON.stringify(clientOptions));
+    const clientOptions = this.options();
 
     if (!question) {
       question = await this.promptForQuestion();
@@ -31,7 +22,7 @@ export class Ask extends Action {
     console.log(chalk.green("\nYou asked: ") + chalk.bold(question));
 
     try {
-      let client = new Polymath({ ...clientOptions, debug: this.isDebug });
+      let client = new Polymath(clientOptions);
 
       let output;
 
