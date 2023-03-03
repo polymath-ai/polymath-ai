@@ -15,7 +15,7 @@ export class Ask extends Action {
   async run({ args, options, command }) {
     const question = args[0];
     const configOption = this.opts.config;
-    const { debug, error } = this.say();
+    const { debug, error } = this.say;
 
     const opts = new Options(this.isDebug);
 

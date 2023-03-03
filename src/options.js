@@ -12,7 +12,7 @@ export class Options extends Base {
   // Hunt around the filesystem for a config file
   loadRawConfig(configOption) {
     let rawConfig;
-    const { debug, error } = this.say();
+    const { debug, error } = this.say;
 
     // if there is a configOption:
     if (configOption) {

@@ -6,11 +6,10 @@ const error = (...args) => console.error(chalk.red("ERROR:", ...args));
 export class Base {
   constructor(isDebug) {
     this.isDebug = isDebug;
-  }
-
-  say() {
-    const debug = this.#debug.bind(this);
-    return { debug, error };
+    this.say = {
+      debug: this.#debug.bind(this),
+      error,
+    }
   }
 
   #debug(...args) {
