@@ -4,15 +4,15 @@ import os from "os";
 import path from "path";
 
 export class Options {
-  #isDebug;
+  isDebug;
 
   constructor(isDebug) {
-    this.#isDebug = isDebug;
+    this.isDebug = isDebug;
   }
 
-  debug(message) {
-    if (this.#isDebug) {
-      console.log(chalk.blue(`DEBUG: ${message}`));
+  debug(...args) {
+    if (this.isDebug) {
+      console.log(chalk.blue("DEBUG:", ...args));
     }
   }
 
@@ -67,7 +67,8 @@ export class Options {
     return rawConfig;
   }
 
-  // Munge together a clientOptions object from the config file and the command line
+  // Munge together a clientOptions object from the config file
+  // and the command line.
   normalizeClientOptions(programOptions, rawConfig) {
     // convert a main host config into the bits needed for the Polymath
     let clientOptions = {};
@@ -75,8 +76,10 @@ export class Options {
     clientOptions.apiKey =
       programOptions.openaiApiKey || rawConfig.default_api_key;
 
-    clientOptions.servers =
-      programOptions.server || rawConfig.client_options.servers || undefined;
+    clientOptions.servers = [].concat(
+      programOptions.server,
+      rawConfig.client_options?.servers
+    );
 
     clientOptions.libraryFiles =
       programOptions.libraries ||
@@ -144,5 +147,4 @@ export class Options {
 
     return completionOptions;
   }
-
 }

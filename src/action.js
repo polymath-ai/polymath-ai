@@ -7,9 +7,9 @@ export class Action {
     this.isDebug = debug;
   }
 
-  debug(message) {
+  debug(...args) {
     if (this.isDebug) {
-      console.log(chalk.blue(`DEBUG: ${message}`));
+      console.log(chalk.blue('DEBUG:', ...args));
     }
   }
 }

@@ -16,12 +16,12 @@ export class Ask extends Action {
     const question = args[0];
     const configOption = this.opts.config;
 
-    const opts = new Options();
+    const opts = new Options(this.isDebug);
 
     const rawConfig = opts.loadRawConfig(configOption);
     let clientOptions = opts.normalizeClientOptions(this.opts, rawConfig);
 
-    // console.log("CLIENT OPTIONS", clientOptions);
+    this.debug("Client options", JSON.stringify(clientOptions));
 
     if (!question) {
       question = await this.promptForQuestion();
