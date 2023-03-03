@@ -12,14 +12,14 @@ export class Ask extends Action {
 
   async run({ args, options, command }) {
     const question = args[0];
-    const { debug, error } = this.say;
+    const { debug, error, log } = this.say;
     const clientOptions = this.options();
 
     if (!question) {
       question = await this.promptForQuestion();
     }
 
-    console.log(chalk.green("\nYou asked: ") + chalk.bold(question));
+    log("You asked: ", question);
 
     try {
       let client = new Polymath(clientOptions);
@@ -30,9 +30,7 @@ export class Ask extends Action {
       let results = await client.ask(question);
       output = results.context();
 
-      console.log(
-        chalk.green("\nThe Polymath answered with:\n\n  ") + chalk.bold(output)
-      );
+      log("The Polymath answered with:\n\n", output);
     } catch (e) {
       error('Failed to Ask Polymath', e);
     }

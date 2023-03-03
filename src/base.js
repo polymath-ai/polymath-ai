@@ -1,6 +1,8 @@
 import chalk from "chalk";
 
 const error = (...args) => console.error(chalk.red("ERROR:", ...args));
+const log = (msg, ...args) =>
+  console.log(chalk.green(`\n${msg}`), chalk.bold(...args));
 
 // Base class with all the useful infrastructure.
 export class Base {
@@ -9,7 +11,8 @@ export class Base {
     this.say = {
       debug: this.#debug.bind(this),
       error,
-    }
+      log,
+    };
   }
 
   #debug(...args) {
