@@ -19,3 +19,9 @@ test("normalizeClientOptions with no config servers", (t) => {
   );
   t.deepEqual(result, { servers: ["program"] });
 });
+
+test("normalizeClientOptions with no servers at all", (t) => {
+  const opts = new Options(false);
+  const result = opts.normalizeClientOptions({}, { client_options: {} });
+  t.deepEqual(result, {});
+});

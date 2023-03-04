@@ -65,7 +65,6 @@ export class Options extends Base {
   // and the command line.
   normalizeClientOptions(programOptions, rawConfig) {
     const nonempty = (obj) => (!obj || obj.length == 0 ? null : obj);
-
     const setnonempty = (obj, key, value) => value && (obj[key] = value);
 
     // convert a main host config into the bits needed for the Polymath
@@ -77,10 +76,12 @@ export class Options extends Base {
       programOptions.openaiApiKey || rawConfig.default_api_key
     );
 
-    clientOptions.servers =
+    setnonempty(
+      clientOptions,
+      "servers",
       nonempty(programOptions.server) ||
-      nonempty(rawConfig.client_options?.servers) ||
-      [];
+        nonempty(rawConfig.client_options?.servers)
+    );
 
     setnonempty(
       clientOptions,
