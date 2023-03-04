@@ -31,7 +31,7 @@
   },
   "homepage": "https://github.com/polymath-ai/cli#readme",
   "dependencies": {
-    "@polymath-ai/client": "^1.0.13",
+    "@polymath-ai/client": "^1.1.0",
     "chalk": "^5.2.0",
     "commander": "^10.0.0",
     "esm": "^3.2.25",
