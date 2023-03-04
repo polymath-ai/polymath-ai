@@ -1,6 +1,9 @@
-# cli
+# Polymath CLI
 
 A Polymath CLI for interacting with all things Polymath.
+
+It wraps the [Polymath JS client](https://github.com/polymath-ai/polymath-js-client/),
+and will always be a lean CLI shim on top of that.
 
 ## Setup
 
@@ -74,6 +77,15 @@ polymath import --input=medium --input-directory=path/to/export-backup/ --output
 
 ```shell
 polymath export --input-library=... --output=pinecone --pinecone-api-key="The Key" --pinecone-base-url="The URL" --pinecone-namespace=namespace
+```
+
+### Check information and validate an Polymath Endpoint ❌
+
+Go ahead and great a Polymath Endpoint to get information on what is supported,
+and do a lil validation check to boot.
+
+```shell
+polymath info --server https://glazkov.com`
 ```
 
 ## Development
