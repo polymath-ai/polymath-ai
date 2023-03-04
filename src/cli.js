@@ -8,11 +8,6 @@ import { actor } from "./action.js";
 import { Ask } from "./actions/ask.js";
 import { Complete } from "./actions/complete.js";
 
-// Allowing multiple values for a single option, collecting them in an array
-const collect = (value, previous) => {
-  return previous.concat([value]);
-};
-
 class CLI {
   program;
 
@@ -38,12 +33,7 @@ class CLI {
         "OPENAI_API_KEY"
       )
     );
-    program.option(
-      "-s, --server <endpoint>",
-      "Polymath server endpoint",
-      collect,
-      []
-    );
+    program.option("-s, --server <endpoints...>", "Polymath server endpoints");
     program.option(
       "-l, --libraries <libOrDirectory>",
       "Library files or directory"
