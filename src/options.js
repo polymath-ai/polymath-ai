@@ -64,20 +64,30 @@ export class Options extends Base {
   // Munge together a clientOptions object from the config file
   // and the command line.
   normalizeClientOptions(programOptions, rawConfig) {
+    const nonempty = (obj) => (!obj || obj.length == 0 ? null : obj);
+    const setnonempty = (obj, key, value) => value && (obj[key] = value);
+
     // convert a main host config into the bits needed for the Polymath
     let clientOptions = {};
 
-    clientOptions.apiKey =
-      programOptions.openaiApiKey || rawConfig.default_api_key;
+    setnonempty(
+      clientOptions,
+      "apiKey",
+      programOptions.openaiApiKey || rawConfig.default_api_key
+    );
 
-    clientOptions.servers = []
-      .concat(programOptions.server, rawConfig.client_options?.servers)
-      .filter((item) => item);
+    setnonempty(
+      clientOptions,
+      "servers",
+      nonempty(programOptions.server) ||
+        nonempty(rawConfig.client_options?.servers)
+    );
 
-    clientOptions.libraryFiles =
-      programOptions.libraries ||
-      rawConfig.client_options?.libraryFiles ||
-      undefined;
+    setnonempty(
+      clientOptions,
+      "libraryFiles",
+      programOptions.libraries || rawConfig.client_options?.libraryFiles
+    );
 
     if (programOptions.pinecone) {
       clientOptions.pinecone = {
