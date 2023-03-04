@@ -1,5 +1,5 @@
 import test from "ava";
-import { Polymath } from "../main.js";
+import { Polymath } from "../src/main.js";
 
 //
 // Most of these tests are more of the intergration variety.
