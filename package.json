@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/cli",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "A CLI for Polymath",
   "main": "src/cli.js",
   "type": "module",
@@ -38,6 +38,7 @@
     "inquirer": "^9.1.4"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.0",
     "ava": "^5.2.0",
     "mock-fs": "^5.2.0"
   }
