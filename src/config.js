@@ -42,13 +42,7 @@ export class Config extends Base {
       }
     } else {
       // if that fails, try to load ~/.polymath/config/default.json
-      const homeDir = os.homedir();
-      const configPath = path.join(
-        homeDir,
-        ".polymath",
-        "config",
-        "default.json"
-      );
+      const configPath = Config.homeDirPath("default");
 
       debug(`Now, looking for a default config at ${configPath}`);
 
