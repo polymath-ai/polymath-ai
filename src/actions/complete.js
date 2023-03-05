@@ -11,7 +11,7 @@ export class Complete extends Action {
   async run({ args, options, command }) {
     const question = args[0];
     const { debug, error, log, chalk } = this.say;
-    const clientOptions = this.options();
+    const clientOptions = this.clientOptions();
 
     if (!question) {
       question = await this.promptForQuestion();

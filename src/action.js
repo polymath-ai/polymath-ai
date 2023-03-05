@@ -17,7 +17,7 @@ export class Action extends Base {
     return opts.normalizeCompletionOptions(subcommandOptions, rawConfig);
   }
 
-  options() {
+  clientOptions() {
     const opts = new Options(this.isDebug);
     const { debug } = this.say;
 

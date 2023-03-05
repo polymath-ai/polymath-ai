@@ -7,6 +7,7 @@ import { Command, Option } from "commander";
 import { actor } from "./action.js";
 import { Ask } from "./actions/ask.js";
 import { Complete } from "./actions/complete.js";
+import { Validate } from "./actions/validate.js";
 
 class CLI {
   program;
@@ -93,6 +94,8 @@ class CLI {
       )
       .alias("completion")
       .action(actor(Complete, program));
+
+    program.command("validate").action(actor(Validate, program));
 
     program.parse();
   }
