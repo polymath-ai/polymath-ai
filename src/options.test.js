@@ -2,26 +2,53 @@ import test from "ava";
 
 import { Options } from "./options.js";
 
-test("normalizeClientOptions with no program servers", (t) => {
+test("normalizeClientOptions servers", (t) => {
   const opts = new Options(false);
-  const result = opts.normalizeClientOptions(
+  let result;
+
+  result = opts.normalizeClientOptions(
     {},
     { client_options: { servers: ["config"] } }
   );
   t.deepEqual(result, { servers: ["config"] });
-});
 
-test("normalizeClientOptions with no config servers", (t) => {
-  const opts = new Options(false);
-  const result = opts.normalizeClientOptions(
+  result = opts.normalizeClientOptions(
     { server: ["program"] },
     { client_options: {} }
   );
   t.deepEqual(result, { servers: ["program"] });
+
+  result = opts.normalizeClientOptions({}, { client_options: {} });
+  t.deepEqual(result, {});
 });
 
-test("normalizeClientOptions with no servers at all", (t) => {
+test("normalizeClientOptions libraries", (t) => {
   const opts = new Options(false);
-  const result = opts.normalizeClientOptions({}, { client_options: {} });
+  let result;
+
+  result = opts.normalizeClientOptions(
+    { libraries: ["program"] },
+    { client_options: { libraryFiles: ["config"] } }
+  );
+  t.deepEqual(result, { libraryFiles: ["program"] });
+
+  result = opts.normalizeClientOptions(
+    {},
+    { client_options: { libraryFiles: ["config"] } }
+  );
+  t.deepEqual(result, { libraryFiles: ["config"] });
+
+  result = opts.normalizeClientOptions({}, {});
+  t.deepEqual(result, {});
+});
+
+test("normalizeClientOptions omit", (t) => {
+  const opts = new Options(false);
+  let result;
+
+  result = opts.normalizeClientOptions({}, { client_options: { omit: "foo" } });
+  t.deepEqual(result, { omit: "foo" });
+
+  result = opts.normalizeClientOptions({}, {});
   t.deepEqual(result, {});
 });

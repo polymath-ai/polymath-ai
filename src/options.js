@@ -64,30 +64,23 @@ export class Options extends Base {
   // Munge together a clientOptions object from the config file
   // and the command line.
   normalizeClientOptions(programOptions, rawConfig) {
-    const nonempty = (obj) => (!obj || obj.length == 0 ? null : obj);
     const setnonempty = (obj, key, value) => value && (obj[key] = value);
 
     // convert a main host config into the bits needed for the Polymath
     let clientOptions = {};
+    let clientConfig = rawConfig.client_options;
 
-    setnonempty(
-      clientOptions,
-      "apiKey",
-      programOptions.openaiApiKey || rawConfig.default_api_key
-    );
+    const values = {
+      apiKey: programOptions.openaiApiKey || rawConfig.default_api_key,
+      servers: programOptions.server || clientConfig?.servers,
+      libraryFiles: programOptions.libraries || clientConfig?.libraryFiles,
+      omit: clientConfig?.omit,
+      debug: clientConfig?.debug,
+    };
 
-    setnonempty(
-      clientOptions,
-      "servers",
-      nonempty(programOptions.server) ||
-        nonempty(rawConfig.client_options?.servers)
-    );
-
-    setnonempty(
-      clientOptions,
-      "libraryFiles",
-      programOptions.libraries || rawConfig.client_options?.libraryFiles
-    );
+    for (const [key, value] of Object.entries(values)) {
+      setnonempty(clientOptions, key, value);
+    }
 
     if (programOptions.pinecone) {
       clientOptions.pinecone = {
@@ -98,12 +91,6 @@ export class Options extends Base {
     } else if (rawConfig.client_options?.pinecone) {
       clientOptions.pinecone = rawConfig.client_options.pinecone;
     }
-
-    if (rawConfig.client_options?.omit)
-      clientOptions.omit = rawConfig.client_options.omit;
-
-    if (rawConfig.client_options?.debug)
-      clientOptions.debug = rawConfig.client_options.debug;
 
     return clientOptions;
   }

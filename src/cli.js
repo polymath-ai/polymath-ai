@@ -35,7 +35,7 @@ class CLI {
     );
     program.option("-s, --server <endpoints...>", "Polymath server endpoints");
     program.option(
-      "-l, --libraries <libOrDirectory>",
+      "-l, --libraries <libOrDirectory...>",
       "Library files or directory"
     );
 
