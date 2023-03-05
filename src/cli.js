@@ -33,7 +33,7 @@ class CLI {
         "OPENAI_API_KEY"
       )
     );
-    program.option("-s, --server <endpoints...>", "Polymath server endpoints");
+    program.option("-s, --servers <endpoints...>", "Polymath server endpoints");
     program.option(
       "-l, --libraries <libOrDirectory...>",
       "Library files or directory"

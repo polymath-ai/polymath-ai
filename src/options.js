@@ -70,7 +70,7 @@ export class Options extends Base {
 
     const values = {
       apiKey: programOptions.openaiApiKey || rawConfig.default_api_key,
-      servers: programOptions.server || clientConfig?.servers,
+      servers: programOptions.servers || clientConfig?.servers,
       libraryFiles: programOptions.libraries || clientConfig?.libraryFiles,
       omit: clientConfig?.omit,
       debug: clientConfig?.debug,

@@ -13,7 +13,7 @@ test("normalizeClientOptions servers", (t) => {
   t.deepEqual(result, { servers: ["config"] });
 
   result = opts.normalizeClientOptions(
-    { server: ["program"] },
+    { servers: ["program"] },
     { client_options: {} }
   );
   t.deepEqual(result, { servers: ["program"] });
