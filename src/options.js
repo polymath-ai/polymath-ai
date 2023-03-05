@@ -64,8 +64,6 @@ export class Options extends Base {
   // Munge together a clientOptions object from the config file
   // and the command line.
   normalizeClientOptions(programOptions, rawConfig) {
-    const setnonempty = (obj, key, value) => value && (obj[key] = value);
-
     // convert a main host config into the bits needed for the Polymath
     let clientOptions = {};
     let clientConfig = rawConfig.client_options;
@@ -79,7 +77,7 @@ export class Options extends Base {
     };
 
     for (const [key, value] of Object.entries(values)) {
-      setnonempty(clientOptions, key, value);
+      if (value) clientOptions[key] = value;
     }
 
     if (programOptions.pinecone) {
