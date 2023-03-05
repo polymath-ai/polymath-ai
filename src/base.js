@@ -6,8 +6,8 @@ const log = (msg, ...args) =>
 
 // Base class with all the useful infrastructure.
 export class Base {
-  constructor(isDebug) {
-    this.isDebug = isDebug;
+  constructor({ debug }) {
+    this.isDebug = debug;
     this.say = {
       debug: this.#debug.bind(this),
       error,

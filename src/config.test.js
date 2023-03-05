@@ -8,7 +8,7 @@ import { Config } from "./config.js";
 import mockfs from "mock-fs";
 
 test("homedir path", (t) => {
-  const config = new Config(false);
+  const config = new Config({ debug: false });
   const result = Config.homeDirPath("foo");
   const expected = path.join(os.homedir(), ".polymath", "config", "foo.json");
   t.deepEqual(result, expected);
@@ -21,7 +21,7 @@ test("load config from exact path", (t) => {
   mockfs({
     [localPath]: JSON.stringify(answer),
   });
-  const config = new Config(false);
+  const config = new Config({ debug: false });
   const result = config.load(filename);
   t.deepEqual(result, answer);
   mockfs.restore();
@@ -33,7 +33,7 @@ test("load config from homedir", (t) => {
   mockfs({
     [Config.homeDirPath(filename)]: JSON.stringify(answer),
   });
-  const config = new Config(false);
+  const config = new Config({ debug: false });
   const result = config.load(filename);
   t.deepEqual(result, answer);
   mockfs.restore();
@@ -44,7 +44,7 @@ test("load default config", (t) => {
   mockfs({
     [Config.homeDirPath("default")]: JSON.stringify(answer),
   });
-  const config = new Config(false);
+  const config = new Config({ debug: false });
   const result = config.load();
   t.deepEqual(result, answer);
   mockfs.restore();

@@ -5,8 +5,8 @@ import path from "path";
 import { Base } from "./base.js";
 
 export class Config extends Base {
-  constructor(debug) {
-    super(debug);
+  constructor(args) {
+    super(args);
   }
 
   static homeDirPath(name) {

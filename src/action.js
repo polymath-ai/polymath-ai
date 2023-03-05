@@ -6,24 +6,24 @@ export class Action extends Base {
   #options;
 
   constructor(options) {
-    super(options.debug);
+    super(options);
     this.#options = options;
   }
 
   // TODO: get this into complete
   completionOptions(subcommandOptions) {
-    const opts = new Options(this.isDebug);
+    const opts = new Options(this.#options);
     const configOption = this.#options.config;
-    const config = new Config(this.isDebug).load(configOption);
+    const config = new Config(this.#options).load(configOption);
     return opts.normalizeCompletionOptions(subcommandOptions, config);
   }
 
   clientOptions() {
-    const opts = new Options(this.isDebug);
+    const opts = new Options(this.#options);
     const { debug } = this.say;
 
     const configOption = this.#options.config;
-    const config = new Config(this.isDebug).load(configOption);
+    const config = new Config(this.#options).load(configOption);
     const clientOptions = {
       ...opts.normalizeClientOptions(this.#options, config),
       debug: this.isDebug,

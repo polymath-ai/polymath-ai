@@ -3,7 +3,7 @@ import test from "ava";
 import { Options } from "./options.js";
 
 test("normalizeClientOptions servers", (t) => {
-  const opts = new Options(false);
+  const opts = new Options({ debug: false });
   let result;
 
   result = opts.normalizeClientOptions(
@@ -23,7 +23,7 @@ test("normalizeClientOptions servers", (t) => {
 });
 
 test("normalizeClientOptions libraries", (t) => {
-  const opts = new Options(false);
+  const opts = new Options({ debug: false });
   let result;
 
   result = opts.normalizeClientOptions(
@@ -43,7 +43,7 @@ test("normalizeClientOptions libraries", (t) => {
 });
 
 test("normalizeClientOptions omit", (t) => {
-  const opts = new Options(false);
+  const opts = new Options({ debug: false });
   let result;
 
   result = opts.normalizeClientOptions({}, { client_options: { omit: "foo" } });

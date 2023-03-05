@@ -1,8 +1,8 @@
 import { Base } from "./base.js";
 
 export class Options extends Base {
-  constructor(isDebug) {
-    super(isDebug);
+  constructor(args) {
+    super(args);
   }
 
   // Munge together a clientOptions object from the config file
