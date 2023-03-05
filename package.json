@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/cli",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A CLI for Polymath",
   "main": "src/cli.js",
   "type": "module",
