@@ -38,6 +38,7 @@
     "inquirer": "^9.1.4"
   },
   "devDependencies": {
-    "ava": "^5.2.0"
+    "ava": "^5.2.0",
+    "mock-fs": "^5.2.0"
   }
 }
