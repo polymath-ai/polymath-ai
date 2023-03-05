@@ -80,7 +80,10 @@ class Polymath {
       );
     }
 
-    let queryEmbedding = await this.generateEmbedding(query);
+    // If passed the query_embedding, use it. Otherwise, generate it.
+    // Beware the fact that there is a chance generateEMbedding(query) != queryEmbedding
+    let queryEmbedding =
+      askOptions?.query_embedding || (await this.generateEmbedding(query));
 
     // For each server and/or local library, get the results and merge it all together!
     let bits = [];
