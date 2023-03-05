@@ -7,21 +7,21 @@ import { Config } from "./config.js";
 
 import mockfs from "mock-fs";
 
+test("homedir path", (t) => {
+  const config = new Config(false);
+  const result = Config.homeDirPath("foo");
+  const expected = path.join(os.homedir(), ".polymath", "config", "foo.json");
+  t.deepEqual(result, expected);
+});
+
 test("load config file", (t) => {
   const filename = "foo";
-  const localPath = path.resolve(filename);
-  const homedir = path.join(
-    os.homedir(),
-    ".polymath",
-    "config",
-    `${filename}.json`
-  );
   const answer = { config: "homedir" };
   mockfs({
-    [homedir]: JSON.stringify(answer),
+    [Config.homeDirPath(filename)]: JSON.stringify(answer),
   });
   const config = new Config(false);
-  const result = config.load("foo");
+  const result = config.load(filename);
   t.deepEqual(result, answer);
   mockfs.restore();
 });

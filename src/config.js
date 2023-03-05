@@ -9,6 +9,10 @@ export class Config extends Base {
     super(debug);
   }
 
+  static homeDirPath(name) {
+    return path.join(os.homedir(), ".polymath", "config", `${name}.json`);
+  }
+
   // Hunt around the filesystem for a config file
   load(configOption) {
     let rawConfig;
@@ -26,13 +30,7 @@ export class Config extends Base {
       } catch (e) {
         // if that fails, try to load ~/.polymath/config/<configOption>.json
         try {
-          const homeDir = os.homedir();
-          const configPath = path.join(
-            homeDir,
-            ".polymath",
-            "config",
-            `${configOption}.json`
-          );
+          const configPath = Config.homeDirPath(configOption);
           debug(`Now, looking for config at: ${configPath}`);
 
           const config = fs.readFileSync(configPath, "utf8");
