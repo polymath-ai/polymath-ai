@@ -1,4 +1,5 @@
 import { Base } from "./base.js";
+import { Config } from "./config.js";
 import { Options } from "./options.js";
 
 export class Action extends Base {
@@ -13,8 +14,8 @@ export class Action extends Base {
   completionOptions(subcommandOptions) {
     const opts = new Options(this.isDebug);
     const configOption = this.#options.config;
-    const rawConfig = opts.loadRawConfig(configOption);
-    return opts.normalizeCompletionOptions(subcommandOptions, rawConfig);
+    const config = new Config(this.isDebug).load(configOption);
+    return opts.normalizeCompletionOptions(subcommandOptions, config);
   }
 
   clientOptions() {
@@ -22,9 +23,9 @@ export class Action extends Base {
     const { debug } = this.say;
 
     const configOption = this.#options.config;
-    const rawConfig = opts.loadRawConfig(configOption);
+    const config = new Config(this.isDebug).load(configOption);
     const clientOptions = {
-      ...opts.normalizeClientOptions(this.#options, rawConfig),
+      ...opts.normalizeClientOptions(this.#options, config),
       debug: this.isDebug,
     };
     debug("Client options", JSON.stringify(clientOptions));

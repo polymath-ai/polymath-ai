@@ -1,7 +1,3 @@
-import fs from "fs";
-import os from "os";
-import path from "path";
-
 import { Base } from "./base.js";
 
 export class Options extends Base {
@@ -9,69 +5,17 @@ export class Options extends Base {
     super(isDebug);
   }
 
-  // Hunt around the filesystem for a config file
-  loadRawConfig(configOption) {
-    let rawConfig;
-    const { debug, error } = this.say;
-
-    // if there is a configOption:
-    if (configOption) {
-      // try to load it as a filename
-      try {
-        const filename = path.resolve(configOption);
-        debug(`Looking for config at: ${filename}`);
-
-        const config = fs.readFileSync(filename, "utf8");
-        rawConfig = JSON.parse(config);
-      } catch (e) {
-        // if that fails, try to load ~/.polymath/config/<configOption>.json
-        try {
-          const homeDir = os.homedir();
-          const configPath = path.join(
-            homeDir,
-            ".polymath",
-            "config",
-            `${configOption}.json`
-          );
-          debug(`Now, looking for config at: ${configPath}`);
-
-          const config = fs.readFileSync(configPath, "utf8");
-          rawConfig = JSON.parse(config);
-        } catch (e) {
-          error("No config file at that location.", e);
-          process.exit(1);
-        }
-      }
-    } else {
-      // if that fails, try to load ~/.polymath/config/default.json
-      const homeDir = os.homedir();
-      const configPath = path.join(
-        homeDir,
-        ".polymath",
-        "config",
-        "default.json"
-      );
-
-      debug(`Now, looking for a default config at ${configPath}`);
-
-      const config = fs.readFileSync(configPath, "utf8");
-      rawConfig = JSON.parse(config);
-    }
-
-    return rawConfig;
-  }
-
   // Munge together a clientOptions object from the config file
   // and the command line.
-  normalizeClientOptions(programOptions, rawConfig) {
+  normalizeClientOptions(programOptions, config) {
     const skipEmpties = (obj) =>
       Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
 
     // convert a main host config into the bits needed for the Polymath
-    let clientConfig = rawConfig.client_options;
+    let clientConfig = config.client_options;
 
     let clientOptions = skipEmpties({
-      apiKey: programOptions.openaiApiKey || rawConfig.default_api_key,
+      apiKey: programOptions.openaiApiKey || config.default_api_key,
       servers: programOptions.servers || clientConfig?.servers,
       libraryFiles: programOptions.libraries || clientConfig?.libraryFiles,
       omit: clientConfig?.omit,
@@ -84,8 +28,8 @@ export class Options extends Base {
         baseUrl: programOptions.pineconeBaseUrl,
         namespace: programOptions.pineconeNamespace,
       };
-    } else if (rawConfig.client_options?.pinecone) {
-      clientOptions.pinecone = rawConfig.client_options.pinecone;
+    } else if (config.client_options?.pinecone) {
+      clientOptions.pinecone = config.client_options.pinecone;
     }
 
     return clientOptions;
