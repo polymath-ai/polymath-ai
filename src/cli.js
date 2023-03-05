@@ -34,11 +34,15 @@ class CLI {
         "OPENAI_API_KEY"
       )
     );
-    program.option("-s, --servers <endpoints...>", "Polymath server endpoints");
-    program.option(
-      "-l, --libraries <libOrDirectory...>",
-      "Library files or directory"
-    );
+    program
+      .option("-s, --servers <endpoints...>", "Polymath server endpoints")
+      .alias("server");
+    program
+      .option(
+        "-l, --libraries <libOrDirectory...>",
+        "Library files or directory"
+      )
+      .alias("library");
 
     program.option("-p, --pinecone", "Use pinecone");
     program.addOption(
