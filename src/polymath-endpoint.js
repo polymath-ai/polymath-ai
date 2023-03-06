@@ -1,4 +1,4 @@
-import { encodeEmbedding } from "./polymath-utils.js";
+import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./polymath-utils.js";
 
 //
 // Talk to remote servers and ask for their bits
@@ -44,6 +44,14 @@ class PolymathEndpoint {
     ).json();
 
     return result;
+  }
+
+  async validate() {
+    // prepare a random embedding to send to the server
+    const randomEmbedding = new Array(EMBEDDING_VECTOR_LENGTH)
+      .fill(0)
+      .map(() => Math.random());
+    this.ask(randomEmbedding, { count: 500, count_type: "bit" });
   }
 }
 

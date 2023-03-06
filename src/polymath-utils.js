@@ -8,6 +8,7 @@ const MAX_TOKENS_FOR_MODEL = {
   "text-embedding-ada-002": 8191,
   "gpt-3.5-turbo": 4096,
 };
+const EMBEDDING_VECTOR_LENGTH = 1536;
 
 function encodeEmbedding(data) {
   return Buffer.from(new Float32Array(data).buffer).toString("base64");
@@ -54,4 +55,5 @@ export {
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
   DEFAULT_MAX_TOKENS_FOR_MODEL,
+  EMBEDDING_VECTOR_LENGTH,
 };
