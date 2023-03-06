@@ -6,8 +6,9 @@
 // pr.context(DEFAULT_MAX_TOKENS_COMPLETION) // return the string of context limited to 1025 tokens
 // --------------------------------------------------------------------------
 class PolymathResults {
-  constructor(bits) {
+  constructor(bits, askOptions) {
     this._bits = bits;
+    this._askOptions = askOptions;
   }
 
   bits(maxTokensWorth = 0) {
@@ -76,6 +77,32 @@ class PolymathResults {
         return false;
       })
       .map((bit) => bit.info);
+  }
+
+  // Return a JSON response appropriate for sending back to a client
+  response() {
+    let response = {
+      version: this._askOptions.version ?? 1,
+      embedding_model:
+        this._askOptions.query_embedding_model || "text-embedding-ada-002",
+    };
+    if (this._askOptions?.omit) {
+      this.omit(this._askOptions.omit);
+      response.omit = this._askOptions.omit;
+    }
+    if (this._askOptions?.count_type) {
+      response.count_type = this._askOptions.count_type || "bits";
+    }
+    // default to sorting
+    if (this._askOptions?.sort == "similarity" || !this._askOptions?.sort) {
+      this.sortBitsBySimilarity();
+    }
+    if (this._askOptions?.count) {
+      this.trim(this._askOptions.count, this._askOptions?.count_type);
+    }
+    response.bits = this._bits;
+
+    return response;
   }
 }
 

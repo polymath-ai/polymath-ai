@@ -132,12 +132,7 @@ class Polymath {
     }
 
     // Finally, clean up the results and return them!
-    let pr = new PolymathResults(bits);
-    pr.sortBitsBySimilarity();
-    if (askOptions?.omit) pr.omit(askOptions.omit);
-    if (askOptions?.count) pr.trim(askOptions.count, askOptions?.count_type);
-
-    return pr;
+    return new PolymathResults(bits, askOptions);
   }
 
   // Given input text such as the users query, return an embedding

@@ -301,7 +301,8 @@ test("Polymath gets one result with embedding omited locally", async (t) => {
       count: 1,
     });
 
-    if (!r.bits()[0].embedding) {
+    let response = r.response();
+    if (!r.bits()[0].embedding && response.omit === "embedding") {
       t.pass();
     }
   } catch (e) {
