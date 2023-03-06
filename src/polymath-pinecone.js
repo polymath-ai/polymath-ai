@@ -40,6 +40,8 @@ class PolymathPinecone {
       bit.info.title = pineconeResult.metadata.title;
     if (pineconeResult.metadata?.description)
       bit.info.description = pineconeResult.metadata.description;
+    if ('score' in pineconeResult) 
+      bit.similarity = pineconeResult.score;
 
     return bit;
   }
