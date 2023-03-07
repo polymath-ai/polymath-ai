@@ -48,14 +48,41 @@ class PolymathEndpoint {
 
   async validate() {
     // prepare a random embedding to send to the server
+    const maxTokenCount = 1500;
+
     const randomEmbedding = new Array(EMBEDDING_VECTOR_LENGTH)
       .fill(0)
       .map(() => Math.random());
-    const result = await this.ask(randomEmbedding, {
-      count: 500,
-      count_type: "bit",
-    });
-    return true;
+
+    let result = false;
+    let response = null;
+
+    // See if it even responds.
+    try {
+      response = await this.ask(randomEmbedding, {
+        count: maxTokenCount,
+        count_type: "token",
+      });
+    } catch (error) {
+      return {
+        result,
+        error,
+      };
+    }
+
+    // See if it counted tokens correctly.
+    const tokenCount = response.bits.reduce(
+      (acc, bit) => acc + bit.token_count,
+      0
+    );
+
+    if (tokenCount > maxTokenCount)
+      return {
+        result,
+        error: "Does not seem to respond to 'token' parameter.",
+      };
+    result = true;
+    return { result };
   }
 }
 
