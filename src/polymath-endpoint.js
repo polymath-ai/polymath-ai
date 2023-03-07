@@ -51,7 +51,11 @@ class PolymathEndpoint {
     const randomEmbedding = new Array(EMBEDDING_VECTOR_LENGTH)
       .fill(0)
       .map(() => Math.random());
-    this.ask(randomEmbedding, { count: 500, count_type: "bit" });
+    const result = await this.ask(randomEmbedding, {
+      count: 500,
+      count_type: "bit",
+    });
+    return true;
   }
 }
 
