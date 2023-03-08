@@ -2,14 +2,14 @@ import * as dotenv from "dotenv";
 
 import { Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
-import { PolymathPinecone } from "./polymath-pinecone.js";
-import { PolymathResults } from "./polymath-results.js";
-import { PolymathEndpoint } from "./polymath-endpoint.js";
-import { PolymathLocal } from "./polymath-local.js";
+import { PolymathPinecone } from "./pinecone.js";
+import { PolymathResults } from "./results.js";
+import { PolymathEndpoint } from "./endpoint.js";
+import { PolymathLocal } from "./local.js";
 import {
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
-} from "./polymath-utils.js";
+} from "./utils.js";
 
 // Initialize .env variables
 dotenv.config();

@@ -1,11 +1,11 @@
 import fs from "fs";
 import { globbySync } from "globby";
 
-import { decodeEmbedding, cosineSimilarity } from "./polymath-utils.js";
+import { decodeEmbedding, cosineSimilarity } from "./utils.js";
 
-//
+// --------------------------------------------------------------------------
 // Query a local library of bits
-//
+// --------------------------------------------------------------------------
 class PolymathLocal {
   constructor(libraries) {
     let expandedLibraries = this.expandLibraries(libraries);

@@ -1,4 +1,4 @@
-import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./polymath-utils.js";
+import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./utils.js";
 
 //
 // Talk to remote servers and ask for their bits
