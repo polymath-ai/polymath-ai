@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "name": "@polymath-ai/polymath-ai",
+  "version": "0.0.1",
+  "description": "Polymath Monorepo",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "keywords": [],
+  "author": "The Polymath Crew (Alex, Dimitri, Dion)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-ai/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "devDependencies": {
+    "@changesets/cli": "^2.26.0",
+    "ava": "^5.2.0"
+  },
+  "workspaces": [
+    "./packages/*"
+  ]
+}
