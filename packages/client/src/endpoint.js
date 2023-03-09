@@ -47,6 +47,9 @@ class PolymathEndpoint {
   }
 
   async validate() {
+    const countTokens = (bits) =>
+      bits.reduce((acc, bit) => acc + bit.token_count, 0);
+
     // This will be the validation log.
     const log = [];
 
@@ -80,12 +83,7 @@ class PolymathEndpoint {
     }
 
     // See if it counted tokens correctly.
-    const tokenCount = response.bits.reduce(
-      (acc, bit) => acc + bit.token_count,
-      0
-    );
-
-    if (tokenCount > requestedTokenCount) {
+    if (countTokens(response.bits) > requestedTokenCount) {
       log.push({ message: "Does not seem to respond to 'token' parameter." });
       return {
         valid,
@@ -95,6 +93,40 @@ class PolymathEndpoint {
     log.push({
       message: "Server correctly accounted for the 'token' parameter",
     });
+
+    // Try again with a different token count.
+    requestedTokenCount = 1000;
+    try {
+      response = await this.ask(randomEmbedding, {
+        count: requestedTokenCount,
+        count_type: "token",
+      });
+      log.push({
+        message: "Server responded to request",
+      });
+    } catch (error) {
+      log.push({
+        message: "Server did not respond to request",
+        error,
+      });
+      return {
+        valid,
+        log,
+      };
+    }
+
+    // See if it counted tokens correctly again.
+    if (countTokens(response.bits) > requestedTokenCount) {
+      log.push({ message: "Does not seem to respond to 'token' parameter." });
+      return {
+        valid,
+        log,
+      };
+    }
+    log.push({
+      message: "Server correctly accounted for the 'token' parameter",
+    });
+
     valid = true;
     return { valid, log };
   }
