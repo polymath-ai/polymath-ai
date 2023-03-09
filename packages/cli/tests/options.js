@@ -1,6 +1,6 @@
 import test from "ava";
 
-import { Options } from "./options.js";
+import { Options } from "../src/options.js";
 
 test("normalizeClientOptions servers", (t) => {
   const opts = new Options({ debug: false });

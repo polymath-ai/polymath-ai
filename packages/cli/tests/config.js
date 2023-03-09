@@ -3,7 +3,7 @@ import test from "ava";
 import os from "os";
 import path from "path";
 
-import { Config } from "./config.js";
+import { Config } from "../src/config.js";
 
 import mockfs from "mock-fs";
 
