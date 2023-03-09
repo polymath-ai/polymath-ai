@@ -27,9 +27,7 @@ export class Validate extends Action {
       if (!this.isDebug) continue;
 
       debug("Validation details:");
-      for (const item of result.log) {
-        debug(`- ${item.message}`);
-      }
+      result.log.forEach((item) => debug(`- ${item.message}`));
     }
     log("\nDone validating servers\n\n");
   }
