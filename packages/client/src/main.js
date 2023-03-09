@@ -1,5 +1,3 @@
-import * as dotenv from "dotenv";
-
 import { Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
 import { PolymathPinecone } from "./pinecone.js";
@@ -12,7 +10,11 @@ import {
 } from "./utils.js";
 
 // Initialize .env variables
-dotenv.config();
+import * as dotenv from "dotenv";
+import { findUpSync } from "find-up";
+dotenv.config({
+  path: findUpSync(".env"),
+});
 
 // --------------------------------------------------------------------------
 // This Polymath has some class.
