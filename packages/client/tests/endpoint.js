@@ -7,9 +7,9 @@ test("Try validating an endpoint (smoke test)", async (t) => {
   let result;
 
   result = await endpoint.validate();
-  t.true(result.result);
+  t.true(result.valid);
 
   let badEndpoint = new PolymathEndpoint("https://polymath.glazkov.com/nope");
   result = await badEndpoint.validate();
-  t.false(result.result);
+  t.false(result.valid);
 });
