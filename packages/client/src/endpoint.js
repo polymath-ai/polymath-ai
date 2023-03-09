@@ -47,6 +47,8 @@ class PolymathEndpoint {
   }
 
   async validate() {
+    const log = [];
+
     // prepare a random embedding to send to the server
     const maxTokenCount = 1500;
 
@@ -63,10 +65,17 @@ class PolymathEndpoint {
         count: maxTokenCount,
         count_type: "token",
       });
+      log.push({
+        message: "Server responded to request",
+      });
     } catch (error) {
+      log.push({
+        message: "Server did not respond to request",
+        error,
+      });
       return {
         valid,
-        error,
+        log,
       };
     }
 
@@ -76,13 +85,20 @@ class PolymathEndpoint {
       0
     );
 
-    if (tokenCount > maxTokenCount)
+    if (tokenCount > maxTokenCount) {
+      log.push({
+        message: "Does not seem to respond to 'token' parameter.",
+      });
       return {
         valid,
-        error: "Does not seem to respond to 'token' parameter.",
+        log,
       };
+    }
+    log.push({
+      message: "Server correctly accounted for the 'token' parameter",
+    });
     valid = true;
-    return { valid };
+    return { valid, log };
   }
 }
 

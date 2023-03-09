@@ -23,6 +23,13 @@ export class Validate extends Action {
       } else {
         error(`Server ${server} is invalid`);
       }
+
+      if (!this.isDebug) continue;
+
+      debug("Validation details:");
+      for (const item of result.log) {
+        debug(`- ${item.message}`);
+      }
     }
     log("\nDone validating servers\n\n");
   }
