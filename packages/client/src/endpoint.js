@@ -47,11 +47,10 @@ class PolymathEndpoint {
   }
 
   async validate() {
+    // This will be the validation log.
     const log = [];
 
     // prepare a random embedding to send to the server
-    const maxTokenCount = 1500;
-
     const randomEmbedding = new Array(EMBEDDING_VECTOR_LENGTH)
       .fill(0)
       .map(() => Math.random());
@@ -60,9 +59,10 @@ class PolymathEndpoint {
     let response = null;
 
     // See if it even responds.
+    let requestedTokenCount = 1500;
     try {
       response = await this.ask(randomEmbedding, {
-        count: maxTokenCount,
+        count: requestedTokenCount,
         count_type: "token",
       });
       log.push({
@@ -85,10 +85,8 @@ class PolymathEndpoint {
       0
     );
 
-    if (tokenCount > maxTokenCount) {
-      log.push({
-        message: "Does not seem to respond to 'token' parameter.",
-      });
+    if (tokenCount > requestedTokenCount) {
+      log.push({ message: "Does not seem to respond to 'token' parameter." });
       return {
         valid,
         log,
