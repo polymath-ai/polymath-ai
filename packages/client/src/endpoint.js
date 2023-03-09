@@ -54,7 +54,7 @@ class PolymathEndpoint {
       .fill(0)
       .map(() => Math.random());
 
-    let result = false;
+    let valid = false;
     let response = null;
 
     // See if it even responds.
@@ -65,7 +65,7 @@ class PolymathEndpoint {
       });
     } catch (error) {
       return {
-        result,
+        valid,
         error,
       };
     }
@@ -78,11 +78,11 @@ class PolymathEndpoint {
 
     if (tokenCount > maxTokenCount)
       return {
-        result,
+        valid,
         error: "Does not seem to respond to 'token' parameter.",
       };
-    result = true;
-    return { result };
+    valid = true;
+    return { valid };
   }
 }
 

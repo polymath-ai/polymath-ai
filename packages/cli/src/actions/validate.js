@@ -1,3 +1,4 @@
+import { PolymathEndpoint } from "@polymath-ai/client";
 import { Action } from "../action.js";
 
 export class Validate extends Action {
@@ -15,6 +16,14 @@ export class Validate extends Action {
     }
     for (const server of servers) {
       log(`Validating server ${server}...`);
+      const endpoint = new PolymathEndpoint(server);
+      const result = await endpoint.validate();
+      if (result.valid) {
+        log(`Server ${server} is valid`);
+      } else {
+        error(`Server ${server} is invalid`);
+      }
     }
+    log("\nDone validating servers\n\n");
   }
 }
