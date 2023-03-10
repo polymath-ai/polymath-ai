@@ -123,20 +123,22 @@ In the directory of the package where you need to add the dependency, edit the c
 
 ```json
 "dependencies": {
-  "@polymath-ai/${package}[-${suffix}]": "^${version}",
+  "@polymath-ai/${package}[-${suffix}]": "*",
 }
 ```
+
+Using `*` is okay for our case, since we always publish packages in lockstep.
 
 Where `${version}` is the current version of the package. For example:
 
 ```json5
 "dependencies": {
   // ...
-  "@polymath-ai/remix-kit": "^0.0.7"
+  "@polymath-ai/remix-kit": "*"
 },
 "devDependencies": {
   // ...
-  "@polymath-ai/tsconfig": "^0.0.0"
+  "@polymath-ai/tsconfig": "*"
 }
 ```
 
