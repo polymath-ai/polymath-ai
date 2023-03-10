@@ -127,14 +127,14 @@ In the directory of the package where you need to add the dependency, edit the c
 
 Where `${version}` is the current version of the package. For example:
 
-```
+```json
 "dependencies": {
   ...
-  "@polymath-ai/remix-kit": "0.0.7"
+  "@polymath-ai/remix-kit": "^0.0.7"
 },
 "devDependencies": {
   ...
-  "@polymath-ai/tsconfig": "0.0.0"
+  "@polymath-ai/tsconfig": "^0.0.0"
 }
 ```
 
