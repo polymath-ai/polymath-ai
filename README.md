@@ -35,6 +35,8 @@ npx polymath -c wdl complete "what is Web platform?"
 
 ```
 
+See [CLI README](./core/cli/README.md) for more information on how to use the `polymath` tool.
+
 ## Managing packages within the monorepo
 
 :one: First, decide where the package will reside. There are three different directories, each serving a different purpose:
