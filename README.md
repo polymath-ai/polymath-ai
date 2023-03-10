@@ -88,3 +88,10 @@ To publish packages, we use [changesets](https://github.com/changesets/changeset
 2. Run `changeset version` to bump the version numbers of the packages that have changed. This will update the `package.json` files of the packages that have changed, and will create a new commit with the changes.
 
 3. Run `changeset publish` to publish the packages that have changed. This will create a new tag for the new version, and will publish the packages to the npm registry.
+
+## Filing bugs
+
+When creating a Github issue:
+
+- apply the relevant label (bug, feature, etc.)
+- apply scope label, if the bug is scoped to a particular package. The format of the label is `scope:${package}`, where `${package}` is the name of the package directory in the repo. For example, `scope:cli` or `scope:client`. If the label doesn't exist, create it using the convention above.
