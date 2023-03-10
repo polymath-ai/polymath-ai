@@ -155,13 +155,32 @@ class Polymath {
   }
 
   // Given a users query, return a completion with polymath results and the answer
-  async completion(query, polymathResults, askOptions, completionOptions) {
+  async completion(
+    query,
+    polymathResults,
+    askOptions,
+    completionOptions,
+    streamProcessor
+  ) {
     if (!polymathResults) {
       // get the polymath results here
       polymathResults = await this.ask(query, askOptions);
     }
+    let responseBitsAndInfo = {
+      bits: polymathResults.bits(),
+      infos: polymathResults.infoSortedBySimilarity(),
+    };
 
     completionOptions ||= this.completionOptions;
+
+    streamProcessor ||= {
+      processDelta: (delta) => {
+        if (delta) process.stdout.write(delta);
+      },
+      processResults: (results) => {
+        process.stdout.write("\n\n");
+      },
+    };
 
     let model = completionOptions?.model || "text-davinci-003";
 
@@ -180,6 +199,10 @@ class Polymath {
     try {
       let response;
       let responseText;
+      let axiosExtraInfo = completionOptions?.stream
+        ? { responseType: "stream" }
+        : {};
+
       if (model == "gpt-3.5-turbo") {
         let messages = [];
         if (completionOptions?.system) {
@@ -193,45 +216,62 @@ class Polymath {
           content: prompt,
         });
 
-        response = await this.openai.createChatCompletion({
-          model: model,
-          messages: messages,
-          temperature: completionOptions?.temperature || 0,
-          max_tokens:
-            completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
-          top_p: completionOptions?.top_p || 1,
-          n: completionOptions?.n || 1,
-          stream: completionOptions?.stream || false,
-          stop: completionOptions?.stop || null,
-          presence_penalty: completionOptions?.presence_penalty || 0,
-          frequency_penalty: completionOptions?.frequency_penalty || 0,
-        });
-        responseText = response.data.choices[0].message.content;
+        response = await this.openai.createChatCompletion(
+          {
+            model: model,
+            messages: messages,
+            temperature: completionOptions?.temperature || 0,
+            max_tokens:
+              completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
+            top_p: completionOptions?.top_p || 1,
+            n: completionOptions?.n || 1,
+            stream: completionOptions?.stream || false,
+            stop: completionOptions?.stop || null,
+            presence_penalty: completionOptions?.presence_penalty || 0,
+            frequency_penalty: completionOptions?.frequency_penalty || 0,
+          },
+          axiosExtraInfo
+        );
+        if (completionOptions?.stream) {
+          response.data.on("data", (data) => {
+            this.processData(data, model, streamProcessor, responseBitsAndInfo);
+          });
+        } else {
+          responseText = response.data.choices[0].message.content;
+        }
       } else {
         // text-davinci-003
-        response = await this.openai.createCompletion({
-          model: model,
-          prompt: prompt,
-          temperature: completionOptions?.temperature || 0,
-          max_tokens:
-            completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
-          top_p: completionOptions?.top_p || 1,
-          n: completionOptions?.n || 1,
-          stream: completionOptions?.stream || false,
-          logprobs: completionOptions?.stream || null,
-          echo: completionOptions?.echo || false,
-          stop: completionOptions?.stop || null,
-          presence_penalty: completionOptions?.presence_penalty || 0,
-          frequency_penalty: completionOptions?.frequency_penalty || 0,
-          best_of: completionOptions?.best_of || 1,
-        });
-        responseText = response.data.choices[0].text;
+        response = await this.openai.createCompletion(
+          {
+            model: model,
+            prompt: prompt,
+            temperature: completionOptions?.temperature || 0,
+            max_tokens:
+              completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
+            top_p: completionOptions?.top_p || 1,
+            n: completionOptions?.n || 1,
+            stream: completionOptions?.stream || false,
+            logprobs: completionOptions?.logprobs || null,
+            echo: completionOptions?.echo || false,
+            stop: completionOptions?.stop || null,
+            presence_penalty: completionOptions?.presence_penalty || 0,
+            frequency_penalty: completionOptions?.frequency_penalty || 0,
+            best_of: completionOptions?.best_of || 1,
+          },
+          axiosExtraInfo
+        );
+        if (completionOptions?.stream) {
+          response.data.on("data", (data) => {
+            this.processData(data, model, streamProcessor, responseBitsAndInfo);
+          });
+        } else {
+          responseText = response.data.choices[0].text;
+        }
       }
 
       // returning the first option for now
       return {
-        bits: polymathResults.bits(),
-        infos: polymathResults.infoSortedBySimilarity(),
+        ...responseBitsAndInfo,
         completion: responseText?.trim(),
       };
     } catch (error) {
@@ -252,6 +292,34 @@ class Polymath {
   // given the query, add the prompt template and return the encoded total
   getPromptTokenCount(query) {
     return encode(query + this.promptTemplate).length;
+  }
+
+  processData(data, model, streamProcessor, results) {
+    const lines = data
+      .toString()
+      .split("\n")
+      .filter((line) => line.trim() !== "");
+
+    for (const line of lines) {
+      const message = line.toString().replace(/^data: /, "");
+      if (message === "[DONE]") {
+        streamProcessor.processResults(results);
+        return; // Stream finished
+      }
+      try {
+        // console.log("Message", message);
+        const parsed = JSON.parse(message);
+        let delta;
+        if (model === "gpt-3.5-turbo") {
+          delta = parsed.choices[0].delta?.content;
+        } else {
+          delta = parsed.choices[0].text;
+        }
+        streamProcessor.processDelta(delta);
+      } catch (error) {
+        console.error("Could not JSON parse stream message", message, error);
+      }
+    }
   }
 }
 

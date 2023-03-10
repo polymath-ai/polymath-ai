@@ -205,6 +205,80 @@ test("Polymath gets local completions with the turbo model and a system message"
   }
 });
 
+test("Polymath gets local completions with the turbo model streaming", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      libraryFiles: ["./libraries/knowledge-string.json"],
+    });
+
+    let completionOptions = {
+      model: "gpt-3.5-turbo",
+      stream: true,
+    };
+
+    await new Promise((resolve, reject) => {
+      let streamProcessor = {
+        processResults: (r) => {
+          resolve();
+          t.pass();
+        },
+        processDelta: (delta) => {
+          // console.log("STREAMING DELTA:", delta);
+        },
+      };
+
+      client.completion(
+        "How long is a piece of string?",
+        undefined, // PolymathResults
+        undefined, // askOptions
+        completionOptions,
+        streamProcessor
+      );
+    });
+  } catch (e) {
+    log("LOCAL TURBO STREAMING ERROR:", e);
+    t.fail();
+  }
+});
+
+test("Polymath gets local completions with the OG model streaming", async (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: process.env.OPENAI_API_KEY,
+      libraryFiles: ["./libraries/knowledge-string.json"],
+    });
+
+    let completionOptions = {
+      model: "text-davinci-003",
+      stream: true,
+    };
+
+    await new Promise((resolve, reject) => {
+      let streamProcessor = {
+        processResults: (r) => {
+          resolve();
+          t.pass();
+        },
+        processDelta: (delta) => {
+          // console.log("STREAMING DELTA:", delta);
+        },
+      };
+
+      client.completion(
+        "How long is a piece of string?",
+        undefined, // PolymathResults
+        undefined, // askOptions
+        completionOptions,
+        streamProcessor
+      );
+    });
+  } catch (e) {
+    log("LOCAL OG STREAMING ERROR:", e);
+    t.fail();
+  }
+});
+
 test("Polymath gets server completions", async (t) => {
   try {
     let client = new Polymath({
