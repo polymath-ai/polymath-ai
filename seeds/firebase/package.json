@@ -1,5 +1,5 @@
 {
-  "name": "functions",
+  "name": "@polymath-ai/firebase-seed",
   "type": "module",
   "description": "Cloud Functions for Firebase",
   "scripts": {
