@@ -55,14 +55,6 @@ npm init --scope=@polymath-ai -y -w ./${place}/${package}
 
 where `${package}` is the name of the package to be added and `${place}` is the directory in which the package will reside.
 
-:three: To add one package in the monorepo as a dependency on another, run:
-
-```bash
-npm install @polymath-ai/${dependency} -w ./${place}/${package}
-```
-
-where `${dependency}` is the name of the package to be added as a dependency, and `${package}` is the name of the package that will have the dependency added.
-
 :four: Decide whether the package will be published to `npm`. If no, add the following to the `package.json` file:
 
 ```json
@@ -100,6 +92,32 @@ For packages in the `kits` directory, the suffix is `-kit`. For packages in the 
 │   ...
 
 ```
+
+## Wiring dependencies between packages
+
+To add one package in the monorepo as a dependency on another, you need to do some manual writing. Because `npm` seems to always go look for the package in the registry first, we need to add dependencies for yet-unpublished packages by hand.
+
+In the directory of the package where you need to add the dependency, edit the contents of `dependencies` (or `devDependencies`) to add the entry for the package on which you want this package to depend:
+
+```json
+"dependencies": {
+  "@polymath-ai/${package}[-${suffix}]": "^${version}",
+}
+```
+
+Where `${version}` is the current version of the package. For example:
+
+```
+"dependencies": {
+  ...
+  "@polymath-ai/remix-kit": "0.0.7"
+},
+"devDependencies": {
+  ...
+  "@polymath-ai/tsconfig": "0.0.0"
+}
+```
+
 
 We try to place most of the code into sub-directories of the `src` directory, organizing them according to their purpose.
 
