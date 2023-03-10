@@ -48,15 +48,15 @@ npx polymath -c wdl complete "what is Web platform?"
 :three: Create a new package:
 
 ```bash
-npm init --scope=@polymath-ai -y -w ./packages/${package}
+npm init --scope=@polymath-ai -y -w ./${place}/${package}
 ```
 
-where `${package}` is the name of the package to be added.
+where `${package}` is the name of the package to be added and `${place}` is the directory in which the package will reside.
 
 :three: To add one package in the monorepo as a dependency on another, run:
 
 ```bash
-npm install @polymath-ai/${dependency} -w ./packages/${package}
+npm install @polymath-ai/${dependency} -w ./${place}/${package}
 ```
 
 where `${dependency}` is the name of the package to be added as a dependency, and `${package}` is the name of the package that will have the dependency added.
