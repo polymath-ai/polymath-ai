@@ -37,7 +37,15 @@ npx polymath -c wdl complete "what is Web platform?"
 
 ## Managing packages within the monorepo
 
-To create a new package, run:
+:one: First, decide where the package will reside. There are three different directories, each serving a different purpose:
+
+- `core` -- contains packages that are core to the project.
+- `kits` -- contains packages that are used as starter kits for various environments, like `remix` or `firebase`.
+- `seeds` -- for early experimental ideas that are not fully fleshed out.
+
+:two: Next, decide on the name of the package. Pick a memorable name that is both descriptive and short. Abbreviations are okay as long as they are easily recognizable, like `cli`. Avoid redundant words, like `polymath` or `ai`.
+
+:three: Create a new package:
 
 ```bash
 npm init --scope=@polymath-ai -y -w ./packages/${package}
@@ -45,7 +53,7 @@ npm init --scope=@polymath-ai -y -w ./packages/${package}
 
 where `${package}` is the name of the package to be added.
 
-To add one package in the monorepo as a dependency on another, run:
+:three: To add one package in the monorepo as a dependency on another, run:
 
 ```bash
 npm install @polymath-ai/${dependency} -w ./packages/${package}
@@ -53,7 +61,27 @@ npm install @polymath-ai/${dependency} -w ./packages/${package}
 
 where `${dependency}` is the name of the package to be added as a dependency, and `${package}` is the name of the package that will have the dependency added.
 
-All packages within the monorepo have a similar structure:
+:four: Decide whether the package will be published to `npm`. If no, add the following to the `package.json` file:
+
+```json
+{
+  "private": true
+}
+```
+
+Otherwise, make sure to name the package according to the following convention:
+
+```json
+{
+  "name": "@polymath-ai/${package}[${-suffix}]"
+}
+```
+
+where `${package}` is the name of the package.
+
+For packages in the `kits` directory, the suffix is `-kit`. For packages in the `seeds` directory, the suffix is `-seed`. For packages in the `core` directory, the suffix is omitted.
+
+:five: Organize the package. All packages within the monorepo have a similar structure:
 
 ```text
 
