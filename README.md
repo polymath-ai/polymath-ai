@@ -93,6 +93,26 @@ For packages in the `kits` directory, the suffix is `-kit`. For packages in the 
 
 ```
 
+## Working with monorepo
+
+Basically, use `-w ${place}/${package}` to scope all usual `npm` activity to a particular package. For example, to run tests just in `core/cli`:
+
+```bash
+
+npm test -w core/cli
+
+```
+
+To add a new dev dependency `foo` in `kits/remix`:
+
+```bash
+
+npm i foo -w kits/remix
+
+```
+
+And so on.
+
 ## Wiring dependencies between packages
 
 To add one package in the monorepo as a dependency on another, you need to do some manual writing. Because `npm` seems to always go look for the package in the registry first, we need to add dependencies for yet-unpublished packages by hand.
@@ -117,7 +137,6 @@ Where `${version}` is the current version of the package. For example:
   "@polymath-ai/tsconfig": "0.0.0"
 }
 ```
-
 
 We try to place most of the code into sub-directories of the `src` directory, organizing them according to their purpose.
 
