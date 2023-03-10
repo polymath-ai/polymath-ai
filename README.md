@@ -92,6 +92,8 @@ For packages in the `kits` directory, the suffix is `-kit`. For packages in the 
 │   ...
 
 ```
+We try to place most of the code into sub-directories of the `src` directory, organizing them according to their purpose.
+
 
 ## Working with monorepo
 
@@ -127,18 +129,16 @@ In the directory of the package where you need to add the dependency, edit the c
 
 Where `${version}` is the current version of the package. For example:
 
-```json
+```json5
 "dependencies": {
-  ...
+  // ...
   "@polymath-ai/remix-kit": "^0.0.7"
 },
 "devDependencies": {
-  ...
+  // ...
   "@polymath-ai/tsconfig": "^0.0.0"
 }
 ```
-
-We try to place most of the code into sub-directories of the `src` directory, organizing them according to their purpose.
 
 ## Testing
 
