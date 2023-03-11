@@ -6,7 +6,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "build": "npx tsc --build"
   },
   "repository": {
     "type": "git",
