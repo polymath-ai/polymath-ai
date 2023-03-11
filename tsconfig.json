@@ -1,0 +1,7 @@
+{
+  "extends": "@polymath-ai/infra/tsconfig/base.json",
+  "files": [],
+  "references": [
+    { "path": "core/cli" }
+  ]
+}

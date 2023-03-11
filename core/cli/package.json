@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
+    "@polymath-ai/infra": "*",
     "ava": "^5.2.0",
     "mock-fs": "^5.2.0"
   }
