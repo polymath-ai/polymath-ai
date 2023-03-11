@@ -2,10 +2,10 @@
   "name": "@polymath-ai/cli",
   "version": "0.0.7",
   "description": "A CLI for Polymath",
-  "main": "src/cli.js",
   "type": "module",
+  "main": "dist/src/cli.js",
   "bin": {
-    "polymath": "src/cli.js"
+    "polymath": "dist/src/cli.js"
   },
   "publishConfig": {
     "access": "public"
