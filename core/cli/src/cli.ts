@@ -98,7 +98,10 @@ class CLI {
       .alias("completion")
       .action(actor(Complete, program));
 
-    program.command("validate").action(actor(Validate, program));
+    program
+      .command("validate")
+      .description("Validate a Polymath endpoint")
+      .action(actor(Validate, program));
 
     program.parse();
   }

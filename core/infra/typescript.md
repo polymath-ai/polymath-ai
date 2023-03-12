@@ -36,7 +36,7 @@ Because the TypeScript compiler resolves paths relative to the location of the `
     "composite": true,
     "outDir": "./dist"
   },
-  "exclude": ["node_modules", "dist"],
+  "include": ["src/**/*", "tests/**/*"],
   "extends": "@polymath-ai/infra/tsconfig/base.json"
 }
 ```

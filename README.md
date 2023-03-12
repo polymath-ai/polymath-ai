@@ -188,6 +188,16 @@ We use [ava](https://github.com/avajs/ava) for testing.
 
 We place test files into a separate `tests` directory, with the same file name name as what they test.
 
+## Watch workflow
+
+To make development with TypeScript super-easy, use the `turbo watch` command. Open a separate temrinal window and run:
+
+```bash
+turbo watch
+```
+
+This will start continuous compilation process that will enable you to just do your without having to think about the explicit build step.
+
 ## Publishing packages
 
 To publish packages, we use [changesets](https://github.com/changesets/changesets). The publishing workflow is:

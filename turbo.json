@@ -8,6 +8,10 @@
     "test": {
       "dependsOn": ["build", "^test"]
     },
+    "watch": {
+      "persistent": true,
+      "cache": false
+    },
     "lint": {}
   }
 }

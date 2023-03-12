@@ -12,7 +12,8 @@
   },
   "scripts": {
     "test": "ava",
-    "build": "tsc --b"
+    "build": "tsc --b",
+    "watch": "tsc --b --watch"
   },
   "repository": {
     "type": "git",
@@ -54,7 +55,6 @@
     "@polymath-ai/infra": "*",
     "@types/mock-fs": "^4.13.1",
     "ava": "^5.2.0",
-    "mock-fs": "^5.2.0",
-    "rimraf": "^4.4.0"
+    "mock-fs": "^5.2.0"
   }
 }
