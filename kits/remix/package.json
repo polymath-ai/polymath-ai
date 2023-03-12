@@ -1,8 +1,9 @@
 {
   "private": true,
+  "name": "@polymath-ai/remix-kit",
   "sideEffects": false,
   "scripts": {
-    "build": "remix build",
+    "build:nonturbo": "remix build",
     "dev": "remix dev",
     "start": "remix-serve build",
     "typecheck": "tsc"

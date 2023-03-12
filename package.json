@@ -6,8 +6,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "ava",
-    "build": "npx tsc --build"
+    "test": "turbo run test",
+    "build": "turbo run build"
   },
   "repository": {
     "type": "git",

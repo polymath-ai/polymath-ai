@@ -11,7 +11,8 @@
     "access": "public"
   },
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "build": "npx tsc --build"
   },
   "repository": {
     "type": "git",
