@@ -51,8 +51,12 @@ export class Options extends Base {
     completionOptions.top_p =
       commandOptions.completionTopP || rawConfig.completions_options?.top_p;
     completionOptions.n = commandOptions.n || rawConfig.completions_options?.n;
-    completionOptions.stream =
-      commandOptions.completionStream || rawConfig.completions_options?.stream;
+
+    if (commandOptions.hasOwnProperty("completionStream")) {
+      completionOptions.stream = commandOptions.completionStream.toLowerCase() === "true";
+    } else if (rawConfig.completions_options?.stream) {
+      completionOptions.stream = rawConfig.completions_options.stream;
+    }
 
     if (
       commandOptions.completionSystem ||
