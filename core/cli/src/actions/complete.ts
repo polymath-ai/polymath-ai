@@ -13,9 +13,9 @@ export class Complete extends Action {
     const { debug, error, log, chalk } = this.say;
     const clientOptions = this.clientOptions();
 
-    // if (!question) {
-    //   question = await this.promptForQuestion();
-    // }
+    if (!question) {
+      question = await this.promptForQuestion();
+    }
 
     log("You asked: ", question);
 

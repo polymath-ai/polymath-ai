@@ -9,13 +9,13 @@ export class Ask extends Action {
   }
 
   async run({ args, options, command }: any) {
-    const question = args[0];
+    let question: any = args[0];
     const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
 
-    // if (!question) {
-    //   question = await this.promptForQuestion();
-    // }
+    if (!question) {
+      question = await this.promptForQuestion();
+    }
 
     log("You asked: ", question);
 

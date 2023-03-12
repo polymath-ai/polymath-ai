@@ -1,6 +1,7 @@
 import { Base } from "./base.js";
 import { Config } from "./config.js";
 import { Options } from "./options.js";
+import inquirer from "inquirer";
 
 export class Action extends Base {
   #options;
@@ -33,14 +34,14 @@ export class Action extends Base {
   }
 
   // Ask the dear listener for a question as they didn't provide one to the CLI
-  // async promptForQuestion() {
-  //   let question = await inquirer.prompt({
-  //     type: "input",
-  //     name: "result",
-  //     message: "What is your question?",
-  //   });
-  //   return question.result;
-  // }
+  async promptForQuestion() {
+    let question = await inquirer.prompt({
+      type: "input",
+      name: "result",
+      message: "What is your question?",
+    });
+    return question.result;
+  }
 }
 
 export const actor = (cls: any, program: any) => {
