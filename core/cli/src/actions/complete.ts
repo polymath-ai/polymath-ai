@@ -21,7 +21,7 @@ export class Complete extends Action {
 
   async run({ args, options, command }: any) {
     let question: any = args[0];
-    const { debug, error, log, chalk } = this.say;
+    const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
 
     if (!question) {

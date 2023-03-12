@@ -7,6 +7,12 @@ and will always be a lean CLI shim on top of that.
 
 ## Setup
 
+You can run a local `polymath` cli via `npx`, E.g.:
+
+```shell
+npx polymath -c local-knowledge complete --completion-model gpt-3.5-turbo "How long is a piece of string?"
+```
+
 Download and install the `polymath` cli globally:
 
 ```shell
@@ -66,6 +72,14 @@ polymath [-c configfileorname] complete "how long is a piece of string?"
 ```
 
 It takes the same arguments as `ask` but also uses OpenAI config options and other arguments to overrule them (e.g. `max_tokens`, `stop`, etc)
+
+### Ask a polymath to `stream` a full completion ✅
+
+```shell
+polymath -c local-knowledge complete --completion-stream true --completion-model gpt-3.5-turbo "How long is a piece of string?"
+```
+
+This example turns on streaming, and sets the completion model to the new default turbo mode.
 
 ### Import content ❌
 
