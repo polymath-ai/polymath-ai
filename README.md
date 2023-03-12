@@ -190,13 +190,13 @@ We place test files into a separate `tests` directory, with the same file name n
 
 ## Watch workflow
 
-To make development with TypeScript super-easy, use the `turbo watch` command. Open a separate temrinal window and run:
+To make development with TypeScript super-easy, use the `turbo watch` command. Open a separate terminal window and run:
 
 ```bash
 turbo watch
 ```
 
-This will start continuous compilation process that will enable you to just do your without having to think about the explicit build step.
+This will start continuous compilation process that will enable you to write your TS without having to think about the explicit build step.
 
 ## Publishing packages
 
