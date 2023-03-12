@@ -33,7 +33,7 @@
   "ava": {
     "typescript": {
       "rewritePaths": {
-        "src/": "dist/"
+        "./": "dist/"
       },
       "compile": false
     }
@@ -48,7 +48,9 @@
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
     "@polymath-ai/infra": "*",
+    "@types/mock-fs": "^4.13.1",
     "ava": "^5.2.0",
+    "@ava/typescript": "^3.0.1",
     "mock-fs": "^5.2.0"
   }
 }
