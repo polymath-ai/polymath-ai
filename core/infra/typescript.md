@@ -113,7 +113,7 @@ Currently, `ava` [does not](https://github.com/avajs/typescript/issues/33) suppo
 
 ## Turbo
 
-To make building the project easier, we use [Turborepo](https://turbo.build/repo/docs). Turborepo is fairly opinionless a build tool designed to work well with monorepos.
+To make building the project easier, we use [Turborepo](https://turbo.build/repo/docs). Turborepo is a fairly opinionless build tool designed to work well with monorepos.
 
 To install Turborepo, run:
 
