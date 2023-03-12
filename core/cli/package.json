@@ -3,16 +3,16 @@
   "version": "0.0.7",
   "description": "A CLI for Polymath",
   "type": "module",
-  "main": "dist/src/cli.js",
+  "main": "./index.js",
   "bin": {
-    "polymath": "dist/src/cli.js"
+    "polymath": "./index.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "test": "ava",
-    "build": "npx tsc --build"
+    "build": "rimraf ./dist && npx tsc --build"
   },
   "repository": {
     "type": "git",
@@ -46,11 +46,12 @@
     "inquirer": "^9.1.4"
   },
   "devDependencies": {
+    "@ava/typescript": "^3.0.1",
     "@changesets/cli": "^2.26.0",
     "@polymath-ai/infra": "*",
     "@types/mock-fs": "^4.13.1",
     "ava": "^5.2.0",
-    "@ava/typescript": "^3.0.1",
-    "mock-fs": "^5.2.0"
+    "mock-fs": "^5.2.0",
+    "rimraf": "^4.4.0"
   }
 }
