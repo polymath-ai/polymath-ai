@@ -131,6 +131,38 @@ let polymath = new Polymath({
 });
 ```
 
+You may want to process a completion as it streams to you. To do so you need to setup a streamProcessor:
+
+```js
+let client = new Polymath({
+  apiKey: process.env.OPENAI_API_KEY,
+  libraryFiles: ["./libraries/knowledge-string.json"],
+});
+
+let completionOptions = {
+  model: "text-davinci-003",
+  stream: true,
+};
+
+let streamProcessor = {
+  processResults: (r) => {
+    resolve();
+    t.pass();
+  },
+  processDelta: (delta) => {
+    // console.log("STREAMING DELTA:", delta);
+  },
+};
+
+client.completion(
+  "How long is a piece of string?",
+  undefined, // PolymathResults
+  undefined, // askOptions
+  completionOptions,
+  streamProcessor
+);
+```
+
 # Tests
 
 Tests are located in `tests/`. We use [ava](https://github.com/avajs/ava) for a simple test library.
