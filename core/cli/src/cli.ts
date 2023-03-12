@@ -89,8 +89,8 @@ class CLI {
       )
       .option("--completion-top-p <top-p>", "the top_p for completion")
       .option("--completion-n <n>", "the n for completion")
-      .option("--completion-stream <stream>", "the stream for completion")
-      .option("--completion-stop <stop>", "the stop for completion")
+      .option("--completion-stream <stream>", "Turn on streaming with true for completion")
+      .option("--completion-stop <stop>", "Set a stop term for completion")
       .option(
         "--completion-prompt-template <prompt>",
         "a prompt template to rewrite"
