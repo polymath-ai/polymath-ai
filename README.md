@@ -1,6 +1,6 @@
 # Polymath Monorepo
 
-This repository contains all the Polymath Node packages. It is set up as a monor, using Node's built-in [workspace](https://docs.npmjs.com/cli/v9/using-npm/workspaces?v=true) capability.
+This repository contains all the Polymath Node packages. It is set up as a monorepo, using Node's built-in [workspace](https://docs.npmjs.com/cli/v9/using-npm/workspaces?v=true) capability.
 
 ## Getting started
 
