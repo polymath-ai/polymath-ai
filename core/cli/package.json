@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "ava",
-    "build": "rimraf ./dist && npx tsc --build"
+    "build": "tsc --b"
   },
   "repository": {
     "type": "git",
