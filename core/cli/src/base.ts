@@ -1,12 +1,15 @@
 import chalk from "chalk";
 
-const error = (...args) => console.error(chalk.red("ERROR:", ...args));
-const log = (msg, ...args) =>
+const error = (...args: any) => console.error(chalk.red("ERROR:", ...args));
+const log = (msg: any, ...args: any) =>
   console.log(chalk.green(`\n${msg}`), chalk.bold(...args));
 
 // Base class with all the useful infrastructure.
 export class Base {
-  constructor({ debug }) {
+  isDebug: boolean;
+  say: any;
+
+  constructor({ debug }: { debug: boolean }) {
     this.isDebug = debug;
     this.say = {
       debug: this.#debug.bind(this),
@@ -16,7 +19,7 @@ export class Base {
     };
   }
 
-  #debug(...args) {
+  #debug(...args: any) {
     if (this.isDebug) {
       console.log(chalk.blue("DEBUG:", ...args));
     }

@@ -1,14 +1,14 @@
 import { Base } from "./base.js";
 
 export class Options extends Base {
-  constructor(args) {
+  constructor(args: any) {
     super(args);
   }
 
   // Munge together a clientOptions object from the config file
   // and the command line.
-  normalizeClientOptions(programOptions, config) {
-    const skipEmpties = (obj) =>
+  normalizeClientOptions(programOptions: any, config: any) {
+    const skipEmpties = (obj: any) =>
       Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
 
     // convert a main host config into the bits needed for the Polymath
@@ -36,9 +36,9 @@ export class Options extends Base {
   }
 
   // Munge together a clientOptions object from the config file and the command line
-  normalizeCompletionOptions(commandOptions, rawConfig) {
+  normalizeCompletionOptions(commandOptions: any, rawConfig: any) {
     // convert a main host config into the bits needed for the Polymath
-    let completionOptions = {};
+    let completionOptions: any = {};
 
     completionOptions.model =
       commandOptions.completionModel || rawConfig.completions_options?.model;
