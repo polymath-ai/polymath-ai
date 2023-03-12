@@ -2,20 +2,20 @@ import { Polymath } from "@polymath-ai/client";
 import { Action } from "../action.js";
 
 export class Ask extends Action {
-  opts;
+  opts: any;
 
-  constructor(options) {
+  constructor(options: any) {
     super(options);
   }
 
-  async run({ args, options, command }) {
+  async run({ args, options, command }: any) {
     const question = args[0];
     const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
 
-    if (!question) {
-      question = await this.promptForQuestion();
-    }
+    // if (!question) {
+    //   question = await this.promptForQuestion();
+    // }
 
     log("You asked: ", question);
 

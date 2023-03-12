@@ -6,7 +6,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "ava"
+    "test": "echo use 'turbo test' instead",
+    "build": "echo use 'turbo build' instead"
   },
   "repository": {
     "type": "git",
@@ -21,7 +22,8 @@
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
   "devDependencies": {
     "@changesets/cli": "^2.26.0",
-    "ava": "^5.2.0"
+    "ava": "^5.2.0",
+    "typescript": "^4.9.5"
   },
   "workspaces": [
     "./core/*",

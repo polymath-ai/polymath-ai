@@ -5,16 +5,16 @@ import path from "path";
 import { Base } from "./base.js";
 
 export class Config extends Base {
-  constructor(args) {
+  constructor(args: any) {
     super(args);
   }
 
-  static homeDirPath(name) {
+  static homeDirPath(name: string) {
     return path.join(os.homedir(), ".polymath", "config", `${name}.json`);
   }
 
   // Hunt around the filesystem for a config file
-  load(configOption) {
+  load(configOption: any) {
     let rawConfig;
     const { debug, error } = this.say;
 

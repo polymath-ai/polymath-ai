@@ -45,7 +45,7 @@ test("load default config", (t) => {
     [Config.homeDirPath("default")]: JSON.stringify(answer),
   });
   const config = new Config({ debug: false });
-  const result = config.load();
+  const result = config.load(null);
   t.deepEqual(result, answer);
   mockfs.restore();
 });

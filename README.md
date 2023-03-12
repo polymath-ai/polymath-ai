@@ -92,12 +92,52 @@ For packages in the `kits` directory, the suffix is `-kit`. For packages in the 
 │   ...
 
 ```
+
 We try to place most of the code into sub-directories of the `src` directory, organizing them according to their purpose.
 
+One exception might be the [JS-to-TS bridge](core/infra/typescript.md#js-to-ts-bridge-for-cli), which is necessary to make the TypeScript CLI tools work.
 
 ## Working with monorepo
 
-Basically, use `-w ${place}/${package}` to scope all usual `npm` activity to a particular package. For example, to run tests just in `core/cli`:
+Because some packages use TypeScript, we need to make sure the code is built and ready to go before we use it.
+
+To make this easy and convenient, we use [Turborepo](https://turbo.build/repo/docs). Turborepo is a build tool designed to work well with monorepos.
+
+To install Turborepo, run:
+
+```bash
+npm i -g turbo
+```
+
+Once installed, you can use the `turbo` command to build the project. To build the entire project, run:
+
+```bash
+turbo build
+```
+
+in the root of the project. To work within a specific package, change your working directory to this package and do the same. For example, to build the `core/cli` package:
+
+```bash
+cd core/cli
+turbo build
+```
+
+Same thing works for tests. To test the entire project, run:
+
+```bash
+turbo test
+```
+
+To run test for a specific package, follow the same pattern as with `build`. For example, to test the `core/cli` package:
+
+```bash
+cd core/cli
+turbo test
+```
+
+Turborepo is fairly opinionless, so if you don't want to use it, you can get the same results (with more typing and checking) by using `npm` directly.
+
+In this case, use `-w ${place}/${package}` to scope all usual `npm` activity to a particular package. For example, to run tests just in `core/cli`:
 
 ```bash
 

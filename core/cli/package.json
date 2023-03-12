@@ -2,17 +2,17 @@
   "name": "@polymath-ai/cli",
   "version": "0.0.7",
   "description": "A CLI for Polymath",
-  "main": "src/cli.js",
   "type": "module",
+  "main": "./index.js",
   "bin": {
-    "@polymath-ai/cli": "src/cli.js",
-    "polymath": "src/cli.js"
+    "polymath": "./index.js"
   },
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
-    "test": "ava"
+    "test": "ava",
+    "build": "tsc --b"
   },
   "repository": {
     "type": "git",
@@ -30,6 +30,17 @@
     "url": "https://github.com/polymath-ai/cli/issues"
   },
   "homepage": "https://github.com/polymath-ai/cli#readme",
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
   "dependencies": {
     "@polymath-ai/client": "^1.1.2",
     "chalk": "^5.2.0",
@@ -38,8 +49,12 @@
     "inquirer": "^9.1.4"
   },
   "devDependencies": {
+    "@ava/typescript": "^3.0.1",
     "@changesets/cli": "^2.26.0",
+    "@polymath-ai/infra": "*",
+    "@types/mock-fs": "^4.13.1",
     "ava": "^5.2.0",
-    "mock-fs": "^5.2.0"
+    "mock-fs": "^5.2.0",
+    "rimraf": "^4.4.0"
   }
 }

@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 import fs from "fs";
 
 import { Command, Option } from "commander";
@@ -9,6 +7,7 @@ import { Ask } from "./actions/ask.js";
 import { Complete } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
 
+// TODO: Implement a nice API for this.
 class CLI {
   program;
 
@@ -105,9 +104,4 @@ class CLI {
   }
 }
 
-new CLI().run();
-
-// TODO: wrap the main in a function and allow this so folks could load it as a module
-// export function cli(args) {
-//   console.log(args);
-// }
+export { CLI };
