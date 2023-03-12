@@ -45,7 +45,7 @@ The `composite` option is what makes next part of the setup possible.
 
 ## TypeScript is optional per package
 
-A package may choose to use JS or TS. To enable picking and choosing which packages get to use TypeScipt, we use [references](https://www.typescriptlang.org/docs/handbook/project-references.html). To make your package use TypeScript, add it as a referenceto `tsconfig.json` in the root of the monorepo:
+A package may choose to use JS or TS. To enable picking and choosing which packages get to use TypeScipt, we use [references](https://www.typescriptlang.org/docs/handbook/project-references.html). To make your package use TypeScript, add it as a reference to `tsconfig.json` in the root of the monorepo:
 
 ```json
 {
