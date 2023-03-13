@@ -208,6 +208,8 @@ To publish packages, we use [changesets](https://github.com/changesets/changeset
 
 3. Run `npx changeset publish` to publish the packages that have changed. This will create a new tag for the new version, and will publish the packages to the npm registry.
 
+4. Run `git push --follow-tags` to push the tags created by the steps above to the main repo.
+
 ## Filing bugs
 
 When creating a Github issue:
