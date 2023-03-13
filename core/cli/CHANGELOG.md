@@ -1,5 +1,11 @@
 # @polymath-ai/cli
 
+## 0.0.8
+
+### Patch Changes
+
+- Convert to TypeScript.
+
 ## 0.0.7
 
 ### Patch Changes
