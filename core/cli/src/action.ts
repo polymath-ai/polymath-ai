@@ -10,10 +10,12 @@ export interface RunArguments {
   command: string;
 }
 
+type ActionArgs = { [arg: string]: any };
+
 export abstract class Action extends Base {
   #options;
 
-  constructor(options: any) {
+  constructor(options: ActionArgs) {
     super(options);
     this.#options = options;
   }
@@ -53,7 +55,9 @@ export abstract class Action extends Base {
   }
 }
 
-export const actor = (cls: any, program: Command) => {
+type ActionConstructor = new (options: ActionArgs) => Action;
+
+export const actor = (cls: ActionConstructor, program: Command) => {
   return (...args: string[]) => {
     const [options, command] = args.slice(-2);
     args = args.slice(0, -2);
