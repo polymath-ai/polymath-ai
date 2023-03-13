@@ -3,13 +3,21 @@ import { Config } from "./config.js";
 import { Options } from "./options.js";
 import inquirer from "inquirer";
 
-export class Action extends Base {
+export interface RunArguments {
+  args: string[];
+  options: any;
+  command: string;
+}
+
+export abstract class Action extends Base {
   #options;
 
   constructor(options: any) {
     super(options);
     this.#options = options;
   }
+
+  abstract run({ args, options, command }: RunArguments): Promise<void>;
 
   // TODO: get this into complete
   completionOptions(subcommandOptions: any) {
@@ -45,10 +53,10 @@ export class Action extends Base {
 }
 
 export const actor = (cls: any, program: any) => {
-  return (...args: any) => {
+  return (...args: string[]) => {
     const [options, command] = args.slice(-2);
     args = args.slice(0, -2);
-    const ask = new cls(program.opts());
-    ask.run({ args, options, command });
+    const action: Action = new cls(program.opts());
+    action.run({ args, options, command });
   };
 };

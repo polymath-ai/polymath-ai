@@ -1,5 +1,5 @@
 import { Polymath } from "@polymath-ai/client";
-import { Action } from "../action.js";
+import { Action, RunArguments } from "../action.js";
 
 export class Complete extends Action {
   opts: any;
@@ -19,7 +19,7 @@ export class Complete extends Action {
       .join("\n\n");
   }
 
-  async run({ args, options, command }: any) {
+  override async run({ args, options, command }: RunArguments) {
     let question: any = args[0];
     const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
@@ -37,16 +37,19 @@ export class Complete extends Action {
       // completion
       let completionOptions = this.completionOptions(options);
 
-      if (completionOptions.stream) { // async mode baybee
+      if (completionOptions.stream) {
+        // async mode baybee
         let streamProcessor = {
           processDelta: (delta: string | Uint8Array) => {
             if (delta) process.stdout.write(delta);
           },
-          processResults: (finalResults: { infos: any; }) => {
-            process.stdout.write("\n\n" + this.sources(finalResults.infos) + "\n");
+          processResults: (finalResults: { infos: any }) => {
+            process.stdout.write(
+              "\n\n" + this.sources(finalResults.infos) + "\n"
+            );
           },
         };
-  
+
         log("The Polymath is answering with...\n");
 
         client.completion(
@@ -55,7 +58,7 @@ export class Complete extends Action {
           null, // we don't need no ask Options
           completionOptions,
           streamProcessor
-        )
+        );
       } else {
         let results = await client.completion(
           question,
