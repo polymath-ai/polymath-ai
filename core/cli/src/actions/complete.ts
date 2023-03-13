@@ -1,10 +1,10 @@
 import { Polymath } from "@polymath-ai/client";
-import { Action, RunArguments } from "../action.js";
+import { Action, ActionArgs, RunArguments } from "../action.js";
 
 export class Complete extends Action {
   opts: any;
 
-  constructor(options: any) {
+  constructor(options: ActionArgs) {
     super(options);
   }
 

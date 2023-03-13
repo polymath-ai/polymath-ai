@@ -10,11 +10,11 @@ export interface RunArguments {
   command: string;
 }
 
-type ActionArgs = { [arg: string]: any };
+export type ActionArgs = { [arg: string]: any };
 export type ClientOptions = { [key: string]: any };
 
 export abstract class Action extends Base {
-  #options;
+  #options: ActionArgs;
 
   constructor(options: ActionArgs) {
     super(options);
