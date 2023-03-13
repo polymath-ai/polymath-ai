@@ -11,6 +11,7 @@ export interface RunArguments {
 }
 
 type ActionArgs = { [arg: string]: any };
+export type ClientOptions = { [key: string]: any };
 
 export abstract class Action extends Base {
   #options;
@@ -30,7 +31,7 @@ export abstract class Action extends Base {
     return opts.normalizeCompletionOptions(subcommandOptions, config);
   }
 
-  clientOptions() {
+  clientOptions(): ClientOptions {
     const opts = new Options(this.#options);
     const { debug } = this.say;
 
