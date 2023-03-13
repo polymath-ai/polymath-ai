@@ -2,6 +2,7 @@ import { Base } from "./base.js";
 import { Config } from "./config.js";
 import { Options } from "./options.js";
 import inquirer from "inquirer";
+import { Command } from "commander";
 
 export interface RunArguments {
   args: string[];
@@ -52,7 +53,7 @@ export abstract class Action extends Base {
   }
 }
 
-export const actor = (cls: any, program: any) => {
+export const actor = (cls: any, program: Command) => {
   return (...args: string[]) => {
     const [options, command] = args.slice(-2);
     args = args.slice(0, -2);
