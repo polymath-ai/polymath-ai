@@ -1,5 +1,11 @@
 # @polymath-ai/cli
 
+## 0.0.9
+
+### Patch Changes
+
+- Publish only what's necesary.
+
 ## 0.0.8
 
 ### Patch Changes
