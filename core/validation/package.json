@@ -1,0 +1,47 @@
+{
+  "name": "@polymath-ai/validation",
+  "version": "1.0.0",
+  "description": "A library for validating Polymath format",
+  "type": "module",
+  "main": "./dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "ava",
+    "build": "tsc --b",
+    "watch": "tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "keywords": [],
+  "author": "The Polymath Crew (Alex, Dimitri, Dion)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-ai/labels/scope%3Avalidation"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "files": [
+    "dist"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@ava/typescript": "^3.0.1",
+    "@changesets/cli": "^2.26.0",
+    "@polymath-ai/infra": "*",
+    "ava": "^5.2.0"
+  }
+}
