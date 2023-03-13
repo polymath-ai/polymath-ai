@@ -202,11 +202,11 @@ This will start continuous compilation process that will enable you to write you
 
 To publish packages, we use [changesets](https://github.com/changesets/changesets). The publishing workflow is:
 
-1. Run `changeset` to create a new changeset. This will prompt you to select the packages that have changed, and will create a new changeset file in the `.changeset` directory.
+1. Run `npx changeset` to create a new changeset. This will prompt you to select the packages that have changed, and will create a new changeset file in the `.changeset` directory.
 
-2. Run `changeset version` to bump the version numbers of the packages that have changed. This will update the `package.json` files of the packages that have changed, and will create a new commit with the changes.
+2. Run `npx changeset version` to bump the version numbers of the packages that have changed. This will update the `package.json` files of the packages that have changed, and will create a new commit with the changes.
 
-3. Run `changeset publish` to publish the packages that have changed. This will create a new tag for the new version, and will publish the packages to the npm registry.
+3. Run `npx changeset publish` to publish the packages that have changed. This will create a new tag for the new version, and will publish the packages to the npm registry.
 
 ## Filing bugs
 
