@@ -31,6 +31,10 @@
     "url": "https://github.com/polymath-ai/cli/issues"
   },
   "homepage": "https://github.com/polymath-ai/cli#readme",
+  "files": [
+    "dist",
+    "index.js"
+  ],
   "ava": {
     "files": [
       "tests/**/*.ts"
