@@ -1,5 +1,7 @@
 import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./utils.js";
 
+import { Validator } from "@polymath-ai/validation";
+
 //
 // Talk to remote servers and ask for their bits
 //
@@ -47,6 +49,9 @@ class PolymathEndpoint {
   }
 
   async validate() {
+    const validator = new Validator();
+    await validator.run();
+
     const countTokens = (bits) =>
       bits.reduce((acc, bit) => acc + bit.token_count, 0);
 
