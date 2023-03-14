@@ -74,6 +74,27 @@ test("Polymath tells you when it's invalid, allowing you to fix it later", (t) =
   }
 });
 
+test("Polymath knows which models are ChatCompletion style", (t) => {
+  try {
+    let client = new Polymath({
+      apiKey: "sk-fake-api-key",
+      libraryFiles: ["./libraries/knowledge-string.json"],
+    });
+
+    if (
+      client.isChatModel("gpt-3.5-turbo") &&
+      client.isChatModel("gpt-4") &&
+      !client.isChatModel("text-davinci-003") &&
+      !client.isChatModel("invalid")
+    ) {
+      t.pass();
+    }
+  } catch (e) {
+    log("ERROR:", e);
+    t.fail();
+  }
+});
+
 test("Polymath can get embeddings", async (t) => {
   let client = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,

@@ -203,7 +203,7 @@ class Polymath {
         ? { responseType: "stream" }
         : {};
 
-      if (model == "gpt-3.5-turbo") {
+      if (this.isChatModel(model)) {
         let messages = [];
         if (completionOptions?.system) {
           messages.push({
@@ -294,6 +294,12 @@ class Polymath {
     return encode(query + this.promptTemplate).length;
   }
 
+  // Does the model work with the OpenAI chat model API?
+  isChatModel(model) {
+    const chatModels = ["gpt-3.5-turbo", "gpt-4"];
+    return chatModels.includes(model);
+  }
+
   processData(data, model, streamProcessor, results) {
     const lines = data
       .toString()
@@ -310,7 +316,7 @@ class Polymath {
         // console.log("Message", message);
         const parsed = JSON.parse(message);
         let delta;
-        if (model === "gpt-3.5-turbo") {
+        if (this.isChatModel(model)) {
           delta = parsed.choices[0].delta?.content;
         } else {
           delta = parsed.choices[0].text;
