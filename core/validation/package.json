@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A library for validating Polymath format",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./index.js",
   "publishConfig": {
     "access": "public"
   },
@@ -24,7 +24,8 @@
   },
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
   "files": [
-    "dist"
+    "dist",
+    "index.js"
   ],
   "ava": {
     "files": [
