@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/polymath-ai/polymath-js-client#readme",
   "dependencies": {
+    "@polymath-ai/validation": "*",
     "dotenv": "^16.0.3",
     "esm": "^3.2.25",
     "find-up": "^6.3.0",

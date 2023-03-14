@@ -3,6 +3,6 @@
     "composite": true,
     "outDir": "./dist"
   },
-  "include": ["src/**/*", "tests/**/*"],
+  "include": ["src/**/*", "tests/**/*", "index.ts"],
   "extends": "@polymath-ai/infra/tsconfig/base.json"
 }
