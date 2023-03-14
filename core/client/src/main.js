@@ -296,8 +296,7 @@ class Polymath {
 
   // Does the model work with the OpenAI chat model API?
   isChatModel(model) {
-    const chatModels = ["gpt-3.5-turbo", "gpt-4"];
-    return chatModels.includes(model);
+    return ["gpt-3.5-turbo", "gpt-4"].includes(model);
   }
 
   processData(data, model, streamProcessor, results) {
