@@ -37,7 +37,7 @@ export async function action({ request }: ActionArgs) {
   }
   let client = new Polymath(clientOptions);
 
-  if (!client.valid()) {
+  if (!client.validate()) {
     client.servers = [];
     if (polymathHostConfig.server_options) {
       polymathHostConfig.server_options.forEach((server) => {
