@@ -49,80 +49,17 @@ class PolymathEndpoint {
   }
 
   async validate() {
-    const validator = new Validator();
-    await validator.run();
-
-    const countTokens = (bits) =>
-      bits.reduce((acc, bit) => acc + bit.token_count, 0);
-
-    // This will be the validation log.
-    const log = [];
-
     // prepare a random embedding to send to the server
     const randomEmbedding = new Array(EMBEDDING_VECTOR_LENGTH)
       .fill(0)
       .map(() => Math.random());
 
-    let valid = false;
-    let response = null;
+    const ask = async (args) => {
+      return await this.ask(randomEmbedding, args);
+    };
 
-    // See if it even responds.
-    let requestedTokenCount = 1500;
-    try {
-      response = await this.ask(randomEmbedding, {
-        count: requestedTokenCount,
-        count_type: "token",
-      });
-      log.push({
-        message: "Server responded to request",
-      });
-    } catch (error) {
-      log.push({ message: "Server did not respond to request", error });
-      return { valid, log };
-    }
-
-    // See if we received bits.
-    if (!response.bits) {
-      log.push({ message: "Server did not return any bits" });
-      return { valid, log };
-    }
-    log.push({
-      message: `Server returned ${response.bits.length} bits`,
-    });
-
-    // See if it counted tokens correctly.
-    if (countTokens(response.bits) > requestedTokenCount) {
-      log.push({ message: "Does not seem to respond to 'token' parameter." });
-      return { valid, log };
-    }
-    log.push({
-      message: "Server correctly accounted for the 'token' parameter",
-    });
-
-    // Try again with a different token count.
-    requestedTokenCount = 1000;
-    try {
-      response = await this.ask(randomEmbedding, {
-        count: requestedTokenCount,
-        count_type: "token",
-      });
-      log.push({ message: "Server responded to request" });
-    } catch (error) {
-      log.push({ message: "Server did not respond to request", error });
-      return { valid, log };
-    }
-
-    // See if it counted tokens correctly again.
-    if (countTokens(response.bits) > requestedTokenCount) {
-      log.push({ message: "Does not seem to respond to 'token' parameter." });
-      return { valid, log };
-    }
-    log.push({
-      message: "Server correctly accounted for the 'token' parameter",
-    });
-
-    valid = true;
-    return { valid, log };
+    const validator = new Validator(ask);
+    return await validator.run();
   }
 }
 
