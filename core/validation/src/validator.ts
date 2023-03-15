@@ -1,4 +1,9 @@
-type RequestMaker = (args: any) => Promise<any>;
+import { Harness, check, RequestMaker, ValidationResult } from "./harness.js";
+
+export interface ValidatorResults {
+  valid: boolean;
+  details: ValidationResult[];
+}
 
 export class Validator {
   makeRequest: RequestMaker;
@@ -7,73 +12,31 @@ export class Validator {
     this.makeRequest = makeRequest;
   }
 
-  async run() {
+  async run(): Promise<ValidatorResults> {
     const countTokens = (bits: any) =>
       bits.reduce((acc: any, bit: any) => acc + bit.token_count, 0);
 
-    // This will be the validation log.
-    const log = [];
+    const harness = new Harness(this.makeRequest);
 
-    let valid = false;
-    let response = null;
+    await harness.validate(
+      { count: 1500, count_type: "token" },
+      check("Result contains bits", (c) => !!c.response.bits),
+      check(
+        "Server accurately responds to `token` parameter",
+        (c) => countTokens(c.response.bits) < c.args.count
+      )
+    );
 
-    // See if it even responds.
-    let requestedTokenCount = 1500;
-    try {
-      response = await this.makeRequest({
-        count: requestedTokenCount,
-        count_type: "token",
-      });
-      log.push({
-        message: "Server responded to request",
-      });
-    } catch (error: any) {
-      console.error("Server did not respond to request", error);
-      log.push({ message: "Server did not respond to request", error });
-      return { valid, log };
-    }
+    await harness.validate(
+      { count: 1000, count_type: "token" },
+      check(
+        "Server accurately responds to a different `token` parameter",
+        (c) => countTokens(c.response.bits) < c.args.count
+      )
+    );
 
-    // See if we received bits.
-    if (!response.bits) {
-      log.push({ message: "Server did not return any bits" });
-      return { valid, log };
-    }
-    log.push({
-      message: `Server returned ${response.bits.length} bits`,
-    });
-
-    // See if it counted tokens correctly.
-    if (countTokens(response.bits) > requestedTokenCount) {
-      log.push({ message: "Does not seem to respond to 'token' parameter." });
-      return { valid, log };
-    }
-    log.push({
-      message: "Server correctly accounted for the 'token' parameter",
-    });
-
-    // Try again with a different token count.
-    requestedTokenCount = 1000;
-    try {
-      response = await this.makeRequest({
-        count: requestedTokenCount,
-        count_type: "token",
-      });
-      log.push({ message: "Server responded to request" });
-    } catch (error) {
-      log.push({ message: "Server did not respond to request", error });
-      return { valid, log };
-    }
-
-    // See if it counted tokens correctly again.
-    if (countTokens(response.bits) > requestedTokenCount) {
-      log.push({ message: "Does not seem to respond to 'token' parameter." });
-      return { valid, log };
-    }
-    log.push({
-      message: "Server correctly accounted for the 'token' parameter",
-    });
-
-    valid = true;
-    return { valid, log };
+    const details = harness.log.results;
+    const valid = details.every((entry) => entry.success);
+    return { valid, details };
   }
 }
