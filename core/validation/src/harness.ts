@@ -1,7 +1,7 @@
 export type PolymathResponse = any;
 export type PolymathArgs = any;
-export type RequestMaker = (args: any) => Promise<PolymathResponse>;
-export type Checker = (c: ValidationContext) => void;
+export type RequestMaker = (args: PolymathArgs) => Promise<PolymathResponse>;
+export type Checker = (c: ValidationContext) => boolean;
 
 export interface ValidationResult {
   description: string;
@@ -18,20 +18,14 @@ class ValidationLogger {
     this.results.push({ description, success, exception });
   }
 
-  success(description: string) {
-    const success = true;
-    this.results.push({ description, success });
-  }
-
-  failure(description: string) {
-    const success = false;
+  log(success: boolean, description: string) {
     this.results.push({ description, success });
   }
 }
 
 interface ValidationContext {
-  response: PolymathResponse;
   args: PolymathArgs;
+  response: PolymathResponse;
 }
 
 class ValidationCheck {
@@ -43,8 +37,8 @@ class ValidationCheck {
     this.handler = handler;
   }
 
-  run(c: ValidationContext) {
-    this.handler(c);
+  run(log: ValidationLogger, c: ValidationContext) {
+    log.log(this.handler(c), this.description);
   }
 }
 
@@ -67,7 +61,7 @@ export class Harness {
       return;
     }
     try {
-      checks.forEach((check) => check.run({ response, args }));
+      checks.forEach((check) => check.run(this.log, { response, args }));
     } catch (e: any) {
       this.log.exception(e);
     }
