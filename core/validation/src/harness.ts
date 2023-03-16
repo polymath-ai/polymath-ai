@@ -1,6 +1,7 @@
-export type PolymathResponse = any;
-export type PolymathArgs = any;
-export type RequestMaker = (args: PolymathArgs) => Promise<PolymathResponse>;
+import { PolymathRequest } from "./request.js";
+import { PolymathResponse } from "./response.js";
+
+export type RequestMaker = (args: PolymathRequest) => Promise<PolymathResponse>;
 export type Checker = (c: ValidationContext) => boolean;
 
 export interface ValidationResult {
@@ -24,7 +25,7 @@ class ValidationLogger {
 }
 
 interface ValidationContext {
-  args: PolymathArgs;
+  args: PolymathRequest;
   response: PolymathResponse;
 }
 
@@ -51,9 +52,8 @@ export class Harness {
     this.makeRequest = makeRequest;
   }
 
-  async validate(args: PolymathArgs, ...checks: ValidationCheck[]) {
-    // TODO: Validate args.
-    let response: PolymathResponse = null;
+  async validate(args: PolymathRequest, ...checks: ValidationCheck[]) {
+    let response: PolymathResponse;
     try {
       response = await this.makeRequest(args);
     } catch (e: any) {
