@@ -22,7 +22,7 @@ export class Validator {
       { count: 1500, count_type: "token" },
       check("Result contains bits", (c) => !!c.response.bits),
       check(
-        "Server accurately responds to `token` parameter",
+        "Endpoint accurately responds to `token` parameter",
         (c) => countTokens(c.response.bits) < c.args.count
       )
     );
@@ -30,7 +30,7 @@ export class Validator {
     await harness.validate(
       { count: 1000, count_type: "token" },
       check(
-        "Server accurately responds to a different `token` parameter",
+        "Endpoint accurately responds to a different `token` parameter",
         (c) => countTokens(c.response.bits) < c.args.count
       )
     );
