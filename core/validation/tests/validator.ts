@@ -1,10 +1,13 @@
 import test from "ava";
 
+import { PolymathRequest } from "../src/request.js";
+import { PolymathResponse } from "../src/response.js";
 import { Validator } from "../src/validator.js";
-import { PolymathArgs, PolymathResponse } from "../src/harness.js";
 
 test("validator smoke test", async (t) => {
-  const makeRequest = async (args: PolymathArgs): Promise<PolymathResponse> => {
+  const makeRequest = async (
+    args: PolymathRequest
+  ): Promise<PolymathResponse> => {
     return { bits: [{ token_count: args.count - 1 }] };
   };
   const validator = new Validator(makeRequest);
