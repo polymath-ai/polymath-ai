@@ -8,7 +8,11 @@ test("validator smoke test", async (t) => {
   const makeRequest = async (
     args: PolymathRequest
   ): Promise<PolymathResponse> => {
-    return { bits: [{ token_count: args.count - 1 }] };
+    return {
+      version: 1,
+      embedding_model: "openai.com:text-embedding-ada-002",
+      bits: [{ token_count: args.count - 1 }],
+    };
   };
   const validator = new Validator(makeRequest);
   const result = await validator.run();
