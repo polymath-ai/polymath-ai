@@ -2,7 +2,7 @@ export interface Bit {
   token_count: number;
 }
 
-export interface PolymathResponse {
+export interface Response {
   version: number;
   //Currently the only supported model is 'openai.com:text-embedding-ada-002'.
   // That might change in the future.

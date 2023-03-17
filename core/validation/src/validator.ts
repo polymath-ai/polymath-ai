@@ -1,4 +1,4 @@
-import { Harness, check, RequestMaker, ValidationResult } from "./harness.js";
+import { Harness, check, Endpoint, ValidationResult } from "./harness.js";
 
 export interface ValidatorResults {
   valid: boolean;
@@ -6,9 +6,9 @@ export interface ValidatorResults {
 }
 
 export class Validator {
-  makeRequest: RequestMaker;
+  makeRequest: Endpoint;
 
-  constructor(makeRequest: RequestMaker) {
+  constructor(makeRequest: Endpoint) {
     this.makeRequest = makeRequest;
   }
 
