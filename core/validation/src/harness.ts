@@ -1,7 +1,7 @@
-import { PolymathRequest } from "./request.js";
-import { PolymathResponse } from "./response.js";
+import { Request } from "./request.js";
+import { Response } from "./response.js";
 
-export type RequestMaker = (args: PolymathRequest) => Promise<PolymathResponse>;
+export type Endpoint = (args: Request) => Promise<Response>;
 export type Checker = (c: ValidationContext) => boolean;
 
 export interface ValidationResult {
@@ -25,8 +25,8 @@ class ValidationLogger {
 }
 
 interface ValidationContext {
-  args: PolymathRequest;
-  response: PolymathResponse;
+  args: Request;
+  response: Response;
 }
 
 class ValidationCheck {
@@ -45,17 +45,17 @@ class ValidationCheck {
 
 // A simple test-like validation harness.
 export class Harness {
-  makeRequest: RequestMaker;
+  endpoint: Endpoint;
   log: ValidationLogger = new ValidationLogger();
 
-  constructor(makeRequest: RequestMaker) {
-    this.makeRequest = makeRequest;
+  constructor(endpoint: Endpoint) {
+    this.endpoint = endpoint;
   }
 
-  async validate(args: PolymathRequest, ...checks: ValidationCheck[]) {
-    let response: PolymathResponse;
+  async validate(args: Request, ...checks: ValidationCheck[]) {
+    let response: Response;
     try {
-      response = await this.makeRequest(args);
+      response = await this.endpoint(args);
     } catch (e: any) {
       this.log.exception(e);
       return;
