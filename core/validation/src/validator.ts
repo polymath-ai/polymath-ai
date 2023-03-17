@@ -6,17 +6,17 @@ export interface ValidatorResults {
 }
 
 export class Validator {
-  makeRequest: Endpoint;
+  endpoint: Endpoint;
 
-  constructor(makeRequest: Endpoint) {
-    this.makeRequest = makeRequest;
+  constructor(endpoint: Endpoint) {
+    this.endpoint = endpoint;
   }
 
   async run(): Promise<ValidatorResults> {
     const countTokens = (bits: any) =>
       bits.reduce((acc: any, bit: any) => acc + bit.token_count, 0);
 
-    const harness = new Harness(this.makeRequest);
+    const harness = new Harness(this.endpoint);
 
     await harness.validate(
       { count: 1500, count_type: "token" },
