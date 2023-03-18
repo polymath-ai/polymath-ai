@@ -60,11 +60,14 @@ export class Complete extends Action {
           streamProcessor
         );
       } else {
-        let results = await client.completion(
+        // TODO: Match `results` to the type returned by `client.completion`
+        // Currently, I am using `any` to avoid a type error.
+        let results: any = await client.completion(
           question,
           null, // we don't have existing polymath results
           null, // we don't need no ask Options
-          completionOptions
+          completionOptions,
+          null // don't have the stream processsor
         );
 
         let output = results.completion + "\n\n" + this.sources(results.infos);
