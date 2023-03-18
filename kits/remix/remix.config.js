@@ -7,11 +7,13 @@ module.exports = {
   // publicPath: "/build/",
   serverDependenciesToBundle: [
     "@polymath-ai/client",
+    "@polymath-ai/validation",
     "globby",
     "slash",
     "find-up",
     "locate-path",
     "p-locate",
+    "path-exists",
   ],
   future: {
     unstable_tailwind: true,
