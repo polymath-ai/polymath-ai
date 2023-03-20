@@ -1,13 +1,25 @@
 import fs from "fs";
 import { globbySync } from "globby";
 
+import {
+  Bit,
+  BitSimilarity,
+  EmbeddingVector,
+  LibraryFileName,
+  LibraryFileNamePattern,
+  PackedLibraryData
+} from "./types.js";
+
 import { decodeEmbedding, cosineSimilarity } from "./utils.js";
 
 // --------------------------------------------------------------------------
 // Query a local library of bits
 // --------------------------------------------------------------------------
 class PolymathLocal {
-  constructor(libraries) {
+
+  _libraryBits : Bit[]
+
+  constructor(libraries : LibraryFileNamePattern[]) {
     let expandedLibraries = this.expandLibraries(libraries);
     this._libraryBits = this.loadLibraryBits(expandedLibraries);
   }
@@ -15,7 +27,7 @@ class PolymathLocal {
   // Expand any directories or globs in the list of libraries
   // E.g. if you pass in ["./mybits/*.json", "./mybits2"], this will return
   // ["./mybits/1.json", "./mybits/2.json", "./mybits2/1.json", "./mybits2/2.json"]
-  expandLibraries(libraries) {
+  expandLibraries(libraries : LibraryFileNamePattern[]) : LibraryFileName[] {
     let expandedLibraries = [];
     for (const filepattern of libraries) {
       const files = globbySync([filepattern, "!*.SECRET.*"], {
@@ -32,12 +44,12 @@ class PolymathLocal {
   }
 
   // Load up all of the library bits from the given library JSON files
-  loadLibraryBits(libraries) {
+  loadLibraryBits(libraries : LibraryFileName[]) : Bit[] {
     let libraryBits = [];
     for (const filename of libraries) {
       try {
         const data = fs.readFileSync(filename, "utf8");
-        const json = JSON.parse(data);
+        const json : PackedLibraryData = JSON.parse(data);
         const bits = json.bits.map((bit) => {
           return {
             ...bit,
@@ -56,7 +68,7 @@ class PolymathLocal {
   }
 
   // Given an embedding, find the bits with the most similar embeddings
-  similarBits(embedding) {
+  similarBits(embedding : EmbeddingVector) : BitSimilarity[] {
     return (
       this._libraryBits
         .map((bit) => {
@@ -70,7 +82,7 @@ class PolymathLocal {
     );
   }
 
-  ask(queryEmbedding) {
+  ask(queryEmbedding : EmbeddingVector) : BitSimilarity[] {
     return this.similarBits(queryEmbedding);
   }
 }

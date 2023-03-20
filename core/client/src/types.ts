@@ -7,3 +7,29 @@ export type EmbeddingModelName = 'text-embedding-ada-002';
 export type CompletionModelName = 'text-davinci-003' | 'gpt-3.5-turbo';
 
 export type ModelName = EmbeddingModelName | CompletionModelName;
+
+//A filename like './mybits/file.json'
+export type LibraryFileName = string;
+//A parttern deonoting a filename, like './mybits/*.json'
+export type LibraryFileNamePattern = string;
+
+export type Bit = {
+    text: string,
+    embedding: EmbeddingVector
+}
+
+export type BitSimilarity = Bit & {
+    similarity: number
+}
+
+export type PackedBit = {
+    [Key in keyof Bit]: Bit[Key] extends EmbeddingVector ? Base64Embedding : Bit[Key];
+};
+
+export type LibraryData = {
+    bits: Bit[]
+}
+
+export type PackedLibraryData = {
+    [Key in keyof LibraryData]: LibraryData[Key] extends Bit[] ? PackedBit[] : LibraryData[Key];
+}
