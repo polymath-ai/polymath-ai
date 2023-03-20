@@ -26,10 +26,9 @@ class PolymathLocal {
       expandedLibraries.push(...files);
 
       // console.log("In: ", libraries);
-      // console.log("Out: ", expandedLibraries);
-
-      return expandedLibraries;
+      // console.log("Out: ", expandedLibraries);      
     }
+    return expandedLibraries;
   }
 
   // Load up all of the library bits from the given library JSON files
