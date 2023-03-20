@@ -1,5 +1,5 @@
 export interface Bit {
-  token_count: number;
+  token_count?: number;
 }
 
 export interface Response {
