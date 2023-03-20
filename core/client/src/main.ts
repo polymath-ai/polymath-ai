@@ -15,7 +15,18 @@ import * as dotenv from "dotenv";
 import { findUpSync } from "find-up";
 
 import {
-  AskOptions, CompletionOptions, CompletionResult, EmbeddingVector, LibraryFileName, ModelName, PackedBit, PineconeConfig, PolymathOptions, PromptTemplate, Server, StreamProcessor
+  AskOptions,
+  CompletionOptions,
+  CompletionResult,
+  EmbeddingVector,
+  LibraryFileName,
+  ModelName,
+  PackedBit,
+  PineconeConfig,
+  PolymathOptions,
+  PromptTemplate,
+  Server,
+  StreamProcessor
 } from "@polymath-ai/types";
 
 dotenv.config({
