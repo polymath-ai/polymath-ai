@@ -121,7 +121,7 @@ class PolymathResults {
     let response : PackedLibraryData = {
       version: this._askOptions && this._askOptions.version ? this._askOptions.version : 1,
       embedding_model:
-        this._askOptions && this._askOptions.query_embedding_model ? this._askOptions.query_embedding_model : "openai:text-embedding-ada-002",
+        this._askOptions && this._askOptions.query_embedding_model ? this._askOptions.query_embedding_model : "openai.com:text-embedding-ada-002",
       bits: this._bits
     };
     if (this._askOptions?.omit) {
