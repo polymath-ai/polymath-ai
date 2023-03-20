@@ -80,8 +80,48 @@ export type AccessToken = string;
 //TODO: audit uses of these, is it supposed to be bits or tokens?
 export type CountType = 'bit' | 'token';
 
+//May include `{context}` and `{query}`
+export type PromptTemplate = string;
+
+export type PolymathOptions = {
+    askOptions? : AskOptions;
+    //OpenAI API key
+    apiKey: string;
+    pinecone? : PineconeConfig;
+    completionOptions? : CompletionOptions;
+    libraryFiles : LibraryFileName[];
+    servers : Server[];
+    promptTemplate? : PromptTemplate,
+    debug? : boolean;
+}
+
+//TODO: is this actually an OpenAICompletionOptions or something?
+export type CompletionOptions = {
+    prompt_template? : PromptTemplate;
+    model? : CompletionModelName;
+    stream? : boolean;
+    system? : string;
+    temperature? : number;
+    max_tokens? : number;
+    top_p? : number;
+    presence_penalty? : number;
+    frequency_penalty? : number;
+    n? : number;
+    stop? : string | string[];
+    best_of? : number;
+    echo? : false;
+    logprobs? : number;
+};
+
+export type CompletionResult = {
+    bits: PackedBit[],
+    infos: BitInfo[],
+    completion?: string
+};
+
 export type AskOptions = {
     version? : number,
+    query_embedding? : EmbeddingVector,
     query_embedding_model? : EmbeddingModelName,
     count? : number,
     count_type? : CountType,
@@ -89,5 +129,10 @@ export type AskOptions = {
     access_token? : AccessToken,
     sort? : Sort,
 };
+
+export type StreamProcessor = {
+    processDelta : (delta : string) => void ;
+    processResults : (results : CompletionResult) => void;
+}
 
 export type Server = string;

@@ -23,9 +23,9 @@ import {
 class PolymathResults {
 
   _bits : PackedBit[]
-  _askOptions : AskOptions
+  _askOptions : AskOptions | undefined
 
-  constructor(bits : PackedBit[], askOptions : AskOptions) {
+  constructor(bits : PackedBit[], askOptions? : AskOptions) {
     this._bits = bits;
     this._askOptions = askOptions;
   }
@@ -101,7 +101,7 @@ class PolymathResults {
   }
 
   // Return info objects ordered by the most similarity, no duplicates
-  infoSortedBySimilarity() {
+  infoSortedBySimilarity() : BitInfo[] {
     const uniqueInfos : BitInfo[] = [];
     return this._bits
       .sort((a, b) => (b.similarity || 0) - (a.similarity || 0))
@@ -113,15 +113,15 @@ class PolymathResults {
         }
         return false;
       })
-      .map((bit) => bit.info);
+      .map((bit) => bit.info || {url: ''});
   }
 
   // Return a JSON response appropriate for sending back to a client
-  response() {
+  response() : PackedLibraryData {
     let response : PackedLibraryData = {
-      version: this._askOptions.version ?? 1,
+      version: this._askOptions && this._askOptions.version ? this._askOptions.version : 1,
       embedding_model:
-        this._askOptions.query_embedding_model || "openai:text-embedding-ada-002",
+        this._askOptions && this._askOptions.query_embedding_model ? this._askOptions.query_embedding_model : "openai:text-embedding-ada-002",
       bits: this._bits
     };
     if (this._askOptions?.omit) {
