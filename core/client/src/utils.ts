@@ -5,7 +5,7 @@ import {
   Base64Embedding,
   EmbeddingVector,
   ModelName
-} from "./types.js";
+} from "@polymath-ai/types";
 
 // --------------------------------------------------------------------------
 const DEFAULT_MAX_TOKENS_COMPLETION = 1024; // tokens reserved for the answer

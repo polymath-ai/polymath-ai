@@ -7,7 +7,7 @@ import {
   LibraryFileName,
   LibraryFileNamePattern,
   PackedLibraryData
-} from "./types.js";
+} from "@polymath-ai/types";
 
 import { decodeEmbedding, cosineSimilarity } from "./utils.js";
 

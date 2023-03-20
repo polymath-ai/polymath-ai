@@ -7,7 +7,7 @@ import {
   OmitConfiguration,
   PackedBit,
   PackedLibraryData
-} from "./types.js";
+} from "@polymath-ai/types";
 
 import {
   DEFAULT_MAX_TOKENS_FOR_MODEL

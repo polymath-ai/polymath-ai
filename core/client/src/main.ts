@@ -16,7 +16,7 @@ import { findUpSync } from "find-up";
 
 import {
   AskOptions, CompletionOptions, CompletionResult, EmbeddingVector, LibraryFileName, ModelName, PackedBit, PineconeConfig, PolymathOptions, PromptTemplate, Server, StreamProcessor
-} from "./types.js";
+} from "@polymath-ai/types";
 
 dotenv.config({
   path: findUpSync(".env"),

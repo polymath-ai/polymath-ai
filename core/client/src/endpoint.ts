@@ -7,7 +7,7 @@ import {
   EmbeddingVector,
   PackedLibraryData,
   Server
-} from "./types.js";
+} from "@polymath-ai/types";
 
 //
 // Talk to remote servers and ask for their bits

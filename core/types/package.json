@@ -1,0 +1,22 @@
+{
+  "name": "@polymath-ai/types",
+  "version": "1.0.0",
+  "description": "Shared types for polymath-ai",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc --b",
+    "watch": "tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@polymath-ai/infra": "*"
+  }
+}

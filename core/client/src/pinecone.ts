@@ -7,7 +7,7 @@ import {
   PineconeBit,
   PineconeConfig,
   PineconeResult
-} from "./types.js";
+} from "@polymath-ai/types";
 
 // --------------------------------------------------------------------------
 // Talk to Pinecone to do the vector search
