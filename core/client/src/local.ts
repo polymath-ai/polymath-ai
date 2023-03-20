@@ -3,7 +3,6 @@ import { globbySync } from "globby";
 
 import {
   Bit,
-  BitSimilarity,
   EmbeddingVector,
   LibraryFileName,
   LibraryFileNamePattern,
@@ -68,7 +67,7 @@ class PolymathLocal {
   }
 
   // Given an embedding, find the bits with the most similar embeddings
-  similarBits(embedding : EmbeddingVector) : BitSimilarity[] {
+  similarBits(embedding : EmbeddingVector) : Bit[] {
     return (
       this._libraryBits
         .map((bit) => {
@@ -82,7 +81,7 @@ class PolymathLocal {
     );
   }
 
-  ask(queryEmbedding : EmbeddingVector) : BitSimilarity[] {
+  ask(queryEmbedding : EmbeddingVector) : Bit[] {
     return this.similarBits(queryEmbedding);
   }
 }

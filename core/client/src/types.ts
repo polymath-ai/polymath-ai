@@ -22,11 +22,8 @@ export type Bit = {
     text: string,
     token_count: number,
     embedding: EmbeddingVector,
-    info: BitInfo
-}
-
-export type BitSimilarity = Bit & {
-    similarity: number
+    info: BitInfo,
+    similarity?: number
 }
 
 export type PackedBit = {
@@ -61,6 +58,7 @@ export type AskOptions = {
     count_type? : CountType,
     omit?: OmitConfiguration,
     access_token? : AccessToken,
+    sort? : Sort,
 };
 
 export type Server = string;
