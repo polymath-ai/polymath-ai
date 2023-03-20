@@ -13,9 +13,16 @@ export type LibraryFileName = string;
 //A parttern deonoting a filename, like './mybits/*.json'
 export type LibraryFileNamePattern = string;
 
+export type BitInfo = {
+    url: string
+    //TODO: add missing fields
+}
+
 export type Bit = {
     text: string,
-    embedding: EmbeddingVector
+    token_count: number,
+    embedding: EmbeddingVector,
+    info: BitInfo
 }
 
 export type BitSimilarity = Bit & {
@@ -26,7 +33,14 @@ export type PackedBit = {
     [Key in keyof Bit]: Bit[Key] extends EmbeddingVector ? Base64Embedding : Bit[Key];
 };
 
+export type Sort = 'similarity';
+
 export type LibraryData = {
+    version: number,
+    embedding_model: EmbeddingModelName,
+    omit? : OmitConfiguration,
+    count_type? : CountType,
+    sort? : Sort,
     bits: Bit[]
 }
 
@@ -37,11 +51,14 @@ export type PackedLibraryData = {
 export type OmitConfiguration = string;
 export type AccessToken = string;
 
+//TODO: audit uses of these, is it supposed to be bits or tokens?
+export type CountType = 'bit' | 'token';
+
 export type AskOptions = {
-    version? : string,
+    version? : number,
     query_embedding_model? : EmbeddingModelName,
     count? : number,
-    count_type? : 'bit' | 'token'
+    count_type? : CountType,
     omit?: OmitConfiguration,
     access_token? : AccessToken,
 };

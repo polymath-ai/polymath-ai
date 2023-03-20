@@ -27,7 +27,7 @@ class PolymathEndpoint {
 
     // Configure all of the options
     const form = new FormData();
-    form.append("version", askOptions?.version || "1");
+    form.append("version", "" + (askOptions?.version || 1));
     form.append(
       "query_embedding_model",
       askOptions?.query_embedding_model || "openai.com:text-embedding-ada-002"
