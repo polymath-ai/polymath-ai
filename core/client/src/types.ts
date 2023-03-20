@@ -2,7 +2,7 @@
 export type EmbeddingVector = number[];
 export type Base64Embedding = string;
 
-export type EmbeddingModelName = 'text-embedding-ada-002';
+export type EmbeddingModelName = 'openai:text-embedding-ada-002';
 
 export type CompletionModelName = 'text-davinci-003' | 'gpt-3.5-turbo';
 
@@ -33,3 +33,17 @@ export type LibraryData = {
 export type PackedLibraryData = {
     [Key in keyof LibraryData]: LibraryData[Key] extends Bit[] ? PackedBit[] : LibraryData[Key];
 }
+
+export type OmitConfiguration = string;
+export type AccessToken = string;
+
+export type AskOptions = {
+    version? : string,
+    query_embedding_model? : EmbeddingModelName,
+    count? : number,
+    count_type? : 'bit' | 'token'
+    omit?: OmitConfiguration,
+    access_token? : AccessToken,
+};
+
+export type Server = string;

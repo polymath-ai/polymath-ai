@@ -2,15 +2,25 @@ import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./utils.js";
 
 import { Validator } from "@polymath-ai/validation";
 
+import {
+  AskOptions,
+  EmbeddingVector,
+  PackedLibraryData,
+  Server
+} from "./types.js";
+
 //
 // Talk to remote servers and ask for their bits
 //
 class PolymathEndpoint {
-  constructor(server) {
+
+  _server : Server;
+
+  constructor(server : Server) {
     this._server = server;
   }
 
-  async ask(queryEmbedding, askOptions) {
+  async ask(queryEmbedding : EmbeddingVector, askOptions? : AskOptions) : Promise<PackedLibraryData> {
     if (!queryEmbedding) {
       throw new Error("You need to ask a question of the Polymath");
     }
@@ -54,7 +64,7 @@ class PolymathEndpoint {
       .fill(0)
       .map(() => Math.random());
 
-    const ask = async (args) => {
+    const ask = async (args? : AskOptions) => {
       return await this.ask(randomEmbedding, args);
     };
 
