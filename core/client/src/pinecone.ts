@@ -1,15 +1,28 @@
 import { PineconeClient } from "pinecone-client";
 
+import {
+  BitInfo,
+  EmbeddingVector,
+  PackedBit,
+  PineconeBit,
+  PineconeConfig,
+  PineconeResult
+} from "./types.js";
+
 // --------------------------------------------------------------------------
 // Talk to Pinecone to do the vector search
 // --------------------------------------------------------------------------
 class PolymathPinecone {
-  constructor(config) {
+
+  _pinecone : PineconeClient<PineconeBit>;
+  _topK : number;
+
+  constructor(config : PineconeConfig) {
     this._pinecone = new PineconeClient(config);
     this._topK = config.topK || 10;
   }
 
-  async ask(queryEmbedding) {
+  async ask(queryEmbedding : EmbeddingVector) : Promise<PackedBit[]> {
     const result = await this._pinecone.query({
       vector: queryEmbedding,
       topK: this._topK,
@@ -23,11 +36,12 @@ class PolymathPinecone {
     });
   }
 
-  makeBit(pineconeResult) {
-    let bit = {
-      id: pineconeResult.id,
-      info: { url: pineconeResult.metadata?.url },
+  makeBit(pineconeResult : PineconeResult) {
+    const bit : PackedBit = {
+      id: pineconeResult.id
     };
+
+    const info : BitInfo = { url: pineconeResult.metadata?.url };
 
     if (pineconeResult.metadata?.text) bit.text = pineconeResult.metadata.text;
     if (pineconeResult.metadata?.token_count)
@@ -35,14 +49,16 @@ class PolymathPinecone {
     if (pineconeResult.metadata?.access_tag)
       bit.access_tag = pineconeResult.metadata?.access_tag;
     if (pineconeResult.metadata?.image_url)
-      bit.info.image_url = pineconeResult.metadata.image_url;
+      info.image_url = pineconeResult.metadata.image_url;
     if (pineconeResult.metadata?.title)
-      bit.info.title = pineconeResult.metadata.title;
+      info.title = pineconeResult.metadata.title;
     if (pineconeResult.metadata?.description)
-      bit.info.description = pineconeResult.metadata.description;
+      info.description = pineconeResult.metadata.description;
     if ('score' in pineconeResult) 
       bit.similarity = pineconeResult.score;
 
+
+    bit.info = info;
     return bit;
   }
 }

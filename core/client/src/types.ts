@@ -13,18 +13,46 @@ export type LibraryFileName = string;
 //A parttern deonoting a filename, like './mybits/*.json'
 export type LibraryFileNamePattern = string;
 
+//Copied from pinecone library because their configOpts are unexported
+export type PineconeConfig = {
+    apiKey?: string;
+    baseUrl?: string;
+    namespace?: string;
+    topK? : number;
+};
+
+export type PineconeResult = {
+    id: string,
+    score: number,
+    metadata: PineconeBit
+};
+
+export type PineconeBit = BitInfo & {
+    text?: string,
+    token_count? : number,
+    access_tag? :AccessTag,
+}
+
 export type BitInfo = {
     url: string
-    //TODO: add missing fields
+    image_url?: string,
+    title? : string,
+    description? : string
 }
+
+export type AccessTag = string;
+
+export type BitID = string;
 
 export type Bit = {
     //Omit settings could lead to anhy part of Bit being omitted.
+    id? : BitID,
     text?: string,
     token_count?: number,
     embedding?: EmbeddingVector,
     info?: BitInfo,
-    similarity?: number
+    similarity?: number,
+    access_tag? : AccessTag
 }
 
 export type PackedBit = {
