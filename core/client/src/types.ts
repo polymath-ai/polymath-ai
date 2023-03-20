@@ -19,15 +19,16 @@ export type BitInfo = {
 }
 
 export type Bit = {
-    text: string,
-    token_count: number,
-    embedding: EmbeddingVector,
-    info: BitInfo,
+    //Omit settings could lead to anhy part of Bit being omitted.
+    text?: string,
+    token_count?: number,
+    embedding?: EmbeddingVector,
+    info?: BitInfo,
     similarity?: number
 }
 
 export type PackedBit = {
-    [Key in keyof Bit]: Bit[Key] extends EmbeddingVector ? Base64Embedding : Bit[Key];
+    [Key in keyof Bit]: Bit[Key] extends (EmbeddingVector | undefined) ? Base64Embedding | undefined : Bit[Key];
 };
 
 export type Sort = 'similarity';

@@ -52,7 +52,7 @@ class PolymathLocal {
         const bits = json.bits.map((bit) => {
           return {
             ...bit,
-            embedding: decodeEmbedding(bit.embedding),
+            embedding: decodeEmbedding(bit.embedding || ''),
           };
         });
         libraryBits.push(...bits);
@@ -71,6 +71,7 @@ class PolymathLocal {
     return (
       this._libraryBits
         .map((bit) => {
+          if (!bit.embedding) throw new Error('Bit was missing embedding');
           return {
             ...bit,
             similarity: cosineSimilarity(embedding, bit.embedding),
