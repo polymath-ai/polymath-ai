@@ -1,3 +1,5 @@
+import { encode } from "gpt-3-encoder";
+
 import {
   AskOptions,
   BitInfo,
@@ -45,7 +47,7 @@ class PolymathResults {
     const includedBits = [];
     for (let i = 0; i < this._bits.length; i++) {
       const bit = this._bits[i];
-      const bitTokenCount = bit.token_count ||  encodeURI(bit.text || '').length; // TODO: no token_count huh?
+      const bitTokenCount = bit.token_count ||  encode(bit.text || '').length; // TODO: no token_count huh?
       if (totalTokens + bitTokenCount > maxTokens) {
         return includedBits;
       }
