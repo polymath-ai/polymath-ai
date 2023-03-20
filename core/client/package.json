@@ -24,6 +24,14 @@
     "url": "https://github.com/polymath-ai/polymath-js-client/issues"
   },
   "homepage": "https://github.com/polymath-ai/polymath-js-client#readme",
+  "ava": {
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
   "dependencies": {
     "@polymath-ai/validation": "*",
     "dotenv": "^16.0.3",
@@ -35,6 +43,9 @@
     "pinecone-client": "^1.0.1"
   },
   "devDependencies": {
-    "ava": "^5.2.0"
+    "ava": "^5.2.0",
+    "@ava/typescript": "^3.0.1",
+    "@polymath-ai/infra": "*",
+    "typescript": "^4.9.5"
   }
 }
