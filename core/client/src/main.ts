@@ -64,10 +64,10 @@ class Polymath {
     this.completionOptions = options.completionOptions;
 
     // An array of JSON library filenames
-    this.libraries = options.libraryFiles;
+    this.libraries = options.libraryFiles || [];
 
     // An array of Polymath server endpoints
-    this.servers = options.servers;
+    this.servers = options.servers || [];
 
     // A Pinecone config
     this.pinecone = options.pinecone;
@@ -93,7 +93,7 @@ class Polymath {
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
-  async ask(query : string, askOptions? :AskOptions) : Promise<PolymathResults> {
+  async ask(query : string, askOptions? : AskOptions) : Promise<PolymathResults> {
     if (!this.validate()) {
       throw new Error(
         "Polymath requires at least one library or polymath server or pinecone server"

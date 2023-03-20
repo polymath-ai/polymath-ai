@@ -86,11 +86,11 @@ export type PromptTemplate = string;
 export type PolymathOptions = {
     askOptions? : AskOptions;
     //OpenAI API key
-    apiKey: string;
+    apiKey?: string;
     pinecone? : PineconeConfig;
     completionOptions? : CompletionOptions;
-    libraryFiles : LibraryFileName[];
-    servers : Server[];
+    libraryFiles? : LibraryFileName[];
+    servers? : Server[];
     promptTemplate? : PromptTemplate,
     debug? : boolean;
 }

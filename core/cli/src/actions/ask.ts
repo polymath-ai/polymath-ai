@@ -23,7 +23,7 @@ export class Ask extends Action {
       let client = new Polymath(clientOptions);
 
       debug("asking...");
-      let results = await client.ask(question, null);
+      let results = await client.ask(question);
       let output = results.context();
 
       log("The Polymath answered with:\n\n", output);

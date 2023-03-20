@@ -54,8 +54,8 @@ export class Complete extends Action {
 
         client.completion(
           question,
-          null, // we don't have existing polymath results
-          null, // we don't need no ask Options
+          undefined, // we don't have existing polymath results
+          undefined, // we don't need no ask Options
           completionOptions,
           streamProcessor
         );
@@ -64,10 +64,10 @@ export class Complete extends Action {
         // Currently, I am using `any` to avoid a type error.
         let results: any = await client.completion(
           question,
-          null, // we don't have existing polymath results
-          null, // we don't need no ask Options
+          undefined, // we don't have existing polymath results
+          undefined, // we don't need no ask Options
           completionOptions,
-          null // don't have the stream processsor
+          undefined // don't have the stream processsor
         );
 
         let output = results.completion + "\n\n" + this.sources(results.infos);
