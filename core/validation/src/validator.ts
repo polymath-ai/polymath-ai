@@ -23,7 +23,7 @@ export class Validator {
       check("Result contains bits", (c) => !!c.response.bits),
       check(
         "Endpoint accurately responds to `token` parameter",
-        (c) => countTokens(c.response.bits) < c.args.count
+        (c) => countTokens(c.response.bits) < (c.args.count || 0)
       )
     );
 
@@ -31,7 +31,7 @@ export class Validator {
       { count: 1000, count_type: "token" },
       check(
         "Endpoint accurately responds to a different `token` parameter",
-        (c) => countTokens(c.response.bits) < c.args.count
+        (c) => countTokens(c.response.bits) < (c.args.count || 0)
       )
     );
 

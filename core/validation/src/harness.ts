@@ -1,7 +1,9 @@
-import { Request } from "./request.js";
-import { Response } from "./response.js";
+import {
+  AskOptions,
+  PackedLibraryData,
+} from "@polymath-ai/types";
 
-export type Endpoint = (args: Request) => Promise<Response>;
+export type Endpoint = (args: AskOptions) => Promise<PackedLibraryData>;
 export type Checker = (c: ValidationContext) => boolean;
 
 export interface ValidationResult {
@@ -25,8 +27,8 @@ class ValidationLogger {
 }
 
 interface ValidationContext {
-  args: Request;
-  response: Response;
+  args: AskOptions;
+  response: PackedLibraryData;
 }
 
 class ValidationCheck {
@@ -52,8 +54,8 @@ export class Harness {
     this.endpoint = endpoint;
   }
 
-  async validate(args: Request, ...checks: ValidationCheck[]) {
-    let response: Response;
+  async validate(args: AskOptions, ...checks: ValidationCheck[]) {
+    let response: PackedLibraryData;
     try {
       response = await this.endpoint(args);
     } catch (e: any) {
