@@ -5,13 +5,23 @@ import {
   BitInfo,
   CountType,
   OmitConfiguration,
+  OmitKeys,
+  OmitConfigurationField,
   PackedBit,
-  PackedLibraryData
+  PackedLibraryData,
+  TypedObject
 } from "@polymath-ai/types";
 
 import {
   DEFAULT_MAX_TOKENS_FOR_MODEL
 } from "./utils.js";
+
+const KeysToOmit = (omit : OmitConfiguration) : OmitConfigurationField[] => {
+  if (omit == '') return [];
+  if (omit == '*') return TypedObject.keys(OmitKeys);
+  if (typeof omit == 'string') omit = [omit];
+  return omit;
+};
 
 // --------------------------------------------------------------------------
 // A container for the resulting bits
@@ -63,7 +73,7 @@ class PolymathResults {
   }
 
   omit(omitString : OmitConfiguration) : void {
-    const omitKeys = omitString.split(/\s*,\s*/);
+    const omitKeys = KeysToOmit(omitString);
     for (let i = 0; i < this._bits.length; i++) {
       for (let j = 0; j < omitKeys.length; j++) {
         switch (omitKeys[j]){
