@@ -5,11 +5,7 @@ import path from "path";
 import { Base } from "./base.js";
 
 export class Config extends Base {
-  constructor(args: any) {
-    super(args);
-  }
-
-  static homeDirPath(name: string) {
+  static homeDirPath(name: string): string {
     return path.join(os.homedir(), ".polymath", "config", `${name}.json`);
   }
 
