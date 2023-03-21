@@ -32,10 +32,6 @@ class CLI {
     const program = this.program;
     const { version, description } = this.loadVersionInfo();
 
-    console.log(
-      "what",
-      typeof program.name("polymath").description(description)
-    );
     program.version(version);
 
     program.option("-d, --debug", "output extra debugging");
