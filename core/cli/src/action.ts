@@ -11,7 +11,7 @@ export interface RunArguments {
   command: string;
 }
 
-export type ActionArgs = { [arg: string]: any };
+export type ActionArgs = { [arg: string]: unknown };
 
 export abstract class Action extends Base {
   #options: ActionArgs;
