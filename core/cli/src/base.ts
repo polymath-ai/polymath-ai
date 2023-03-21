@@ -12,12 +12,16 @@ export interface Say {
   chalk: typeof chalk;
 }
 
+export type BaseArgs = {
+  debug?: boolean;
+};
+
 // Base class with all the useful infrastructure.
 export class Base {
   isDebug: boolean;
   say: Say;
 
-  constructor({ debug }: { debug?: boolean }) {
+  constructor({ debug }: BaseArgs) {
     this.isDebug = debug || false;
     this.say = {
       debug: this.#debug.bind(this),
