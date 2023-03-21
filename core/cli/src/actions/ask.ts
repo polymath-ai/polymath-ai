@@ -1,5 +1,5 @@
 import { Polymath } from "@polymath-ai/client";
-import { Action, ActionArgs, RunArguments } from "../action.js";
+import { Action, RunArguments } from "../action.js";
 
 export class Ask extends Action {
   override async run({ args, options, command }: RunArguments): Promise<void> {
