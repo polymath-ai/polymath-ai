@@ -42,7 +42,7 @@ export class Options extends Base {
   // Munge together a clientOptions object from the config file and the command line
   normalizeCompletionOptions(
     commandOptions: any,
-    rawConfig: any
+    rawConfig: HostConfig
   ): CompletionOptions {
     // convert a main host config into the bits needed for the Polymath
     const completionOptions: CompletionOptions = {};
@@ -81,11 +81,11 @@ export class Options extends Base {
 
     if (
       commandOptions.completionPromptTemplate ||
-      rawConfig.completions_options?.promp_template
+      rawConfig.completions_options?.prompt_template
     )
       completionOptions.prompt_template =
         commandOptions.completionPromptTemplate ||
-        rawConfig.completions_options?.promp_template;
+        rawConfig.completions_options?.prompt_template;
 
     return completionOptions;
   }

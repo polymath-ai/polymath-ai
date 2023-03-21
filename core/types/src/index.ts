@@ -197,7 +197,7 @@ export type HostConfig = {
     name?: string;
     default?: boolean;
   }[];
-  completion_options?: CompletionOptions;
+  completions_options?: CompletionOptions;
   info?: {
     headername?: string;
     placeholder?: string;
