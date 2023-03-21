@@ -37,7 +37,10 @@ export class Options extends Base {
   }
 
   // Munge together a clientOptions object from the config file and the command line
-  normalizeCompletionOptions(commandOptions: any, rawConfig: any) : CompletionOptions {
+  normalizeCompletionOptions(
+    commandOptions: any,
+    rawConfig: any
+  ): CompletionOptions {
     // convert a main host config into the bits needed for the Polymath
     const completionOptions: CompletionOptions = {};
 
@@ -54,7 +57,8 @@ export class Options extends Base {
     completionOptions.n = commandOptions.n || rawConfig.completions_options?.n;
 
     if (commandOptions.hasOwnProperty("completionStream")) {
-      completionOptions.stream = commandOptions.completionStream.toLowerCase() === "true";
+      completionOptions.stream =
+        commandOptions.completionStream.toLowerCase() === "true";
     } else if (rawConfig.completions_options?.stream) {
       completionOptions.stream = rawConfig.completions_options.stream;
     }

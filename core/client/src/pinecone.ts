@@ -6,23 +6,22 @@ import {
   PackedBit,
   PineconeBit,
   PineconeConfig,
-  PineconeResult
+  PineconeResult,
 } from "@polymath-ai/types";
 
 // --------------------------------------------------------------------------
 // Talk to Pinecone to do the vector search
 // --------------------------------------------------------------------------
 class PolymathPinecone {
+  _pinecone: PineconeClient<PineconeBit>;
+  _topK: number;
 
-  _pinecone : PineconeClient<PineconeBit>;
-  _topK : number;
-
-  constructor(config : PineconeConfig) {
+  constructor(config: PineconeConfig) {
     this._pinecone = new PineconeClient(config);
     this._topK = config.topK || 10;
   }
 
-  async ask(queryEmbedding : EmbeddingVector) : Promise<PackedBit[]> {
+  async ask(queryEmbedding: EmbeddingVector): Promise<PackedBit[]> {
     const result = await this._pinecone.query({
       vector: queryEmbedding,
       topK: this._topK,
@@ -36,12 +35,12 @@ class PolymathPinecone {
     });
   }
 
-  makeBit(pineconeResult : PineconeResult) {
-    const bit : PackedBit = {
-      id: pineconeResult.id
+  makeBit(pineconeResult: PineconeResult) {
+    const bit: PackedBit = {
+      id: pineconeResult.id,
     };
 
-    const info : BitInfo = { url: pineconeResult.metadata?.url };
+    const info: BitInfo = { url: pineconeResult.metadata?.url };
 
     if (pineconeResult.metadata?.text) bit.text = pineconeResult.metadata.text;
     if (pineconeResult.metadata?.token_count)
@@ -54,9 +53,7 @@ class PolymathPinecone {
       info.title = pineconeResult.metadata.title;
     if (pineconeResult.metadata?.description)
       info.description = pineconeResult.metadata.description;
-    if ('score' in pineconeResult) 
-      bit.similarity = pineconeResult.score;
-
+    if ("score" in pineconeResult) bit.similarity = pineconeResult.score;
 
     bit.info = info;
     return bit;

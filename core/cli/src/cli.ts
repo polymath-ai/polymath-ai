@@ -8,9 +8,9 @@ import { Complete } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
 
 type NPMPackageConfig = {
-  version: string,
-  description: string
-}
+  version: string;
+  description: string;
+};
 
 // TODO: Implement a nice API for this.
 class CLI {
@@ -20,12 +20,12 @@ class CLI {
     this.program = new Command();
   }
 
-  loadVersionInfo() : NPMPackageConfig {
+  loadVersionInfo(): NPMPackageConfig {
     // Get the description and version from our own package.json
     return JSON.parse(fs.readFileSync("./package.json", "utf8"));
   }
 
-  run() : void {
+  run(): void {
     const program = this.program;
     const { version, description } = this.loadVersionInfo();
 
@@ -94,7 +94,10 @@ class CLI {
       )
       .option("--completion-top-p <top-p>", "the top_p for completion")
       .option("--completion-n <n>", "the n for completion")
-      .option("--completion-stream <stream>", "Turn on streaming with true for completion")
+      .option(
+        "--completion-stream <stream>",
+        "Turn on streaming with true for completion"
+      )
       .option("--completion-stop <stop>", "Set a stop term for completion")
       .option(
         "--completion-prompt-template <prompt>",

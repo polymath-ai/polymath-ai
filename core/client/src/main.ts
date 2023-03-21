@@ -26,7 +26,7 @@ import {
   PolymathOptions,
   PromptTemplate,
   Server,
-  StreamProcessor
+  StreamProcessor,
 } from "@polymath-ai/types";
 
 dotenv.config({
@@ -47,17 +47,16 @@ dotenv.config({
 // console.log("Context: ", r.context);
 // --------------------------------------------------------------------------
 class Polymath {
+  askOptions?: AskOptions;
+  completionOptions?: CompletionOptions;
+  openai: OpenAIApi;
+  libraries: LibraryFileName[];
+  servers: Server[];
+  pinecone?: PineconeConfig;
+  promptTemplate: PromptTemplate;
+  _debug: boolean;
 
-  askOptions? : AskOptions;
-  completionOptions? : CompletionOptions;
-  openai : OpenAIApi;
-  libraries : LibraryFileName[];
-  servers : Server[];
-  pinecone? : PineconeConfig;
-  promptTemplate : PromptTemplate;
-  _debug : boolean;
-
-  constructor(options : PolymathOptions) {
+  constructor(options: PolymathOptions) {
     // The OpenAI API Key
     if (!options.apiKey) {
       throw new Error("Polymath requires an api_key");
@@ -93,7 +92,7 @@ class Polymath {
     this._debug = !!options.debug;
   }
 
-  debug(message : string) : void {
+  debug(message: string): void {
     if (!this._debug) return;
     console.log("DEBUG: " + message);
   }
@@ -104,7 +103,7 @@ class Polymath {
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
-  async ask(query : string, askOptions? : AskOptions) : Promise<PolymathResults> {
+  async ask(query: string, askOptions?: AskOptions): Promise<PolymathResults> {
     if (!this.validate()) {
       throw new Error(
         "Polymath requires at least one library or polymath server or pinecone server"
@@ -117,7 +116,7 @@ class Polymath {
       askOptions?.query_embedding || (await this.generateEmbedding(query));
 
     // For each server and/or local library, get the results and merge it all together!
-    let bits : PackedBit[] = [];
+    let bits: PackedBit[] = [];
 
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
@@ -159,7 +158,12 @@ class Polymath {
       this.debug("Local Results: " + JSON.stringify(results, null, 2));
 
       if (results) {
-        bits.push(...results.map(bit => ({...bit, embedding: encodeEmbedding(bit.embedding || [])})));
+        bits.push(
+          ...results.map((bit) => ({
+            ...bit,
+            embedding: encodeEmbedding(bit.embedding || []),
+          }))
+        );
       }
     }
 
@@ -168,7 +172,7 @@ class Polymath {
   }
 
   // Given input text such as the users query, return an embedding
-  async generateEmbedding(input : string) : Promise<EmbeddingVector> {
+  async generateEmbedding(input: string): Promise<EmbeddingVector> {
     try {
       const response = await this.openai.createEmbedding({
         model: "text-embedding-ada-002",
@@ -184,12 +188,12 @@ class Polymath {
 
   // Given a users query, return a completion with polymath results and the answer
   async completion(
-    query : string,
-    polymathResults? : PolymathResults,
-    askOptions? : AskOptions,
-    completionOptions? : CompletionOptions,
-    streamProcessor? : StreamProcessor
-  ) : Promise<CompletionResult> {
+    query: string,
+    polymathResults?: PolymathResults,
+    askOptions?: AskOptions,
+    completionOptions?: CompletionOptions,
+    streamProcessor?: StreamProcessor
+  ): Promise<CompletionResult> {
     if (!polymathResults) {
       // get the polymath results here
       polymathResults = await this.ask(query, askOptions);
@@ -227,12 +231,11 @@ class Polymath {
     try {
       let response;
       let responseText;
-      let axiosExtraInfo : {responseType? : "stream"} = completionOptions?.stream
-        ? { responseType: "stream" }
-        : {};
+      let axiosExtraInfo: { responseType?: "stream" } =
+        completionOptions?.stream ? { responseType: "stream" } : {};
 
       if (this.isChatModel(model)) {
-        let messages : ChatCompletionRequestMessage[] = [];
+        let messages: ChatCompletionRequestMessage[] = [];
         if (completionOptions?.system) {
           messages.push({
             role: "system",
@@ -262,8 +265,13 @@ class Polymath {
         );
         if (completionOptions?.stream) {
           //@ts-ignore See https://github.com/openai/openai-node/issues/18#issuecomment-1406961202
-          response.data.on("data", (data : string) => {
-            this.processData(data, model, actualStreamProcessor, responseBitsAndInfo);
+          response.data.on("data", (data: string) => {
+            this.processData(
+              data,
+              model,
+              actualStreamProcessor,
+              responseBitsAndInfo
+            );
           });
         } else {
           responseText = response.data.choices[0].message?.content;
@@ -291,8 +299,13 @@ class Polymath {
         );
         if (completionOptions?.stream) {
           //@ts-ignore See https://github.com/openai/openai-node/issues/18#issuecomment-1406961202
-          response.data.on("data", (data : string) => {
-            this.processData(data, model, actualStreamProcessor, responseBitsAndInfo);
+          response.data.on("data", (data: string) => {
+            this.processData(
+              data,
+              model,
+              actualStreamProcessor,
+              responseBitsAndInfo
+            );
           });
         } else {
           responseText = response.data.choices[0].text;
@@ -311,23 +324,28 @@ class Polymath {
     }
   }
 
-  getPrompt(query : string, context : string) : string {
+  getPrompt(query: string, context: string): string {
     return this.promptTemplate
       .replace("{context}", context)
       .replace("{query}", query);
   }
 
   // given the query, add the prompt template and return the encoded total
-  getPromptTokenCount(query : string) : number {
+  getPromptTokenCount(query: string): number {
     return encode(query + this.promptTemplate).length;
   }
 
   // Does the model work with the OpenAI chat model API?
-  isChatModel(model : ModelName) : boolean {
+  isChatModel(model: ModelName): boolean {
     return ["gpt-3.5-turbo", "gpt-4"].includes(model);
   }
 
-  processData(data : string, model : ModelName, streamProcessor : StreamProcessor, results : CompletionResult) {
+  processData(
+    data: string,
+    model: ModelName,
+    streamProcessor: StreamProcessor,
+    results: CompletionResult
+  ) {
     const lines = data
       .toString()
       .split("\n")

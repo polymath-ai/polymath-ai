@@ -1,13 +1,14 @@
 import chalk from "chalk";
 
-const error = (...args: unknown[]) => console.error(chalk.red("ERROR:", ...args));
+const error = (...args: unknown[]) =>
+  console.error(chalk.red("ERROR:", ...args));
 const log = (msg: string, ...args: unknown[]) =>
   console.log(chalk.green(`\n${msg}`), chalk.bold(...args));
 
 export interface Say {
   debug: (...args: unknown[]) => void;
   error: (...args: unknown[]) => void;
-  log: (msg : string, ...args: unknown[]) => void;
+  log: (msg: string, ...args: unknown[]) => void;
   chalk: typeof chalk;
 }
 

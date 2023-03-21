@@ -24,7 +24,7 @@ export abstract class Action extends Base {
   abstract run({ args, options, command }: RunArguments): Promise<void>;
 
   // TODO: get this into complete
-  completionOptions(subcommandOptions: any) : CompletionOptions {
+  completionOptions(subcommandOptions: any): CompletionOptions {
     const opts = new Options(this.#options);
     const configOption = this.#options.config;
     const config = new Config(this.#options).load(configOption);
@@ -46,7 +46,7 @@ export abstract class Action extends Base {
   }
 
   // Ask the dear listener for a question as they didn't provide one to the CLI
-  async promptForQuestion() : Promise<string> {
+  async promptForQuestion(): Promise<string> {
     let question = await inquirer.prompt({
       type: "input",
       name: "result",
