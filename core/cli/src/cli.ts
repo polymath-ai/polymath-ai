@@ -15,7 +15,7 @@ type NPMPackageConfig = {
 
 // TODO: Implement a nice API for this.
 class CLI {
-  program;
+  program: Command;
 
   constructor() {
     this.program = new Command();
