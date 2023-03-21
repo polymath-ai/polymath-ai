@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*", "tests/**/*", "test-data/custom-module"],
+  "extends": "@polymath-ai/infra/tsconfig/base.json"
+}

@@ -1,0 +1,69 @@
+{
+  "name": "@polymath-ai/ingest",
+  "version": "0.0.9",
+  "description": "An ingest library for Polymath",
+  "type": "module",
+  "main": "src/main.js",
+  "exports": "./src/main.js",
+  "bin": {
+    "polymath-ingest": "./index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "ava",
+    "build": "tsc --b",
+    "watch": "tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/cli.git"
+  },
+  "keywords": [
+    "cli",
+    "polymath",
+    "genai",
+    "llm"
+  ],
+  "author": "The Polymath Crew (Alex, Dimitri, Dion)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/cli/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/cli#readme",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
+  "dependencies": {
+    "@polymath-ai/client": "^1.1.2",
+    "chalk": "^5.2.0",
+    "commander": "^10.0.0",
+    "esm": "^3.2.25",
+    "i": "^0.3.7",
+    "inquirer": "^9.1.4",
+    "npm": "^9.6.2",
+    "rss-parser": "^3.12.0"
+  },
+  "devDependencies": {
+    "@ava/typescript": "^3.0.1",
+    "@changesets/cli": "^2.26.0",
+    "@polymath-ai/infra": "*",
+    "@types/inquirer": "^9.0.3",
+    "@types/mock-fs": "^4.13.1",
+    "ava": "^5.2.0",
+    "mock-fs": "^5.2.0"
+  }
+}
