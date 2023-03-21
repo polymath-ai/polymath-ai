@@ -1,17 +1,12 @@
 import { Polymath } from "@polymath-ai/client";
-import { Action, ActionArgs, RunArguments } from "../action.js";
+import { BitInfo, CompletionResult, StreamProcessor } from "@polymath-ai/types";
+import { Action, RunArguments } from "../action.js";
 
 export class Complete extends Action {
-  opts: any;
-
-  constructor(options: ActionArgs) {
-    super(options);
-  }
-
-  sources(infos: any) {
+  sources(infos: BitInfo[]) {
     const { chalk } = this.say;
     return infos
-      ?.map((info: any) => {
+      ?.map((info: BitInfo) => {
         return chalk.dim(
           "Source: " + (info.title || info.description) + "\n" + info.url
         );
@@ -20,7 +15,7 @@ export class Complete extends Action {
   }
 
   override async run({ args, options, command }: RunArguments) {
-    let question: any = args[0];
+    let question: string = args[0];
     const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
 
@@ -39,11 +34,11 @@ export class Complete extends Action {
 
       if (completionOptions.stream) {
         // async mode baybee
-        let streamProcessor = {
+        let streamProcessor : StreamProcessor = {
           processDelta: (delta: string | Uint8Array) => {
             if (delta) process.stdout.write(delta);
           },
-          processResults: (finalResults: { infos: any }) => {
+          processResults: (finalResults : CompletionResult) => {
             process.stdout.write(
               "\n\n" + this.sources(finalResults.infos) + "\n"
             );
@@ -62,7 +57,7 @@ export class Complete extends Action {
       } else {
         // TODO: Match `results` to the type returned by `client.completion`
         // Currently, I am using `any` to avoid a type error.
-        let results: any = await client.completion(
+        let results: CompletionResult = await client.completion(
           question,
           undefined, // we don't have existing polymath results
           undefined, // we don't need no ask Options
