@@ -2,10 +2,6 @@ import { CompletionOptions } from "@polymath-ai/types";
 import { Base } from "./base.js";
 
 export class Options extends Base {
-  constructor(args: any) {
-    super(args);
-  }
-
   // Munge together a clientOptions object from the config file
   // and the command line.
   normalizeClientOptions(programOptions: any, config: any) {
