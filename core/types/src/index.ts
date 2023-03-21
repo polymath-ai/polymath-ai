@@ -176,3 +176,32 @@ export class TypedObject {
     return Object.entries(t) as any;
   }
 }
+
+//TODO: rename to a better name.
+//A HostConfig is what you might have in your `.polymath/config.SECRET.json`
+export type HostConfig = {
+  endpoint?: string;
+  default_proviate_access_tag?: string;
+  default_api_key?: string;
+  //TODO: refactor to be literally PolymathOptions?
+  client_options?: {
+    libraryFiles?: LibraryFileName[];
+    omit?: OmitConfiguration;
+    debug?: boolean;
+  };
+  //TODO: rename to hosts?
+  server_options?: {
+    url: string;
+    name?: string;
+    default?: boolean;
+  }[];
+  completion_options?: CompletionOptions;
+  info?: {
+    headername?: string;
+    placeholder?: string;
+    fun_queries?: string[];
+    source_prefixes?: {
+      [url: string]: string;
+    };
+  };
+};
