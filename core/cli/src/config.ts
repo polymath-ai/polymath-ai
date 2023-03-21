@@ -1,3 +1,4 @@
+import { HostConfig } from "@polymath-ai/types";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -10,8 +11,8 @@ export class Config extends Base {
   }
 
   // Hunt around the filesystem for a config file
-  load(configOption: any) {
-    let rawConfig;
+  load(configOption?: string | null): HostConfig {
+    let rawConfig: HostConfig = {};
     const { debug, error } = this.say;
 
     // if there is a configOption:
