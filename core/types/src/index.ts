@@ -185,6 +185,8 @@ export type HostConfig = {
   default_api_key?: string;
   //TODO: refactor to be literally PolymathOptions?
   client_options?: {
+    pinecone?: PineconeConfig;
+    servers?: Server[];
     libraryFiles?: LibraryFileName[];
     omit?: OmitConfiguration;
     debug?: boolean;

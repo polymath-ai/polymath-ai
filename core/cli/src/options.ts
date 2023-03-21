@@ -1,10 +1,17 @@
-import { CompletionOptions } from "@polymath-ai/types";
+import {
+  CompletionOptions,
+  HostConfig,
+  PolymathOptions,
+} from "@polymath-ai/types";
 import { Base } from "./base.js";
 
 export class Options extends Base {
   // Munge together a clientOptions object from the config file
   // and the command line.
-  normalizeClientOptions(programOptions: any, config: any) {
+  normalizeClientOptions(
+    programOptions: any,
+    config: HostConfig
+  ): PolymathOptions {
     const skipEmpties = (obj: any) =>
       Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
 

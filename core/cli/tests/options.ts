@@ -46,8 +46,11 @@ test("normalizeClientOptions omit", (t) => {
   const opts = new Options({ debug: false });
   let result;
 
-  result = opts.normalizeClientOptions({}, { client_options: { omit: "foo" } });
-  t.deepEqual(result, { omit: "foo" });
+  result = opts.normalizeClientOptions(
+    {},
+    { client_options: { omit: "text" } }
+  );
+  t.deepEqual(result, { omit: "text" });
 
   result = opts.normalizeClientOptions({}, {});
   t.deepEqual(result, {});
