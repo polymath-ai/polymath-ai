@@ -1,4 +1,5 @@
 import fs from "fs";
+import { URL } from "node:url";
 
 import { Command, Option } from "commander";
 
@@ -22,14 +23,20 @@ class CLI {
 
   loadVersionInfo(): NPMPackageConfig {
     // Get the description and version from our own package.json
-    return JSON.parse(fs.readFileSync("./package.json", "utf8"));
+    return JSON.parse(
+      fs.readFileSync(new URL("../../package.json", import.meta.url), "utf8")
+    );
   }
 
   run(): void {
     const program = this.program;
     const { version, description } = this.loadVersionInfo();
 
-    program.name("polymath").description(description).version(version);
+    console.log(
+      "what",
+      typeof program.name("polymath").description(description)
+    );
+    program.version(version);
 
     program.option("-d, --debug", "output extra debugging");
     program.option("-c, --config <path>", "config file");
