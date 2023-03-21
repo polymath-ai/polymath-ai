@@ -3,7 +3,7 @@ import { Config } from "./config.js";
 import { Options } from "./options.js";
 import inquirer from "inquirer";
 import { Command } from "commander";
-import { PolymathOptions } from "@polymath-ai/types";
+import { CompletionOptions, PolymathOptions } from "@polymath-ai/types";
 
 export interface RunArguments {
   args: string[];
@@ -24,7 +24,7 @@ export abstract class Action extends Base {
   abstract run({ args, options, command }: RunArguments): Promise<void>;
 
   // TODO: get this into complete
-  completionOptions(subcommandOptions: any) {
+  completionOptions(subcommandOptions: any) : CompletionOptions {
     const opts = new Options(this.#options);
     const configOption = this.#options.config;
     const config = new Config(this.#options).load(configOption);

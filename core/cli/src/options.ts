@@ -1,3 +1,4 @@
+import { CompletionOptions } from "@polymath-ai/types";
 import { Base } from "./base.js";
 
 export class Options extends Base {
@@ -36,9 +37,9 @@ export class Options extends Base {
   }
 
   // Munge together a clientOptions object from the config file and the command line
-  normalizeCompletionOptions(commandOptions: any, rawConfig: any) {
+  normalizeCompletionOptions(commandOptions: any, rawConfig: any) : CompletionOptions {
     // convert a main host config into the bits needed for the Polymath
-    let completionOptions: any = {};
+    const completionOptions: CompletionOptions = {};
 
     completionOptions.model =
       commandOptions.completionModel || rawConfig.completions_options?.model;
