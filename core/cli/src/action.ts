@@ -1,4 +1,4 @@
-import { Base } from "./base.js";
+import { Base, BaseArgs } from "./base.js";
 import { Config } from "./config.js";
 import { Options } from "./options.js";
 import inquirer from "inquirer";
@@ -11,7 +11,10 @@ export interface RunArguments {
   command: string;
 }
 
-export type ActionArgs = { [arg: string]: unknown };
+export type ActionArgs = BaseArgs & {
+  config?: string;
+  [arg: string]: unknown;
+};
 
 export abstract class Action extends Base {
   #options: ActionArgs;
