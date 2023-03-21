@@ -17,8 +17,8 @@ export class Base {
   isDebug: boolean;
   say: Say;
 
-  constructor({ debug }: { [debug: string]: boolean }) {
-    this.isDebug = debug;
+  constructor({ debug }: { debug?: boolean }) {
+    this.isDebug = debug || false;
     this.say = {
       debug: this.#debug.bind(this),
       error,
