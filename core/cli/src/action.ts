@@ -57,8 +57,9 @@ export abstract class Action extends Base {
 }
 
 type ActionConstructor = new (options: ActionArgs) => Action;
+type ActorFunc = (...args: string[]) => void;
 
-export const actor = (cls: ActionConstructor, program: Command) => {
+export const actor = (cls: ActionConstructor, program: Command): ActorFunc => {
   return (...args: string[]) => {
     const [options, command] = args.slice(-2);
     args = args.slice(0, -2);
