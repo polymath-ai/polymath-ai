@@ -1,5 +1,11 @@
 # @polymath-ai/cli
 
+## 0.0.11
+
+### Patch Changes
+
+- dfcb16b: Removed debugging statement.
+
 ## 0.0.10
 
 ### Patch Changes
