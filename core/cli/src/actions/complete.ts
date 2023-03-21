@@ -3,7 +3,7 @@ import { BitInfo, CompletionResult, StreamProcessor } from "@polymath-ai/types";
 import { Action, RunArguments } from "../action.js";
 
 export class Complete extends Action {
-  sources(infos: BitInfo[]) {
+  sources(infos: BitInfo[]) : string {
     const { chalk } = this.say;
     return infos
       ?.map((info: BitInfo) => {
@@ -14,7 +14,7 @@ export class Complete extends Action {
       .join("\n\n");
   }
 
-  override async run({ args, options, command }: RunArguments) {
+  override async run({ args, options }: RunArguments) : Promise<void> {
     let question: string = args[0];
     const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
