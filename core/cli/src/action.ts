@@ -3,6 +3,7 @@ import { Config } from "./config.js";
 import { Options } from "./options.js";
 import inquirer from "inquirer";
 import { Command } from "commander";
+import { PolymathOptions } from "@polymath-ai/types";
 
 export interface RunArguments {
   args: string[];
@@ -11,7 +12,6 @@ export interface RunArguments {
 }
 
 export type ActionArgs = { [arg: string]: any };
-export type ClientOptions = { [key: string]: any };
 
 export abstract class Action extends Base {
   #options: ActionArgs;
@@ -31,7 +31,7 @@ export abstract class Action extends Base {
     return opts.normalizeCompletionOptions(subcommandOptions, config);
   }
 
-  clientOptions(): ClientOptions {
+  clientOptions(): PolymathOptions {
     const opts = new Options(this.#options);
     const { debug } = this.say;
 

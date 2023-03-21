@@ -1,5 +1,6 @@
 import { PolymathEndpoint } from "@polymath-ai/client";
-import { Action, ClientOptions, RunArguments } from "../action.js";
+import { PolymathOptions } from "@polymath-ai/types";
+import { Action, RunArguments } from "../action.js";
 
 export class Validate extends Action {
   constructor(options: any) {
@@ -8,8 +9,8 @@ export class Validate extends Action {
 
   override async run({ args, options, command }: RunArguments): Promise<void> {
     const { debug, error, log } = this.say;
-    const clientOptions: ClientOptions = this.clientOptions();
-    const servers: string[] = clientOptions?.servers;
+    const clientOptions: PolymathOptions = this.clientOptions();
+    const servers: string[] = clientOptions?.servers || [];
     if (!servers) {
       error("No servers defined in config file");
       return;
