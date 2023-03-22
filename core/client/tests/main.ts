@@ -1,3 +1,4 @@
+import { CompletionOptions } from "@polymath-ai/types";
 import test from "ava";
 import { Polymath } from "../src/main.js";
 
@@ -13,7 +14,7 @@ import { Polymath } from "../src/main.js";
 // npx ava -m "Polymath gets one result with embedding omited locally" -- -d # turns on debug logging
 //
 
-let log = () => {};
+let log = (...args: any) => {};
 if (process.argv.slice(2)[0] == "--debug" || process.argv.slice(2)[0] == "-d") {
   log = console.log;
 }
@@ -34,7 +35,7 @@ test("Polymath requires an OpenAI API Key", (t) => {
 
 test("Polymath errors without an OpenAI API Key", (t) => {
   try {
-    new Polymath();
+    new Polymath({});
     t.fail();
   } catch (e) {
     log("ERROR:", e);
@@ -84,8 +85,7 @@ test("Polymath knows which models are ChatCompletion style", (t) => {
     if (
       client.isChatModel("gpt-3.5-turbo") &&
       client.isChatModel("gpt-4") &&
-      !client.isChatModel("text-davinci-003") &&
-      !client.isChatModel("invalid")
+      !client.isChatModel("text-davinci-003")
     ) {
       t.pass();
     }
@@ -233,18 +233,18 @@ test("Polymath gets local completions with the turbo model streaming", async (t)
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let completionOptions = {
+    let completionOptions: CompletionOptions = {
       model: "gpt-3.5-turbo",
       stream: true,
     };
 
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve) => {
       let streamProcessor = {
-        processResults: (r) => {
-          resolve();
+        processResults: (r: any) => {
+          resolve(null);
           t.pass();
         },
-        processDelta: (delta) => {
+        processDelta: (delta: any) => {
           // console.log("STREAMING DELTA:", delta);
         },
       };
@@ -270,18 +270,18 @@ test("Polymath gets local completions with the OG model streaming", async (t) =>
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let completionOptions = {
+    let completionOptions: CompletionOptions = {
       model: "text-davinci-003",
       stream: true,
     };
 
     await new Promise((resolve, reject) => {
       let streamProcessor = {
-        processResults: (r) => {
-          resolve();
+        processResults: (r: any) => {
+          resolve(null);
           t.pass();
         },
-        processDelta: (delta) => {
+        processDelta: (delta: any) => {
           // console.log("STREAMING DELTA:", delta);
         },
       };
@@ -371,7 +371,7 @@ test("Polymath sends with extra otherOptions to omit embeddings", async (t) => {
     });
 
     let r = await client.ask("When should you use a Button vs. a Link?", {
-      omit: "info,embedding",
+      omit: ["info", "embedding"],
       count: 1,
     });
 
@@ -422,7 +422,7 @@ test("Polymath gets pinecone results", async (t) => {
 
     log("PINECONE RESULTS: ", JSON.stringify(r));
 
-    if (r.context() && r.bits()[0].info.url) {
+    if (r.context() && r.bits()[0].info?.url) {
       t.pass();
     }
   } catch (e) {

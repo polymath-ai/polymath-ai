@@ -1,14 +1,18 @@
-import { CompletionOptions } from "@polymath-ai/types";
+import {
+  CompletionOptions,
+  HostConfig,
+  PolymathOptions,
+} from "@polymath-ai/types";
+import { CLIBaseOptions } from "./action.js";
 import { Base } from "./base.js";
 
 export class Options extends Base {
-  constructor(args: any) {
-    super(args);
-  }
-
   // Munge together a clientOptions object from the config file
   // and the command line.
-  normalizeClientOptions(programOptions: any, config: any) {
+  normalizeClientOptions(
+    programOptions: CLIBaseOptions,
+    config: HostConfig
+  ): PolymathOptions {
     const skipEmpties = (obj: any) =>
       Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
 
@@ -39,7 +43,7 @@ export class Options extends Base {
   // Munge together a clientOptions object from the config file and the command line
   normalizeCompletionOptions(
     commandOptions: any,
-    rawConfig: any
+    rawConfig: HostConfig
   ): CompletionOptions {
     // convert a main host config into the bits needed for the Polymath
     const completionOptions: CompletionOptions = {};
@@ -78,11 +82,11 @@ export class Options extends Base {
 
     if (
       commandOptions.completionPromptTemplate ||
-      rawConfig.completions_options?.promp_template
+      rawConfig.completions_options?.prompt_template
     )
       completionOptions.prompt_template =
         commandOptions.completionPromptTemplate ||
-        rawConfig.completions_options?.promp_template;
+        rawConfig.completions_options?.prompt_template;
 
     return completionOptions;
   }

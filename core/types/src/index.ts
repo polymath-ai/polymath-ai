@@ -4,7 +4,10 @@ export type Base64Embedding = string;
 
 export type EmbeddingModelName = "openai.com:text-embedding-ada-002";
 
-export type CompletionModelName = "text-davinci-003" | "gpt-3.5-turbo";
+export type CompletionModelName =
+  | "text-davinci-003"
+  | "gpt-3.5-turbo"
+  | "gpt-4";
 
 export type ModelName = EmbeddingModelName | CompletionModelName;
 
@@ -176,3 +179,34 @@ export class TypedObject {
     return Object.entries(t) as any;
   }
 }
+
+//TODO: rename to a better name.
+//A HostConfig is what you might have in your `.polymath/config.SECRET.json`
+export type HostConfig = {
+  endpoint?: string;
+  default_proviate_access_tag?: string;
+  default_api_key?: string;
+  //TODO: refactor to be literally PolymathOptions?
+  client_options?: {
+    pinecone?: PineconeConfig;
+    servers?: Server[];
+    libraryFiles?: LibraryFileName[];
+    omit?: OmitConfiguration;
+    debug?: boolean;
+  };
+  //TODO: rename to hosts?
+  server_options?: {
+    url: string;
+    name?: string;
+    default?: boolean;
+  }[];
+  completions_options?: CompletionOptions;
+  info?: {
+    headername?: string;
+    placeholder?: string;
+    fun_queries?: string[];
+    source_prefixes?: {
+      [url: string]: string;
+    };
+  };
+};

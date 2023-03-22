@@ -3,19 +3,17 @@ import { URL } from "node:url";
 
 import { Command, Option } from "commander";
 
-import { actor } from "./action.js";
 import { Ask } from "./actions/ask.js";
-import { Complete } from "./actions/complete.js";
+import { Complete, CompletionArgs } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
 
 type NPMPackageConfig = {
   version: string;
-  description: string;
 };
 
 // TODO: Implement a nice API for this.
 class CLI {
-  program;
+  program: Command;
 
   constructor() {
     this.program = new Command();
@@ -30,7 +28,7 @@ class CLI {
 
   run(): void {
     const program = this.program;
-    const { version, description } = this.loadVersionInfo();
+    const { version } = this.loadVersionInfo();
 
     program.version(version);
 
@@ -76,7 +74,10 @@ class CLI {
       .command("ask")
       .description("Ask a question to a Polymath")
       .argument("[question]", "The question to ask")
-      .action(actor(Ask, program));
+      .action((question: string) => {
+        const action = new Ask(program.opts());
+        action.run(question);
+      });
 
     program
       .command("complete")
@@ -107,12 +108,18 @@ class CLI {
         "a prompt template to rewrite"
       )
       .alias("completion")
-      .action(actor(Complete, program));
+      .action((question: string, opts: CompletionArgs) => {
+        const action = new Complete(program.opts());
+        action.run(question, opts);
+      });
 
     program
       .command("validate")
       .description("Validate a Polymath endpoint")
-      .action(actor(Validate, program));
+      .action(() => {
+        const action = new Validate(program.opts());
+        action.run();
+      });
 
     program.parse();
   }
