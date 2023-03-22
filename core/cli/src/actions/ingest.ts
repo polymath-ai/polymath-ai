@@ -26,7 +26,7 @@ export type Library = {
 };
 
 export function cleanFilePath(path: string): string {
-  return path.replace(/[.\/\:\?]/g, "-");
+  return path.replace(/[./:?]/g, "-");
 }
 
 export type { IngestArguments };
