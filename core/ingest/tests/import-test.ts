@@ -6,7 +6,7 @@ test("init import with custom module", async (t) => {
   console.log(importer)
 
   const args: string[] = ["../../dist/test-data/custom-module/test.js", "test.com/"];
-  const options: any = { "openaiApiKey": "test" };
+  const options: any = { apiKey: process.env.OPENAI_API_KEY };
 
   const importerArgs = {
     importer: args[0],
