@@ -14,7 +14,7 @@ export default function About() {
           Clients
         </h2>
 
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul className="divide-y divide-gray-200">
           <li className="py-2">
             <Link to="/">Client for full completions</Link>
           </li>
@@ -29,7 +29,7 @@ export default function About() {
           Endpoint
         </h2>
 
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul className="divide-y divide-gray-200">
           <li className="py-2">
             <Link to="/endpoint/ask">Ask Endpoint for Polymath Results</Link>
           </li>

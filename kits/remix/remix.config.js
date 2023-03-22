@@ -7,6 +7,7 @@ module.exports = {
   // publicPath: "/build/",
   serverDependenciesToBundle: [
     "@polymath-ai/client",
+    "@polymath-ai/types",
     "@polymath-ai/validation",
     "globby",
     "slash",

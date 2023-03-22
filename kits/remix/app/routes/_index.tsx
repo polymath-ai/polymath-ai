@@ -1,10 +1,7 @@
-import {
-  useLoaderData,
-  useFetcher,
-  useSearchParams,
-  FetcherWithComponents,
-} from "@remix-run/react";
-import { json, LoaderArgs } from "@remix-run/node";
+import type { FetcherWithComponents } from "@remix-run/react";
+import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useEffect, useRef, useState } from "react";
 import { polymathHostConfig } from "~/utils/polymath.config";
 import { Loading } from "~/components/loading";
@@ -18,13 +15,13 @@ export const loader = async ({ request }: LoaderArgs) => {
   let endpointResults = {};
 
   if (queryParam) {
-    let formdata = new FormData();
+    const formdata = new FormData();
     formdata.append("query", queryParam);
     formdata.append("omit", "embedding");
     serverParams.forEach((server) => {
       formdata.append("server", server);
     });
-    let results = await fetch(
+    const results = await fetch(
       new URL(request.url).origin + "/endpoint/complete",
       {
         method: "POST",
@@ -73,8 +70,8 @@ function EndpointPicker(props: { checked: any }) {
 
       <ul className="mt-2">
         {polymathHostConfig.server_options.map((server, index) => {
-          let serverId = "server" + index;
-          let isChecked =
+          const serverId = "server" + index;
+          const isChecked =
             props.checked.length < 1 || props.checked.includes(server.url);
           return (
             <li className="py-1 ml-3" key={index}>
@@ -111,7 +108,7 @@ function Results(props: {
     return null;
   }
 
-  let isFetchingClass = fetcher.state === "submitting" ? "opacity-50" : "";
+  const isFetchingClass = fetcher.state === "submitting" ? "opacity-50" : "";
 
   return (
     <div className={isFetchingClass}>
@@ -139,10 +136,10 @@ function Results(props: {
               index: string
             ) => {
               let prefix = "";
-              let sourcePrefixes = polymathHostConfig?.info?.source_prefixes;
+              const sourcePrefixes = polymathHostConfig?.info?.source_prefixes;
 
               if (sourcePrefixes) {
-                for (let url in sourcePrefixes) {
+                for (const url in sourcePrefixes) {
                   if (info.url.startsWith(url)) {
                     prefix = sourcePrefixes[url];
                     break;
@@ -171,12 +168,12 @@ function Results(props: {
 
 export default function ClientSingle(): JSX.Element {
   // let json = useLoaderData<typeof loader>();
-  let json = useLoaderData() as any;
+  const json = useLoaderData() as any;
 
   const fetcher = useFetcher();
 
-  let submitRef = useRef<HTMLButtonElement>(null);
-  let formRef = useRef<HTMLFormElement>(null);
+  const submitRef = useRef<HTMLButtonElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get("query");
@@ -187,7 +184,9 @@ export default function ClientSingle(): JSX.Element {
   const funQueries = polymathHostConfig?.info?.fun_queries;
   const randomFunQuery = () => {
     if (funQueries) {
-      let validFunQueries = funQueries.filter((query) => query !== queryValue);
+      const validFunQueries = funQueries.filter(
+        (query) => query !== queryValue
+      );
 
       const randomFunQuery =
         validFunQueries[Math.floor(Math.random() * validFunQueries.length)];
@@ -196,7 +195,7 @@ export default function ClientSingle(): JSX.Element {
     }
   };
 
-  let canAsk = queryValue?.trim().length < 1;
+  const canAsk = queryValue?.trim().length < 1;
 
   useEffect(() => {
     if (
@@ -205,7 +204,7 @@ export default function ClientSingle(): JSX.Element {
       queryParam != queryValue
     ) {
       //   console.log("setSearchParams:", queryValue);
-      let newSearchParams = [["query", queryValue]];
+      const newSearchParams = [["query", queryValue]];
 
       // add any checked <input type="checkbox" name="server" value="..." />
       formRef.current?.querySelectorAll("input[name=server]").forEach((el) => {

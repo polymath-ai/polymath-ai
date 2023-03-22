@@ -1,4 +1,5 @@
-import { ActionArgs, json } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Polymath } from "~/utils/polymath.server";
 import { polymathHostConfig } from "~/utils/polymath.config";
 
@@ -22,12 +23,12 @@ export async function action({ request }: ActionArgs) {
   }
 
   // TODO: get these settings from a config file and switch to configuration system when ready
-  let clientOptions: any = polymathHostConfig.client_options;
+  const clientOptions: any = polymathHostConfig.client_options;
   clientOptions.apiKey =
     polymathHostConfig.default_api_key || process.env.OPENAI_API_KEY;
-  let client = new Polymath(clientOptions);
+  const client = new Polymath(clientOptions);
 
-  let results = await client.ask(query, otherOptions);
+  const results = await client.ask(query, otherOptions);
 
   return json({ bits: results.bits() });
 }
