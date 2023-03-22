@@ -3,27 +3,7 @@ import { Action, CLIBaseOptions } from "../action.js";
 import fs from "fs/promises";
 import path from "path";
 import inquirer from "inquirer";
-
-export type BitInfo = {
-  url?: string;
-  title?: string;
-  description?: string;
-  image_url?: string;
-};
-
-export type Bit = {
-  id?: string;
-  text?: string;
-  token_count?: number;
-  embedding?: string; // not number[] because we need to store it as a string in the database.
-  info?: BitInfo;
-};
-
-export type Library = {
-  version: number;
-  embedding_model: string;
-  bits: Bit[];
-};
+import { PackedLibraryData } from "@polymath-ai/types";
 
 export function cleanFilePath(path: string): string {
   return path.replace(/[./:?]/g, "-");
@@ -82,7 +62,7 @@ export class IngestAction extends Action {
     }
 
     try {
-      const library: Library = {
+      const library: PackedLibraryData = {
         version: 1,
         embedding_model: "openai.com:text-embedding-ada-002",
         bits: [],
