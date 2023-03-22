@@ -59,6 +59,7 @@
     "@ava/typescript": "^3.0.1",
     "@changesets/cli": "^2.26.0",
     "@polymath-ai/infra": "*",
+    "@polymath-ai/ingest": "*",
     "@types/inquirer": "^9.0.3",
     "@types/mock-fs": "^4.13.1",
     "ava": "^5.2.0",
