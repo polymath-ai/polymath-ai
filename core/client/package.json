@@ -24,7 +24,14 @@
     "url": "https://github.com/polymath-ai/polymath-js-client/issues"
   },
   "homepage": "https://github.com/polymath-ai/polymath-js-client#readme",
+  "files": [
+    "dist",
+    "index.js"
+  ],
   "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
     "typescript": {
       "rewritePaths": {
         "./": "dist/"
