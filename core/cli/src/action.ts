@@ -8,7 +8,7 @@ import { CompletionOptions, PolymathOptions } from "@polymath-ai/types";
 export interface RunArguments {
   args: string[];
   options: any;
-  command: string;
+  command: Command;
 }
 
 export type ActionArgs = BaseArgs & {
@@ -63,7 +63,7 @@ type ActionConstructor = new (options: ActionArgs) => Action;
 type ActorFunc = (...args: string[]) => void;
 
 export const actor = (cls: ActionConstructor, program: Command): ActorFunc => {
-  return (...args: string[]) => {
+  return (...args: any[]) => {
     const [options, command] = args.slice(-2);
     args = args.slice(0, -2);
     const action: Action = new cls(program.opts());
