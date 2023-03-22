@@ -152,6 +152,10 @@ export type AskOptions = {
   sort?: Sort;
 };
 
+export type IngestOptions = {
+  destination: string;
+}
+
 export type StreamProcessor = {
   processDelta: (delta: string) => void;
   processResults: (results: CompletionResult) => void;

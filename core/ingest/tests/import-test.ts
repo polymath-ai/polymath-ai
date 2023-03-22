@@ -1,15 +1,20 @@
 import test from "ava";
-import { Import } from '../src/main.js';
+import { Ingest, IngestArguments } from '../src/main.js';
 
 test("init import with custom module", async (t) => {
-  const importer = new Import();
+  const importer = new Ingest();
   console.log(importer)
 
   const args: string[] = ["../../dist/test-data/custom-module/test.js", "test.com/"];
   const options: any = { "openaiApiKey": "test" };
-  const command: string = "";
 
-  const output = await importer.run({ args, options, command })
+  const importerArgs = {
+    importer: args[0],
+    source: args[1],
+    options: options
+  }
+
+  const output = await importer.run(importerArgs)
 
   let counter = 1;
 
@@ -23,6 +28,6 @@ test("init import with custom module", async (t) => {
 
 
 test("init import", (t) => {
-  const importer = new Import();
+  const importer = new Ingest();
   t.not(importer, null);
 });
