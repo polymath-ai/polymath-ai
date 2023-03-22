@@ -8,13 +8,13 @@ test("init import with custom module", async (t) => {
   const args: string[] = ["../../dist/test-data/custom-module/test.js", "test.com/"];
   const options: any = { apiKey: process.env.OPENAI_API_KEY };
 
-  const importerArgs = {
+  const importerArgs : IngestArguments = {
     importer: args[0],
     source: args[1],
     options: options
   }
 
-  const output = await importer.run(importerArgs)
+  const output = importer.run(importerArgs)
 
   let counter = 1;
 

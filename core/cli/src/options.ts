@@ -60,7 +60,7 @@ export class Options extends Base {
       commandOptions.completionTopP || rawConfig.completions_options?.top_p;
     completionOptions.n = commandOptions.n || rawConfig.completions_options?.n;
 
-    if (commandOptions.hasOwnProperty("completionStream")) {
+    if (Object.prototype.hasOwnProperty.call(commandOptions, "completionStream")) {
       completionOptions.stream =
         commandOptions.completionStream.toLowerCase() === "true";
     } else if (rawConfig.completions_options?.stream) {
