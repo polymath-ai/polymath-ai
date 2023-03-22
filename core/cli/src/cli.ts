@@ -10,7 +10,6 @@ import { Validate } from "./actions/validate.js";
 
 type NPMPackageConfig = {
   version: string;
-  description: string;
 };
 
 // TODO: Implement a nice API for this.
@@ -30,7 +29,7 @@ class CLI {
 
   run(): void {
     const program = this.program;
-    const { version, description } = this.loadVersionInfo();
+    const { version } = this.loadVersionInfo();
 
     program.version(version);
 
