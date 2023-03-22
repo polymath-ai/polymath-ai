@@ -56,7 +56,7 @@ export abstract class Ingester {
   async *generateChunks(source: string): AsyncGenerator<Bit> {
     console.log("[LOG] Generating Chunks");
     // Accumulate the buffer.
-    let buffer: string = "";
+    let buffer = "";
     const stringSources = this.getStringsFromSource(source);
     for await (const source of stringSources) {
       console.log(`[LOG] Processing source: ${source.info?.url}`);

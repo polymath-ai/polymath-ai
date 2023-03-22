@@ -1,16 +1,16 @@
-import { join } from 'path';
+import { join } from "path";
 
 import { Polymath } from "@polymath-ai/client";
 import chalk from "chalk";
 import { Ingester } from "./ingester.js";
-import { Bit } from './types.js';
-import { encodeEmbedding } from './utils.js';
-import { PolymathOptions } from '@polymath-ai/types';
+import { Bit } from "./types.js";
+import { encodeEmbedding } from "./utils.js";
+import { PolymathOptions } from "@polymath-ai/types";
 
-const error = (...args: any[]) => console.error(chalk.red("ERROR:", ...args));
-const log = (msg: string, ...args: any[]) =>
+const error = (...args: unknown[]) =>
+  console.error(chalk.red("ERROR:", ...args));
+const log = (msg: string, ...args: unknown[]) =>
   console.log(chalk.green(`\n${msg}`), chalk.bold(...args));
-const debug = (...args: any[]) => console.log(chalk.blue("DEBUG:", ...args));
 
 export type IngestOptions = {
   destination?: string;
@@ -20,7 +20,7 @@ export type IngestArguments = {
   importer: string;
   source: string;
   options?: IngestOptions;
-}
+};
 
 // The importer is an API that can be used by any tool (e.g, the CLI.)
 export class Ingest {
@@ -30,10 +30,10 @@ export class Ingest {
 
     const debug = args.options?.debug;
     const apiKey = args.options?.apiKey;
-    
+
     let loadedImporter: Ingester;
-  
-    console.log(args)
+
+    console.log(args);
 
     if (apiKey == null) {
       error("Please provide an OpenAI API key");
@@ -45,11 +45,12 @@ export class Ingest {
       throw new Error("Please configure an importer");
     }
 
-    if (!importerArg.startsWith('../') && !importerArg.startsWith('./')) {
+    if (!importerArg.startsWith("../") && !importerArg.startsWith("./")) {
       log(`Loading built-in importer: ${importerArg}`);
-      loadedImporter = await Ingester.load(join('builtin-importers', `${importerArg}.js`));
-    }
-    else {
+      loadedImporter = await Ingester.load(
+        join("builtin-importers", `${importerArg}.js`)
+      );
+    } else {
       log(`Loading external importer: ${importerArg}`);
       // We should probably do some validations.
       loadedImporter = await Ingester.load(importerArg);
@@ -61,18 +62,22 @@ export class Ingest {
     }
 
     // <any> is needed here because the typescript compiler doesn't like it when we use the `new` keyword on a dynamic import.
-    const importer: Ingester = new (loadedImporter as any)(args.options) as Ingester;
+    const importer: Ingester = new (loadedImporter as any)(
+      args.options
+    ) as Ingester;
 
     const polymath = new Polymath({ apiKey, debug });
 
     for await (const chunk of importer.generateChunks(source)) {
       log(`Importing chunk ${chunk.info?.url} \`${chunk.text}\``);
-      
-      if (chunk.text == null) { 
-        continue; 
+
+      if (chunk.text == null) {
+        continue;
       }
-    
-      chunk.embedding = encodeEmbedding(await polymath.generateEmbedding(chunk.text));
+
+      chunk.embedding = encodeEmbedding(
+        await polymath.generateEmbedding(chunk.text)
+      );
       yield chunk;
     }
 
