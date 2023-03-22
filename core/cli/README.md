@@ -81,10 +81,18 @@ polymath -c local-knowledge complete --completion-stream true --completion-model
 
 This example turns on streaming, and sets the completion model to the new default turbo mode.
 
-### Import content ❌
+### Import content
+
+e.g:
 
 ```shell
-polymath import --input=medium --input-directory=path/to/export-backup/ --output-file=./libraries/medium-2023.json
+polymath import rss https://pau.kinlan.me/index.xml --destination=./libraries/medium-2023.json
+```
+
+#### Using a self hosted importer
+
+```shell
+polymath ingest ../test/import/html.js https://paul.kinlan.me/
 ```
 
 ### Export content ❌

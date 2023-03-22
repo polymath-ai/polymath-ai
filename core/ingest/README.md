@@ -1,18 +1,10 @@
 # Polymath Ingest
 
-This is a tool that is used to ingest data from a source and convert it into a format that can be used by the Polymath system.
+This is a libraries that can be used to ingest data from a source and convert it into a format that can be used by the Polymath system.
 
 ## Standalone ingestion tool
 
-Install: `npm install -g @polymath/ingest`
-
-### Using Builtin importers
-
-`@polymath/ingest --openai-api-key=[SECRET] rss https://paul.kinlan.me/index.xml`
-
-### Using a self hosted importer
-
-`@polymath/ingest --openai-api-key=[SECRET] ../test/import/html.js https://paul.kinlan.me/`
+See: @polymath/cli
 
 ## API
 
@@ -51,7 +43,7 @@ class MYRSS extends Importer {
 ```
 
 E.g:
-`> polymath-ingest rss https://paul.kinlan.me/index.xml`
+`> polymath ingest rss https://paul.kinlan.me/index.xml`
 
 ### Embed the `Import` process
 
