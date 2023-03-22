@@ -7,6 +7,8 @@ import { Ask } from "./actions/ask.js";
 import { Complete, CompletionArgs } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
 import { IngestAction } from "./actions/ingest.js";
+import { IngestOptions } from "@polymath-ai/types";
+import { CLIBaseOptions } from "./action.js";
 
 type NPMPackageConfig = {
   version: string;
@@ -125,13 +127,13 @@ class CLI {
     program
       .command("ingest")
       .description("Ingest a source into a Polymath")
-      .argument("[question]", "Which ingester should the Polymath use?")
+      .argument("[ingestor]", "Which ingester should the Polymath use?")
       .argument("[source...]", "What source should be ingested?")
       .option(
         "-o, --destination <destination>",
         "The directory where the output should be written."
       )
-      .action((ingestLibrary: string, sources: string[], options: any) => {
+      .action((ingestLibrary: string, sources: string[], options: IngestOptions & CLIBaseOptions) => {
         for (const source of sources) {
           const allOptions = { ...options, ...program.opts() };
           const action = new IngestAction(allOptions);

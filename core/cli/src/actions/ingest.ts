@@ -11,14 +11,14 @@ export function cleanFilePath(path: string): string {
 
 export type { IngestArguments };
 
-// Ask the dear listener for a question as they didn't provide one to the CLI
+// Ask the dear listener for the ingestor as they didn't provide one to the CLI
 async function promptForIngestionLibrary(): Promise<string> {
-  const question = await inquirer.prompt({
+  const ingestor = await inquirer.prompt({
     type: "input",
     name: "result",
     message: "Which ingestion library do you want to use?",
   });
-  return question.result;
+  return ingestor.result;
 }
 
 export class IngestAction extends Action {
