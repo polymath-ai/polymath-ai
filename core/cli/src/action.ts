@@ -2,32 +2,39 @@ import { Base, BaseArgs } from "./base.js";
 import { Config } from "./config.js";
 import { Options } from "./options.js";
 import inquirer from "inquirer";
-import { Command } from "commander";
 import { CompletionOptions, PolymathOptions } from "@polymath-ai/types";
-
-export interface RunArguments {
-  args: string[];
-  options: any;
-  command: Command;
-}
+import { CompletionArgs } from "./actions/complete.js";
 
 export type ActionArgs = BaseArgs & {
   config?: string;
   [arg: string]: unknown;
 };
 
-export abstract class Action extends Base {
-  #options: ActionArgs;
+//TODO: use the actual type from core/types
+export type CLIBaseOptions = {
+  debug?: boolean;
+  config?: string;
+  openaiApiKey?: string;
+  servers?: string[];
+  libraries?: string[];
+  pinecone?: boolean;
+  pineconeApiKey?: string;
+  pineconeBaseUrl?: string;
+  pineconeNamespace?: string;
+};
 
-  constructor(options: ActionArgs) {
+export abstract class Action extends Base {
+  #options: CLIBaseOptions;
+
+  constructor(options: CLIBaseOptions) {
     super(options);
     this.#options = options;
   }
 
-  abstract run({ args, options, command }: RunArguments): Promise<void>;
+  abstract run(...arg: any[]): Promise<void>;
 
   // TODO: get this into complete
-  completionOptions(subcommandOptions: any): CompletionOptions {
+  completionOptions(subcommandOptions: CompletionArgs): CompletionOptions {
     const opts = new Options(this.#options);
     const configOption = this.#options.config;
     const config = new Config(this.#options).load(configOption);
@@ -58,15 +65,3 @@ export abstract class Action extends Base {
     return question.result;
   }
 }
-
-type ActionConstructor = new (options: ActionArgs) => Action;
-type ActorFunc = (...args: string[]) => void;
-
-export const actor = (cls: ActionConstructor, program: Command): ActorFunc => {
-  return (...args: any[]) => {
-    const [options, command] = args.slice(-2);
-    args = args.slice(0, -2);
-    const action: Action = new cls(program.opts());
-    action.run({ args, options, command });
-  };
-};

@@ -1,9 +1,9 @@
 import { PolymathEndpoint } from "@polymath-ai/client";
 import { PolymathOptions } from "@polymath-ai/types";
-import { Action, RunArguments } from "../action.js";
+import { Action } from "../action.js";
 
 export class Validate extends Action {
-  override async run(_: RunArguments): Promise<void> {
+  override async run(): Promise<void> {
     const { debug, error, log } = this.say;
     const clientOptions: PolymathOptions = this.clientOptions();
     const servers: string[] = clientOptions?.servers || [];

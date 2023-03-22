@@ -3,13 +3,14 @@ import {
   HostConfig,
   PolymathOptions,
 } from "@polymath-ai/types";
+import { CLIBaseOptions } from "./action.js";
 import { Base } from "./base.js";
 
 export class Options extends Base {
   // Munge together a clientOptions object from the config file
   // and the command line.
   normalizeClientOptions(
-    programOptions: any,
+    programOptions: CLIBaseOptions,
     config: HostConfig
   ): PolymathOptions {
     const skipEmpties = (obj: any) =>

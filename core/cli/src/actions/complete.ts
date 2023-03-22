@@ -1,6 +1,17 @@
 import { Polymath } from "@polymath-ai/client";
 import { BitInfo, CompletionResult, StreamProcessor } from "@polymath-ai/types";
-import { Action, RunArguments } from "../action.js";
+import { Action } from "../action.js";
+
+//TODO: rationalize with other existing types
+export type CompletionArgs = {
+  completionModel?: string;
+  completionSystem?: string;
+  completionMaxTokens?: string;
+  completionTopP?: number;
+  completionN?: number;
+  completionStream?: boolean;
+  completionStop?: string;
+};
 
 export class Complete extends Action {
   sources(infos: BitInfo[]): string {
@@ -14,8 +25,7 @@ export class Complete extends Action {
       .join("\n\n");
   }
 
-  override async run({ args, options }: RunArguments): Promise<void> {
-    let question: string = args[0];
+  override async run(question: string, opts: CompletionArgs): Promise<void> {
     const { debug, error, log } = this.say;
     const clientOptions = this.clientOptions();
 
@@ -30,7 +40,7 @@ export class Complete extends Action {
 
       debug("completing...");
       // completion
-      let completionOptions = this.completionOptions(options);
+      let completionOptions = this.completionOptions(opts);
 
       if (completionOptions.stream) {
         // async mode baybee
