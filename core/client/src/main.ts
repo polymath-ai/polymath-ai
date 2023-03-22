@@ -99,7 +99,7 @@ class Polymath {
 
   // Returns true if the Polymath is configured with at least one source
   validate() {
-    return this.libraries || this.servers || this.pinecone;
+    return this.libraries.length || this.servers.length || this.pinecone;
   }
 
   // Given a users query, return the Polymath results which contain the bits that will make a good context for a completion
