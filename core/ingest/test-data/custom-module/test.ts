@@ -1,7 +1,7 @@
-import { Importer } from "../../src/importer.js";
+import { Ingester } from "../../src/ingester.js";
 import { Bit, Options } from "../../src/types.js";
 
-export default class Test extends Importer {
+export default class Test extends Ingester {
   constructor(options: Options) {
     super(options);
   }

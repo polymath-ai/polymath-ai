@@ -18,14 +18,14 @@ function getLastPunctuation(input: string): number {
   return Math.max(lastPeriod, lastExclamation, lastQuestion);
 }
 
-export abstract class Importer {
+export abstract class Ingester {
   protected options: Options;
 
   constructor(options: Options) {
     this.options = options;
   }
 
-  static async load(path: string): Promise<Importer> {
+  static async load(path: string): Promise<Ingester> {
     const importer = await import(`./${path}`);
     return importer.default;
   }

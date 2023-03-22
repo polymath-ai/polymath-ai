@@ -3,11 +3,8 @@
   "version": "0.0.9",
   "description": "An ingest library for Polymath",
   "type": "module",
-  "main": "src/main.js",
-  "exports": "./src/main.js",
-  "bin": {
-    "polymath-ingest": "./index.js"
-  },
+  "main": "dist/src/main.js",
+  "exports": "./dist/src/main.js",
   "publishConfig": {
     "access": "public"
   },
@@ -21,7 +18,6 @@
     "url": "git+https://github.com/polymath-ai/cli.git"
   },
   "keywords": [
-    "cli",
     "polymath",
     "genai",
     "llm"
@@ -29,9 +25,9 @@
   "author": "The Polymath Crew (Alex, Dimitri, Dion)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/polymath-ai/cli/issues"
+    "url": "https://github.com/polymath-ai/polymath-ai/issues"
   },
-  "homepage": "https://github.com/polymath-ai/cli#readme",
+  "homepage": "https://github.com/polymath-ai//polymath-ai#readme",
   "files": [
     "dist",
     "index.js"

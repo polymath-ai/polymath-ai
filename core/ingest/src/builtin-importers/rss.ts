@@ -1,6 +1,6 @@
 import { Options, Bit } from '../types.js';
 
-import { Importer } from "../importer.js";
+import { Ingester } from "../ingester.js";
 import RSSParser from 'rss-parser';
 
 const stripHtml = function(str:string): string {
@@ -9,13 +9,17 @@ const stripHtml = function(str:string): string {
   return str;
 }
 
-export default class RSS extends Importer {
+export default class RSS extends Ingester {
 
   constructor(options: Options) {
     super(options);
   }
 
   async *getStringsFromSource(source: string): AsyncGenerator<Bit> {
+    if (!source) {
+      throw new Error("RSS source is not defined");      
+    }
+
     const feed = await (new RSSParser).parseURL(source);
    
     for (const item of feed.items) {
