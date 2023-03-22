@@ -6,8 +6,7 @@ import { Command, Option } from "commander";
 import { Ask } from "./actions/ask.js";
 import { Complete, CompletionArgs } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
-import { IngestAction, IngestArguments } from "./actions/ingest.js";
-import { IngestOptions } from "@polymath-ai/types";
+import { IngestAction } from "./actions/ingest.js";
 
 type NPMPackageConfig = {
   version: string;
