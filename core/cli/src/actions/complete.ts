@@ -36,15 +36,15 @@ export class Complete extends Action {
     log("You asked: ", question);
 
     try {
-      let client = new Polymath(clientOptions);
+      const client = new Polymath(clientOptions);
 
       debug("completing...");
       // completion
-      let completionOptions = this.completionOptions(opts);
+      const completionOptions = this.completionOptions(opts);
 
       if (completionOptions.stream) {
         // async mode baybee
-        let streamProcessor: StreamProcessor = {
+        const streamProcessor: StreamProcessor = {
           processDelta: (delta: string | Uint8Array) => {
             if (delta) process.stdout.write(delta);
           },
@@ -67,7 +67,7 @@ export class Complete extends Action {
       } else {
         // TODO: Match `results` to the type returned by `client.completion`
         // Currently, I am using `any` to avoid a type error.
-        let results: CompletionResult = await client.completion(
+        const results: CompletionResult = await client.completion(
           question,
           undefined, // we don't have existing polymath results
           undefined, // we don't need no ask Options
@@ -75,7 +75,8 @@ export class Complete extends Action {
           undefined // don't have the stream processsor
         );
 
-        let output = results.completion + "\n\n" + this.sources(results.infos);
+        const output =
+          results.completion + "\n\n" + this.sources(results.infos);
         log("The Polymath answered with:\n\n", output);
       }
     } catch (e) {

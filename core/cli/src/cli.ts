@@ -128,7 +128,10 @@ class CLI {
       .description("Ingest a source into a Polymath")
       .argument("[question]", "Which ingester should the Polymath use?")
       .argument("[source...]", "What source should be ingested?")
-      .option("-o, --destination <destination>", "The directory where the output should be written.")
+      .option(
+        "-o, --destination <destination>",
+        "The directory where the output should be written."
+      )
       .action((ingestLibrary: string, sources: string[], options: any) => {
         for (const source of sources) {
           const allOptions = { ...options, ...program.opts() };

@@ -57,7 +57,7 @@ export abstract class Action extends Base {
 
   // Ask the dear listener for a question as they didn't provide one to the CLI
   async promptForQuestion(): Promise<string> {
-    let question = await inquirer.prompt({
+    const question = await inquirer.prompt({
       type: "input",
       name: "result",
       message: "What is your question?",

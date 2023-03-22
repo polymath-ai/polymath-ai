@@ -17,9 +17,9 @@ export class Options extends Base {
       Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
 
     // convert a main host config into the bits needed for the Polymath
-    let clientConfig = config.client_options;
+    const clientConfig = config.client_options;
 
-    let clientOptions = skipEmpties({
+    const clientOptions = skipEmpties({
       apiKey: programOptions.openaiApiKey || config.default_api_key,
       servers: programOptions.servers || clientConfig?.servers,
       libraryFiles: programOptions.libraries || clientConfig?.libraryFiles,

@@ -18,7 +18,7 @@ class PolymathLocal {
   _libraryBits: Bit[];
 
   constructor(libraries: LibraryFileNamePattern[]) {
-    let expandedLibraries = this.expandLibraries(libraries);
+    const expandedLibraries = this.expandLibraries(libraries);
     this._libraryBits = this.loadLibraryBits(expandedLibraries);
   }
 
@@ -26,7 +26,7 @@ class PolymathLocal {
   // E.g. if you pass in ["./mybits/*.json", "./mybits2"], this will return
   // ["./mybits/1.json", "./mybits/2.json", "./mybits2/1.json", "./mybits2/2.json"]
   expandLibraries(libraries: LibraryFileNamePattern[]): LibraryFileName[] {
-    let expandedLibraries = [];
+    const expandedLibraries = [];
     for (const filepattern of libraries) {
       const files = globbySync([filepattern, "!*.SECRET.*"], {
         expandDirectories: {
@@ -43,7 +43,7 @@ class PolymathLocal {
 
   // Load up all of the library bits from the given library JSON files
   loadLibraryBits(libraries: LibraryFileName[]): Bit[] {
-    let libraryBits = [];
+    const libraryBits = [];
     for (const filename of libraries) {
       try {
         const data = fs.readFileSync(filename, "utf8");

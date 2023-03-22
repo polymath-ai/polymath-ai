@@ -13,11 +13,11 @@ export class Ask extends Action {
     log("You asked: ", question);
 
     try {
-      let client = new Polymath(clientOptions);
+      const client = new Polymath(clientOptions);
 
       debug("asking...");
-      let results = await client.ask(question);
-      let output = results.context();
+      const results = await client.ask(question);
+      const output = results.context();
 
       log("The Polymath answered with:\n\n", output);
     } catch (e) {
