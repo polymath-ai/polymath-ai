@@ -1,14 +1,14 @@
-import { Bit, Options } from './types.js';
-import { cleanText } from './utils.js';
+import { Bit, Options } from "./types.js";
+import { cleanText } from "./utils.js";
 
 // NOTE: Dependant on the model we are using with OpenAI, we need to chunk the data in to optimal sizes. In some cases we might only have one bit for an entire document.
 const MIN_CHUNK_SIZE = 500;
 const MAX_CHUNK_SIZE = 1500; // We need to check which model we are using with OpenAI because they all have different limits.
 const GOLDIELOCKS = {
-  "min": MAX_CHUNK_SIZE - MIN_CHUNK_SIZE,
-  "max": MAX_CHUNK_SIZE + MIN_CHUNK_SIZE
-}
-const MEH_SIZE = GOLDIELOCKS.min / 2
+  min: MAX_CHUNK_SIZE - MIN_CHUNK_SIZE,
+  max: MAX_CHUNK_SIZE + MIN_CHUNK_SIZE,
+};
+const MEH_SIZE = GOLDIELOCKS.min / 2;
 
 function getLastPunctuation(input: string): number {
   const lastPeriod = input.lastIndexOf(".");
@@ -41,7 +41,7 @@ export abstract class Ingester {
 
   Returns partial bits.
   */
-  async *getStringsFromSource(source: string): AsyncGenerator<Bit> {
+  async *getStringsFromSource(_source: string): AsyncGenerator<Bit> {
     // e.g yield { url: source, fullText: "" };
     throw new Error("getStringsFromSource not implemented");
   }
@@ -74,7 +74,7 @@ export abstract class Ingester {
       if (buffer.length + cleanedText.length <= GOLDIELOCKS.max) {
         yield {
           text: "\n" + buffer,
-          info: source.info
+          info: source.info,
         };
         buffer = "";
         continue;
@@ -90,19 +90,24 @@ export abstract class Ingester {
         const sentenceEnd = getLastPunctuation(trimmedBuffer); // What do we do if there is no sentence end?...
         if (sentenceEnd == -1) {
           // We couldn't find a sentence end, so just yield and hope let the error percolate down.
-          console.warn("[WARN] Couldn't find sentence end. Emitting entire buffer.");
+          console.warn(
+            "[WARN] Couldn't find sentence end. Emitting entire buffer."
+          );
           break;
         }
 
         const fullSentence = trimmedBuffer.substring(0, sentenceEnd + 1);
-        remainingBuffer = trimmedBuffer.substring(sentenceEnd + 1) + remainingBuffer;
+        remainingBuffer =
+          trimmedBuffer.substring(sentenceEnd + 1) + remainingBuffer;
 
         if (sentenceEnd == fullSentence.length) {
           // The sentence end is at the end of the buffer, so we can just yield and move on.
-          console.warn("[WARN] The sentence is still too long and can't be broken down further. Emitting.");
+          console.warn(
+            "[WARN] The sentence is still too long and can't be broken down further. Emitting."
+          );
           yield {
             text: fullSentence,
-            info: source.info
+            info: source.info,
           };
           break;
         }
@@ -110,14 +115,13 @@ export abstract class Ingester {
         // Add the scraps of the sentence to the remaining buffer.
         trimmedBuffer = remainingBuffer.substring(0, GOLDIELOCKS.max);
         remainingBuffer = remainingBuffer.substring(GOLDIELOCKS.max);
-      } while (remainingBuffer.length > GOLDIELOCKS.max)
+      } while (remainingBuffer.length > GOLDIELOCKS.max);
 
-     
       // Yield the last chunk
       if (buffer.length > 0) {
         yield {
           text: "\n" + buffer,
-          info: source.info
+          info: source.info,
         };
       }
 
