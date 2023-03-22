@@ -4,7 +4,10 @@ export type Base64Embedding = string;
 
 export type EmbeddingModelName = "openai.com:text-embedding-ada-002";
 
-export type CompletionModelName = "text-davinci-003" | "gpt-3.5-turbo";
+export type CompletionModelName =
+  | "text-davinci-003"
+  | "gpt-3.5-turbo"
+  | "gpt-4";
 
 export type ModelName = EmbeddingModelName | CompletionModelName;
 

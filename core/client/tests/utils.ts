@@ -20,7 +20,7 @@ test("When decoding an encoded it comes back the same", (t) => {
   }
 });
 
-function arrayEquals(a, b) {
+function arrayEquals(a: any, b: any) {
   return (
     Array.isArray(a) &&
     Array.isArray(b) &&
