@@ -1,3 +1,6 @@
+import { infoSchema } from "./schemas.js";
+import { z } from "zod";
+
 //TODO: consider having an enumeration of valid lenghts for known models
 export type EmbeddingVector = number[];
 export type Base64Embedding = string;
@@ -36,12 +39,7 @@ export type PineconeBit = BitInfo & {
   access_tag?: AccessTag;
 };
 
-export type BitInfo = {
-  url: string;
-  image_url?: string;
-  title?: string;
-  description?: string;
-};
+export type BitInfo = z.infer<typeof infoSchema>;
 
 export type AccessTag = string;
 
@@ -154,7 +152,7 @@ export type AskOptions = {
 
 export type IngestOptions = {
   destination: string;
-}
+};
 
 export type StreamProcessor = {
   processDelta: (delta: string) => void;
