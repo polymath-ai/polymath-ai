@@ -37,7 +37,9 @@
       "compile": false
     }
   },
-  "dependencies": {},
+  "dependencies": {
+    "zod": "^3.21.4"
+  },
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@changesets/cli": "^2.26.0",

@@ -1,4 +1,5 @@
 import { AskOptions, PackedLibraryData } from "@polymath-ai/types";
+import { z } from "zod";
 
 export type Endpoint = (args: AskOptions) => Promise<PackedLibraryData>;
 export type Checker = (c: ValidationContext) => boolean;
@@ -51,10 +52,41 @@ export class Harness {
     this.endpoint = endpoint;
   }
 
+  validateResponse(response: unknown): PackedLibraryData {
+    const infoSchema = z.object({
+      url: z.string({ required_error: "URL is required" }),
+      image_url: z.string(),
+      title: z.string(),
+      description: z.string(),
+    });
+
+    const bitSchema = z.object({
+      id: z.optional(z.string()),
+      text: z.optional(z.string()),
+      token_count: z.optional(z.number()),
+      embedding: z.optional(z.array(z.number())),
+      info: z.optional(infoSchema),
+      similarity: z.optional(z.number()),
+      access_tag: z.optional(z.string()),
+    });
+
+    const packedLibraryDataSchema = z.object({
+      version: z.number(),
+      embedding_model: z.string(),
+      omit: z.optional(z.string()),
+      count_type: z.optional(z.string()),
+      sort: z.optional(z.string()),
+      bits: z.array(bitSchema),
+    });
+
+    packedLibraryDataSchema.parse(response);
+    return response as PackedLibraryData;
+  }
+
   async validate(args: AskOptions, ...checks: ValidationCheck[]) {
     let response: PackedLibraryData;
     try {
-      response = await this.endpoint(args);
+      response = this.validateResponse(await this.endpoint(args));
     } catch (e) {
       this.log.exception(e as Error);
       return;
