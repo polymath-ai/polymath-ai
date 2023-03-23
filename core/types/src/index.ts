@@ -2,6 +2,9 @@ import {
   bitInfoSchema,
   embeddingVectorSchema,
   base64EmbeddingSchema,
+  embeddingModelNameSchema,
+  completionModelNameSchema,
+  modelNameSchema,
 } from "./schemas.js";
 import { z } from "zod";
 
@@ -11,14 +14,11 @@ export { bitInfoSchema };
 export type EmbeddingVector = z.infer<typeof embeddingVectorSchema>;
 export type Base64Embedding = z.infer<typeof base64EmbeddingSchema>;
 
-export type EmbeddingModelName = "openai.com:text-embedding-ada-002";
+export type EmbeddingModelName = z.infer<typeof embeddingModelNameSchema>;
 
-export type CompletionModelName =
-  | "text-davinci-003"
-  | "gpt-3.5-turbo"
-  | "gpt-4";
+export type CompletionModelName = z.infer<typeof completionModelNameSchema>;
 
-export type ModelName = EmbeddingModelName | CompletionModelName;
+export type ModelName = z.infer<typeof modelNameSchema>;
 
 //A filename like './mybits/file.json'
 export type LibraryFileName = string;
