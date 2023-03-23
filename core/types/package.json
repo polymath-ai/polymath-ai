@@ -18,5 +18,8 @@
   "license": "ISC",
   "devDependencies": {
     "@polymath-ai/infra": "*"
+  },
+  "dependencies": {
+    "zod": "^3.21.4"
   }
 }
