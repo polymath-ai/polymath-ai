@@ -1,3 +1,4 @@
+import { PackedBit } from "@polymath-ai/types";
 import { Harness, check, Endpoint, ValidationResult } from "./harness.js";
 
 export interface ValidatorResults {
@@ -13,8 +14,8 @@ export class Validator {
   }
 
   async run(): Promise<ValidatorResults> {
-    const countTokens = (bits: any) =>
-      bits.reduce((acc: any, bit: any) => acc + bit.token_count, 0);
+    const countTokens = (bits: PackedBit[]) =>
+      bits.reduce((acc, bit: PackedBit) => acc + (bit.token_count || 0), 0);
 
     const harness = new Harness(this.endpoint);
 
