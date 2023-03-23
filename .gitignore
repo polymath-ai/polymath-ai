@@ -104,3 +104,6 @@ dist
 .tern-port
 
 .gitpod.yml
+
+# Ignore .devcontainer bits for now
+.devcontainer
