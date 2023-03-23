@@ -1,5 +1,6 @@
 import { AskOptions, PackedLibraryData } from "@polymath-ai/types";
 import { z } from "zod";
+import { bitInfoSchema } from "@polymath-ai/types";
 
 export type Endpoint = (args: AskOptions) => Promise<PackedLibraryData>;
 export type Checker = (c: ValidationContext) => boolean;
@@ -53,19 +54,12 @@ export class Harness {
   }
 
   validateResponse(response: unknown): PackedLibraryData {
-    const infoSchema = z.object({
-      url: z.string({ required_error: "URL is required" }),
-      image_url: z.string(),
-      title: z.string(),
-      description: z.string(),
-    });
-
     const bitSchema = z.object({
       id: z.optional(z.string()),
       text: z.optional(z.string()),
       token_count: z.optional(z.number()),
       embedding: z.optional(z.array(z.number())),
-      info: z.optional(infoSchema),
+      info: z.optional(bitInfoSchema),
       similarity: z.optional(z.number()),
       access_tag: z.optional(z.string()),
     });
