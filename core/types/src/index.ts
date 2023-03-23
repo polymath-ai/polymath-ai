@@ -1,11 +1,15 @@
-import { bitInfoSchema } from "./schemas.js";
+import {
+  bitInfoSchema,
+  embeddingVectorSchema,
+  base64EmbeddingSchema,
+} from "./schemas.js";
 import { z } from "zod";
 
 export { bitInfoSchema };
 
 //TODO: consider having an enumeration of valid lenghts for known models
-export type EmbeddingVector = number[];
-export type Base64Embedding = string;
+export type EmbeddingVector = z.infer<typeof embeddingVectorSchema>;
+export type Base64Embedding = z.infer<typeof base64EmbeddingSchema>;
 
 export type EmbeddingModelName = "openai.com:text-embedding-ada-002";
 
