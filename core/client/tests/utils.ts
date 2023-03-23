@@ -3,7 +3,7 @@ import test from "ava";
 import { encodeEmbedding, decodeEmbedding } from "../src/utils.js";
 
 test("When decoding an encoded it comes back the same", (t) => {
-  let sampleEmbedding = [
+  const sampleEmbedding = [
     -0.006929283495992422, -0.005336422007530928, -4.547132266452536e-5,
     -0.024047505110502243,
   ];

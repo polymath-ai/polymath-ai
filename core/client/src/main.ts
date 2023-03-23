@@ -112,11 +112,11 @@ class Polymath {
 
     // If passed the query_embedding, use it. Otherwise, generate it.
     // Beware the fact that there is a chance generateEMbedding(query) != queryEmbedding
-    let queryEmbedding =
+    const queryEmbedding =
       askOptions?.query_embedding || (await this.generateEmbedding(query));
 
     // For each server and/or local library, get the results and merge it all together!
-    let bits: PackedBit[] = [];
+    const bits: PackedBit[] = [];
 
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
@@ -129,7 +129,7 @@ class Polymath {
 
       const resultsArray = await Promise.all(promises);
 
-      for (let results of resultsArray) {
+      for (const results of resultsArray) {
         this.debug("Server Results: " + JSON.stringify(results));
         if (results.bits) {
           bits.push(...results.bits);
@@ -139,9 +139,9 @@ class Polymath {
 
     // Second, let's ask pinecone for some
     if (this.pinecone) {
-      let ps = new PolymathPinecone(this.pinecone);
+      const ps = new PolymathPinecone(this.pinecone);
       //TODO: shouldn't pinecone also take an askOptions and filter appropriately?
-      let results = await ps.ask(queryEmbedding);
+      const results = await ps.ask(queryEmbedding);
 
       this.debug("Pinecone Results: " + JSON.stringify(results, null, 2));
 
@@ -152,8 +152,8 @@ class Polymath {
 
     // Third, look for local bits
     if (Array.isArray(this.libraries)) {
-      let ls = new PolymathLocal(this.libraries);
-      let results = ls.ask(queryEmbedding);
+      const ls = new PolymathLocal(this.libraries);
+      const results = ls.ask(queryEmbedding);
 
       this.debug("Local Results: " + JSON.stringify(results, null, 2));
 
@@ -198,7 +198,7 @@ class Polymath {
       // get the polymath results here
       polymathResults = await this.ask(query, askOptions);
     }
-    let responseBitsAndInfo = {
+    const responseBitsAndInfo = {
       bits: polymathResults.bits(),
       infos: polymathResults.infoSortedBySimilarity(),
     };
@@ -214,16 +214,16 @@ class Polymath {
       },
     };
 
-    let model = completionOptions?.model || "text-davinci-003";
+    const model = completionOptions?.model || "text-davinci-003";
 
     // How much room do we have for the content?
     // 4000 - 1024 - tokens for the prompt with the query without the context
-    let contextTokenCount =
+    const contextTokenCount =
       getMaxTokensForModel(model) -
       DEFAULT_MAX_TOKENS_COMPLETION -
       this.getPromptTokenCount(query);
 
-    let prompt = this.getPrompt(
+    const prompt = this.getPrompt(
       query,
       polymathResults.context(contextTokenCount)
     );
@@ -231,11 +231,11 @@ class Polymath {
     try {
       let response;
       let responseText;
-      let axiosExtraInfo: { responseType?: "stream" } =
+      const axiosExtraInfo: { responseType?: "stream" } =
         completionOptions?.stream ? { responseType: "stream" } : {};
 
       if (this.isChatModel(model)) {
-        let messages: ChatCompletionRequestMessage[] = [];
+        const messages: ChatCompletionRequestMessage[] = [];
         if (completionOptions?.system) {
           messages.push({
             role: "system",

@@ -265,18 +265,18 @@ test("Polymath gets local completions with the turbo model streaming", async (t)
 
 test("Polymath gets local completions with the OG model streaming", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let completionOptions: CompletionOptions = {
+    const completionOptions: CompletionOptions = {
       model: "text-davinci-003",
       stream: true,
     };
 
     await new Promise((resolve, reject) => {
-      let streamProcessor = {
+      const streamProcessor = {
         processResults: (r: any) => {
           resolve(null);
           t.pass();
@@ -323,7 +323,7 @@ test("Polymath gets server completions", async (t) => {
 
 test("Polymath gets multiple server completions", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: [
         "https://remix.polymath.chat/",
@@ -331,7 +331,7 @@ test("Polymath gets multiple server completions", async (t) => {
       ],
     });
 
-    let r = await client.completion("Can you use Remix with Preact?");
+    const r = await client.completion("Can you use Remix with Preact?");
 
     if (r.completion) {
       log("Completion: ", r.completion);
@@ -345,12 +345,12 @@ test("Polymath gets multiple server completions", async (t) => {
 
 test("Polymath sends with extra otherOptions to limit count to 1 bit", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: ["https://remix.polymath.chat/"],
     });
 
-    let r = await client.ask("When should you use a Button vs. a Link?", {
+    const r = await client.ask("When should you use a Button vs. a Link?", {
       count: 1,
     });
 
@@ -365,12 +365,12 @@ test("Polymath sends with extra otherOptions to limit count to 1 bit", async (t)
 
 test("Polymath sends with extra otherOptions to omit embeddings", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: ["https://remix.polymath.chat/"],
     });
 
-    let r = await client.ask("When should you use a Button vs. a Link?", {
+    const r = await client.ask("When should you use a Button vs. a Link?", {
       omit: ["info", "embedding"],
       count: 1,
     });
@@ -386,17 +386,17 @@ test("Polymath sends with extra otherOptions to omit embeddings", async (t) => {
 
 test("Polymath gets one result with embedding omited locally", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let r = await client.ask("How long is a piece of string?", {
+    const r = await client.ask("How long is a piece of string?", {
       omit: "embedding",
       count: 1,
     });
 
-    let response = r.response();
+    const response = r.response();
     if (!r.bits()[0].embedding && response.omit === "embedding") {
       t.pass();
     }
@@ -408,7 +408,7 @@ test("Polymath gets one result with embedding omited locally", async (t) => {
 
 test("Polymath gets pinecone results", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       pinecone: {
         apiKey: process.env.PINECONE_API_KEY,
@@ -418,7 +418,7 @@ test("Polymath gets pinecone results", async (t) => {
       },
     });
 
-    let r = await client.ask("How long is a piece of string?");
+    const r = await client.ask("How long is a piece of string?");
 
     log("PINECONE RESULTS: ", JSON.stringify(r));
 
