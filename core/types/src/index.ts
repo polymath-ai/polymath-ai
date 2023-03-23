@@ -1,5 +1,7 @@
-import { infoSchema } from "./schemas.js";
+import { bitInfoSchema } from "./schemas.js";
 import { z } from "zod";
+
+export { bitInfoSchema };
 
 //TODO: consider having an enumeration of valid lenghts for known models
 export type EmbeddingVector = number[];
@@ -39,7 +41,7 @@ export type PineconeBit = BitInfo & {
   access_tag?: AccessTag;
 };
 
-export type BitInfo = z.infer<typeof infoSchema>;
+export type BitInfo = z.infer<typeof bitInfoSchema>;
 
 export type AccessTag = string;
 
