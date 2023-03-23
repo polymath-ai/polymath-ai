@@ -1,7 +1,4 @@
-import {
-  AskOptions,
-  PackedLibraryData,
-} from "@polymath-ai/types";
+import { AskOptions, PackedLibraryData } from "@polymath-ai/types";
 
 export type Endpoint = (args: AskOptions) => Promise<PackedLibraryData>;
 export type Checker = (c: ValidationContext) => boolean;
@@ -58,14 +55,14 @@ export class Harness {
     let response: PackedLibraryData;
     try {
       response = await this.endpoint(args);
-    } catch (e: any) {
-      this.log.exception(e);
+    } catch (e) {
+      this.log.exception(e as Error);
       return;
     }
     try {
       checks.forEach((check) => check.run(this.log, { response, args }));
-    } catch (e: any) {
-      this.log.exception(e);
+    } catch (e) {
+      this.log.exception(e as Error);
     }
   }
 }
