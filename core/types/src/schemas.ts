@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const EMBEDDING_VECTOR_LENGTH = 1536;
 
-export const embeddingVectorSchema = z
+const embeddingVector = z
   .array(z.number())
   .length(
     EMBEDDING_VECTOR_LENGTH,
@@ -12,26 +12,21 @@ export const embeddingVectorSchema = z
     "A list of floating point numbers that represent an embedding vector."
   );
 
-export const base64EmbeddingSchema = z
+const base64Embedding = z
   .string()
   .describe("A base64 encoded string that represents an embedding vector.");
 
-export const embeddingModelNameSchema = z.literal(
-  "openai.com:text-embedding-ada-002"
-);
+const embeddingModelName = z.literal("openai.com:text-embedding-ada-002");
 
-export const completionModelNameSchema = z.enum([
+const completionModelName = z.enum([
   "text-davinci-003",
   "gpt-3.5-turbo",
   "gpt-4",
 ]);
 
-export const modelNameSchema = z.union([
-  embeddingModelNameSchema,
-  completionModelNameSchema,
-]);
+const modelName = z.union([embeddingModelName, completionModelName]);
 
-export const bitInfoSchema = z.object({
+const bitInfo = z.object({
   url: z
     .string({ required_error: "URL is required" })
     .describe("The URL that refers to the original location of the bit."),
@@ -41,3 +36,12 @@ export const bitInfoSchema = z.object({
   title: z.optional(z.string()),
   description: z.optional(z.string()),
 });
+
+export const schemas = {
+  embeddingVector,
+  base64Embedding,
+  embeddingModelName,
+  completionModelName,
+  modelName,
+  bitInfo,
+};

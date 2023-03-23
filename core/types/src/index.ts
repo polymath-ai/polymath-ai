@@ -1,24 +1,15 @@
-import {
-  bitInfoSchema,
-  embeddingVectorSchema,
-  base64EmbeddingSchema,
-  embeddingModelNameSchema,
-  completionModelNameSchema,
-  modelNameSchema,
-} from "./schemas.js";
+import { schemas } from "./schemas.js";
 import { z } from "zod";
 
-export { bitInfoSchema };
+export { schemas };
 
 //TODO: consider having an enumeration of valid lenghts for known models
-export type EmbeddingVector = z.infer<typeof embeddingVectorSchema>;
-export type Base64Embedding = z.infer<typeof base64EmbeddingSchema>;
+export type EmbeddingVector = z.infer<typeof schemas.embeddingVector>;
+export type Base64Embedding = z.infer<typeof schemas.base64Embedding>;
 
-export type EmbeddingModelName = z.infer<typeof embeddingModelNameSchema>;
-
-export type CompletionModelName = z.infer<typeof completionModelNameSchema>;
-
-export type ModelName = z.infer<typeof modelNameSchema>;
+export type EmbeddingModelName = z.infer<typeof schemas.embeddingModelName>;
+export type CompletionModelName = z.infer<typeof schemas.completionModelName>;
+export type ModelName = z.infer<typeof schemas.modelName>;
 
 //A filename like './mybits/file.json'
 export type LibraryFileName = string;
@@ -45,7 +36,7 @@ export type PineconeBit = BitInfo & {
   access_tag?: AccessTag;
 };
 
-export type BitInfo = z.infer<typeof bitInfoSchema>;
+export type BitInfo = z.infer<typeof schemas.bitInfo>;
 
 export type AccessTag = string;
 
