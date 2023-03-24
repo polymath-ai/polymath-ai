@@ -14,10 +14,9 @@ import { Polymath } from "../src/main.js";
 // npx ava -m "Polymath gets one result with embedding omited locally" -- -d # turns on debug logging
 //
 
-let log = (...args: any) => {};
-if (process.argv.slice(2)[0] == "--debug" || process.argv.slice(2)[0] == "-d") {
-  log = console.log;
-}
+const isDebug =
+  process.argv.slice(2)[0] == "--debug" || process.argv.slice(2)[0] == "-d";
+const log = (...args: unknown[]) => isDebug && console.log(...args);
 
 test("Polymath requires an OpenAI API Key", (t) => {
   try {
