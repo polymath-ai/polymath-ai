@@ -264,6 +264,7 @@ class Polymath {
           axiosExtraInfo
         );
         if (completionOptions?.stream) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore See https://github.com/openai/openai-node/issues/18#issuecomment-1406961202
           response.data.on("data", (data: string) => {
             this.processData(
@@ -298,6 +299,7 @@ class Polymath {
           axiosExtraInfo
         );
         if (completionOptions?.stream) {
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           //@ts-ignore See https://github.com/openai/openai-node/issues/18#issuecomment-1406961202
           response.data.on("data", (data: string) => {
             this.processData(
