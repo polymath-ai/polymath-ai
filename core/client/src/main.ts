@@ -111,7 +111,7 @@ class Polymath {
     }
 
     // If passed the query_embedding, use it. Otherwise, generate it.
-    // Beware the fact that there is a chance generateEMbedding(query) != queryEmbedding
+    // Beware the fact that there is a chance generateEmbedding(query) != queryEmbedding
     const queryEmbedding =
       askOptions?.query_embedding || (await this.generateEmbedding(query));
 
@@ -122,9 +122,13 @@ class Polymath {
     if (Array.isArray(this.servers)) {
       this.debug("Asking servers: " + this.servers.join("\n"));
 
+      const args = askOptions
+        ? { ...askOptions, query_embedding: queryEmbedding }
+        : { query_embedding: queryEmbedding };
+
       const promises = this.servers.map((server) => {
-        const ps = new PolymathEndpoint(server);
-        return ps.ask(queryEmbedding, askOptions);
+        const endpoint = new PolymathEndpoint(server);
+        return endpoint.ask(args);
       });
 
       const resultsArray = await Promise.all(promises);
