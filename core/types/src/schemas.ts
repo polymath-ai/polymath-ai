@@ -37,6 +37,57 @@ const bitInfo = z.object({
   description: z.optional(z.string()),
 });
 
+const accessTag = z.string();
+
+const bitId = z.string();
+
+const bit = z.object({
+  //Omit settings could lead to anhy part of Bit being omitted.
+  id: bitId.optional(),
+  text: z.string().optional(),
+  token_count: z.number().optional(),
+  embedding: embeddingVector.optional(),
+  info: bitInfo.optional(),
+  similarity: z.number().optional(),
+  access_tag: accessTag.optional(),
+});
+
+const packedBit = bit.extend({
+  embedding: base64Embedding.optional(),
+});
+
+const omitConfigurationField = z.enum([
+  "text",
+  "info",
+  "embedding",
+  "similarity",
+  "token_count",
+]);
+
+const omitConfiguration = z.union([
+  z.literal("*"),
+  z.literal(""),
+  omitConfigurationField,
+  z.array(omitConfigurationField),
+]);
+
+const sort = z.literal("similarity");
+
+const countType = z.enum(["token", "character"]);
+
+const libraryData = z.object({
+  version: z.number(),
+  embedding_model: embeddingModelName,
+  omit: omitConfiguration.optional(),
+  count_type: countType.optional(),
+  sort: sort.optional(),
+  bits: z.array(bit),
+});
+
+const packedLibraryData = libraryData.extend({
+  bits: z.array(packedBit),
+});
+
 export const schemas = {
   embeddingVector,
   base64Embedding,
@@ -44,4 +95,8 @@ export const schemas = {
   completionModelName,
   modelName,
   bitInfo,
+  bit,
+  packedBit,
+  libraryData,
+  packedLibraryData,
 };

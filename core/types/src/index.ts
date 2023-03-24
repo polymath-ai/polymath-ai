@@ -30,6 +30,8 @@ export type PineconeResult = {
   metadata: PineconeBit;
 };
 
+export type AccessTag = string;
+
 export type PineconeBit = BitInfo & {
   text?: string;
   token_count?: number;
@@ -37,44 +39,11 @@ export type PineconeBit = BitInfo & {
 };
 
 export type BitInfo = z.infer<typeof schemas.bitInfo>;
-
-export type AccessTag = string;
-
-export type BitID = string;
-
-export type Bit = {
-  //Omit settings could lead to anhy part of Bit being omitted.
-  id?: BitID;
-  text?: string;
-  token_count?: number;
-  embedding?: EmbeddingVector;
-  info?: BitInfo;
-  similarity?: number;
-  access_tag?: AccessTag;
-};
-
-export type PackedBit = {
-  [Key in keyof Bit]: Bit[Key] extends EmbeddingVector | undefined
-    ? Base64Embedding | undefined
-    : Bit[Key];
-};
-
+export type Bit = z.infer<typeof schemas.bit>;
+export type PackedBit = z.infer<typeof schemas.packedBit>;
 export type Sort = "similarity";
-
-export type LibraryData = {
-  version: number;
-  embedding_model: EmbeddingModelName;
-  omit?: OmitConfiguration;
-  count_type?: CountType;
-  sort?: Sort;
-  bits: Bit[];
-};
-
-export type PackedLibraryData = {
-  [Key in keyof LibraryData]: LibraryData[Key] extends Bit[]
-    ? PackedBit[]
-    : LibraryData[Key];
-};
+export type LibraryData = z.infer<typeof schemas.libraryData>;
+export type PackedLibraryData = z.infer<typeof schemas.packedLibraryData>;
 
 export const OmitKeys = {
   text: true,
@@ -197,7 +166,7 @@ type ServerOption = {
   default?: boolean;
   url: string;
   name: string;
-}
+};
 
 type ClientOptions = {
   servers?: Server[];
@@ -205,7 +174,7 @@ type ClientOptions = {
   libraryFiles?: LibraryFileName[];
   omit?: OmitConfiguration;
   debug?: boolean;
-}
+};
 
 // Rename and change the key too. This is only used in the web application clients so far
 type WebAppViewOptions = {
@@ -213,6 +182,6 @@ type WebAppViewOptions = {
   placeholder?: string;
   fun_queries?: string[];
   source_prefixes?: {
-      [key: string]: string;
+    [key: string]: string;
   };
 };
