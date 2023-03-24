@@ -1,4 +1,4 @@
-import { HostConfig } from "@polymath-ai/types";
+import type { HostConfig } from "@polymath-ai/types";
 import fs from "fs";
 import os from "os";
 import path from "path";

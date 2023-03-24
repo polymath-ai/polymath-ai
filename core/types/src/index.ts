@@ -183,29 +183,36 @@ export class TypedObject {
 //A HostConfig is what you might have in your `.polymath/config.SECRET.json`
 export type HostConfig = {
   endpoint?: string;
-  default_proviate_access_tag?: string;
+  default_private_access_tag?: string;
   default_api_key?: string;
   //TODO: refactor to be literally PolymathOptions?
-  client_options?: {
-    pinecone?: PineconeConfig;
-    servers?: Server[];
-    libraryFiles?: LibraryFileName[];
-    omit?: OmitConfiguration;
-    debug?: boolean;
-  };
+  client_options?: ClientOptions;
   //TODO: rename to hosts?
-  server_options?: {
-    url: string;
-    name?: string;
-    default?: boolean;
-  }[];
+  server_options?: ServerOption[];
   completions_options?: CompletionOptions;
-  info?: {
-    headername?: string;
-    placeholder?: string;
-    fun_queries?: string[];
-    source_prefixes?: {
-      [url: string]: string;
-    };
+  info?: WebAppViewOptions;
+};
+
+type ServerOption = {
+  default?: boolean;
+  url: string;
+  name: string;
+}
+
+type ClientOptions = {
+  servers?: Server[];
+  pinecone?: PineconeConfig;
+  libraryFiles?: LibraryFileName[];
+  omit?: OmitConfiguration;
+  debug?: boolean;
+}
+
+// Rename and change the key too. This is only used in the web application clients so far
+type WebAppViewOptions = {
+  headername?: string;
+  placeholder?: string;
+  fun_queries?: string[];
+  source_prefixes?: {
+      [key: string]: string;
   };
 };

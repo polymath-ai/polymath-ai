@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@polymath-ai/client": "^1.0.9",
+    "@polymath-ai/types": "*",
     "@remix-run/node": "^1.11.1",
     "@remix-run/react": "^1.11.1",
     "@remix-run/serve": "^1.11.1",
