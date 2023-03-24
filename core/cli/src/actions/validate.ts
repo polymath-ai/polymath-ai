@@ -1,5 +1,6 @@
 import { PolymathEndpoint } from "@polymath-ai/client";
 import { PolymathOptions } from "@polymath-ai/types";
+import { ValidationResult } from "@polymath-ai/validation/dist/src/harness.js";
 import { Action } from "../action.js";
 
 export class Validate extends Action {
@@ -24,7 +25,7 @@ export class Validate extends Action {
       if (!this.isDebug) continue;
 
       debug("Validation details:");
-      result.details.forEach((item: any) => {
+      result.details.forEach((item: ValidationResult) => {
         debug(`- ${item.description}`);
         if (item.exception) {
           const exception = item.exception;

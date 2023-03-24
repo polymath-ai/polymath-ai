@@ -21,7 +21,7 @@ if (process.argv.slice(2)[0] == "--debug" || process.argv.slice(2)[0] == "-d") {
 
 test("Polymath requires an OpenAI API Key", (t) => {
   try {
-    let client = new Polymath({
+    new Polymath({
       apiKey: "sk-fake-api-key",
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
@@ -45,7 +45,7 @@ test("Polymath errors without an OpenAI API Key", (t) => {
 
 test("Polymath tells you when it's invalid", (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: "sk-fake-api-key",
     });
 
@@ -60,7 +60,7 @@ test("Polymath tells you when it's invalid", (t) => {
 
 test("Polymath tells you when it's invalid, allowing you to fix it later", (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: "sk-fake-api-key",
     });
 
@@ -77,7 +77,7 @@ test("Polymath tells you when it's invalid, allowing you to fix it later", (t) =
 
 test("Polymath knows which models are ChatCompletion style", (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: "sk-fake-api-key",
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
@@ -96,12 +96,12 @@ test("Polymath knows which models are ChatCompletion style", (t) => {
 });
 
 test("Polymath can get embeddings", async (t) => {
-  let client = new Polymath({
+  const client = new Polymath({
     apiKey: process.env.OPENAI_API_KEY,
     libraryFiles: ["./libraries/knowledge-string.json"],
   });
 
-  let embedding = await client.generateEmbedding("ePiano");
+  const embedding = await client.generateEmbedding("ePiano");
 
   if (embedding.length == 1536) {
     t.pass();
@@ -112,12 +112,12 @@ test("Polymath can get embeddings", async (t) => {
 
 test("Polymath gets results", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let r = await client.ask("How long is a piece of string?");
+    const r = await client.ask("How long is a piece of string?");
 
     if (r.context()) {
       t.pass();
@@ -130,12 +130,12 @@ test("Polymath gets results", async (t) => {
 
 test("Polymath gets results with glob library files", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/*.json"],
     });
 
-    let r = await client.ask("How long is a piece of string?");
+    const r = await client.ask("How long is a piece of string?");
 
     if (r.context()) {
       t.pass();
@@ -148,12 +148,12 @@ test("Polymath gets results with glob library files", async (t) => {
 
 test("Polymath gets results with directory", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries"],
     });
 
-    let r = await client.ask("How long is a piece of string?");
+    const r = await client.ask("How long is a piece of string?");
 
     if (r.context()) {
       t.pass();
@@ -166,12 +166,12 @@ test("Polymath gets results with directory", async (t) => {
 
 test("Polymath gets server results", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: ["https://polymath.almaer.com/"],
     });
 
-    let r = await client.ask(
+    const r = await client.ask(
       "What is the best side effect of using an AI assistant?"
     );
 
@@ -186,12 +186,12 @@ test("Polymath gets server results", async (t) => {
 
 test("Polymath gets local completions", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let r = await client.completion("How long is a piece of string?");
+    const r = await client.completion("How long is a piece of string?");
 
     if (r.completion) {
       log("Completion: ", r.completion);
@@ -205,7 +205,7 @@ test("Polymath gets local completions", async (t) => {
 
 test("Polymath gets local completions with the turbo model and a system message", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
       completionOptions: {
@@ -214,7 +214,7 @@ test("Polymath gets local completions with the turbo model and a system message"
       },
     });
 
-    let r = await client.completion("How long is a piece of string?");
+    const r = await client.completion("How long is a piece of string?");
 
     if (r.completion) {
       log("Completion: ", r.completion);
@@ -228,23 +228,23 @@ test("Polymath gets local completions with the turbo model and a system message"
 
 test("Polymath gets local completions with the turbo model streaming", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       libraryFiles: ["./libraries/knowledge-string.json"],
     });
 
-    let completionOptions: CompletionOptions = {
+    const completionOptions: CompletionOptions = {
       model: "gpt-3.5-turbo",
       stream: true,
     };
 
     await new Promise((resolve) => {
-      let streamProcessor = {
-        processResults: (r: any) => {
+      const streamProcessor = {
+        processResults: () => {
           resolve(null);
           t.pass();
         },
-        processDelta: (delta: any) => {
+        processDelta: () => {
           // console.log("STREAMING DELTA:", delta);
         },
       };
@@ -275,13 +275,13 @@ test("Polymath gets local completions with the OG model streaming", async (t) =>
       stream: true,
     };
 
-    await new Promise((resolve, reject) => {
+    await new Promise((resolve, _) => {
       const streamProcessor = {
-        processResults: (r: any) => {
+        processResults: () => {
           resolve(null);
           t.pass();
         },
-        processDelta: (delta: any) => {
+        processDelta: () => {
           // console.log("STREAMING DELTA:", delta);
         },
       };
@@ -302,12 +302,12 @@ test("Polymath gets local completions with the OG model streaming", async (t) =>
 
 test("Polymath gets server completions", async (t) => {
   try {
-    let client = new Polymath({
+    const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
       servers: ["https://polymath.almaer.com/"],
     });
 
-    let r = await client.completion(
+    const r = await client.completion(
       "What is the best side effect of using an AI assistant?"
     );
 

@@ -38,7 +38,7 @@ class PolymathResults {
   }
 
   bits(maxTokensWorth = 0): PackedBit[] {
-    let bits = maxTokensWorth > 0 ? this.maxBits(maxTokensWorth) : this._bits;
+    const bits = maxTokensWorth > 0 ? this.maxBits(maxTokensWorth) : this._bits;
     return bits;
   }
 
@@ -127,7 +127,7 @@ class PolymathResults {
 
   // Return a JSON response appropriate for sending back to a client
   response(): PackedLibraryData {
-    let response: PackedLibraryData = {
+    const response: PackedLibraryData = {
       version:
         this._askOptions && this._askOptions.version
           ? this._askOptions.version
