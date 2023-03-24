@@ -51,12 +51,7 @@ class PolymathEndpoint {
       })
     ).json();
 
-    const validationResult = validateResponse(result);
-    if (!validationResult.success) {
-      throw validationResult.error;
-    }
-
-    return validationResult.data;
+    return validateResponse(result);
   }
 
   async validate() {
