@@ -14,10 +14,10 @@ import {
 // Talk to remote servers and ask for their bits
 //
 class PolymathEndpoint {
-  _server: Server;
+  #server: Server;
 
   constructor(server: Server) {
-    this._server = server;
+    this.#server = server;
   }
 
   async ask(
@@ -50,7 +50,7 @@ class PolymathEndpoint {
       form.append("access_token", "" + askOptions?.access_token);
 
     // Send it all over to the Endpoint
-    const url = new URL(this._server);
+    const url = new URL(this.#server);
     const result = await (
       await fetch(url, {
         method: "POST",
