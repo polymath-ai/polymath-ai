@@ -37,27 +37,25 @@ export async function discoverEndpoint(url: URL): Promise<URL | undefined> {
   try {
     const discoveryResponse = await fetch(url);
 
-    if (discoveryResponse.ok == false) { 
-      return; 
+    if (discoveryResponse.ok == false) {
+      return;
     }
 
     // Check the HTTP Header
     const linkHeader = discoveryResponse.headers.get("link");
-    if (linkHeader == undefined) {
-      return;
-    }
+    if (linkHeader != undefined) {
+      const link = Link.parse(linkHeader);
 
-    const link = Link.parse(linkHeader);
+      if (link.has("rel", "polymath")) {
+        const linkUrls = link.get("rel", "polymath");
+        const firstUrl = linkUrls[0].uri;
+        if (firstUrl.startsWith("http://") || firstUrl.startsWith("https://")) {
+          return new URL(firstUrl);
+        }
 
-    if (link.has("rel", "polymath")) {
-      const linkUrls = link.get("rel", "polymath");
-      const firstUrl = linkUrls[0].uri;
-      if (firstUrl.startsWith("http://") || firstUrl.startsWith("https://")) {
-        return new URL(firstUrl);
+        // We need to resolve the paths.
+        return new URL(firstUrl, url);
       }
-
-      // We need to resolve the paths.
-      return new URL(firstUrl, url);
     }
 
     // Check the body
