@@ -1,7 +1,7 @@
-import LinkHeader from "http-link-header";
-import { Parser } from "htmlparser2";
+import Link from "http-link-header";
+import * as htmlparser2 from "htmlparser2";
 
-function parseBody(body: string): string | undefined {
+function parseBody(body: string, url: URL): URL | undefined {
   let polymathURL;
   const parser = new htmlparser2.Parser({
     onopentag(name, attributes) {
@@ -9,8 +9,17 @@ function parseBody(body: string): string | undefined {
         return;
       }
 
-      polymathURL = attributes.href;
-      parser.parseComplete(); 
+      const href = attributes.href;
+
+      if (href != undefined &&
+        href.startsWith("http://") ||
+        href.startsWith("https://")) {
+        polymathURL = new URL(attributes.href);
+      } else {
+        // We need to resolve the paths.
+        polymathURL = new URL(attributes.href, url);
+      }
+      parser.end();
     }
   });
   parser.write(body);
@@ -28,15 +37,21 @@ export async function discoverEndpoint(url: URL): Promise<URL | undefined> {
   try {
     const discoveryResponse = await fetch(url);
 
-    if (discoveryResponse.ok == false) return;
+    if (discoveryResponse.ok == false) { 
+      return; 
+    }
 
     // Check the HTTP Header
     const linkHeader = discoveryResponse.headers.get("link");
-    const link = LinkHeader.parse(linkHeader);
+    if (linkHeader == undefined) {
+      return;
+    }
+
+    const link = Link.parse(linkHeader);
 
     if (link.has("rel", "polymath")) {
-      const linkUrls: string[] = link.get("rel", "polymath");
-      const firstUrl = linkUrl[0];
+      const linkUrls = link.get("rel", "polymath");
+      const firstUrl = linkUrls[0].uri;
       if (firstUrl.startsWith("http://") || firstUrl.startsWith("https://")) {
         return new URL(firstUrl);
       }
@@ -48,7 +63,7 @@ export async function discoverEndpoint(url: URL): Promise<URL | undefined> {
     // Check the body
     const body = await discoveryResponse.text();
     if (body != undefined) {
-      return parseBody(body);
+      return parseBody(body, url);
     }
   } catch (error) {
     console.error("Error during discovery: " + error);

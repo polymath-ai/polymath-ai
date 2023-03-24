@@ -42,6 +42,8 @@
   "dependencies": {
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
+    "@types/htmlparser2": "^3.10.3",
+    "@types/http-link-header": "^1.0.3",
     "dotenv": "^16.0.3",
     "esm": "^3.2.25",
     "find-up": "^6.3.0",
@@ -55,6 +57,7 @@
   "devDependencies": {
     "@ava/typescript": "^3.0.1",
     "@polymath-ai/infra": "*",
+    
     "ava": "^5.2.0",
     "typescript": "^4.9.5"
   }
