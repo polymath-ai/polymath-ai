@@ -1,6 +1,7 @@
 import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./utils.js";
 
 import { Validator } from "@polymath-ai/validation";
+import { validateResponse } from "@polymath-ai/validation";
 
 import {
   AskOptions,
@@ -57,7 +58,12 @@ class PolymathEndpoint {
       })
     ).json();
 
-    return result;
+    const validationResult = validateResponse(result);
+    if (!validationResult.success) {
+      throw validationResult.error;
+    }
+
+    return validationResult.data;
   }
 
   async validate() {

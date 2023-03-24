@@ -143,7 +143,7 @@ class PolymathResults {
       response.omit = this._askOptions.omit;
     }
     if (this._askOptions?.count_type) {
-      response.count_type = this._askOptions.count_type || "bits";
+      response.count_type = this._askOptions.count_type || "bit";
     }
     // default to sorting
     if (this._askOptions?.sort == "similarity" || !this._askOptions?.sort) {

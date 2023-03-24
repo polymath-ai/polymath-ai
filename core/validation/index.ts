@@ -1,3 +1,2 @@
-import { Validator } from "./src/validator.js";
-
-export { Validator };
+export { Validator } from "./src/validator.js";
+export { validateResponse } from "./src/response.js";

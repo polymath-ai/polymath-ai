@@ -64,7 +64,7 @@ export type OmitConfiguration =
 export type AccessToken = string;
 
 //TODO: audit uses of these, is it supposed to be bits or tokens?
-export type CountType = "bit" | "token";
+export type CountType = z.infer<typeof schemas.countType>;
 
 //May include `{context}` and `{query}`
 export type PromptTemplate = string;
