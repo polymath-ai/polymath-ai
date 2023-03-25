@@ -41,7 +41,6 @@ class PolymathEndpoint {
     const args = validateEndpointArgs(askOptions);
     const form = this.prepareFormData(args);
 
-    // Send it all over to the Endpoint
     const url = new URL(this.#server);
     const result = await (
       await fetch(url, {
