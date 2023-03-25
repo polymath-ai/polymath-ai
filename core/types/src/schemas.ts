@@ -26,15 +26,91 @@ const completionModelName = z.enum([
 
 const modelName = z.union([embeddingModelName, completionModelName]);
 
+// TODO: Remove the nulls from these fields.
+// Currently, the info fields are nullable and optional. This is because
+// our old Python implementation is happy to send nulls. We should make these
+// just not come through over the wire.
 const bitInfo = z.object({
   url: z
     .string({ required_error: "URL is required" })
-    .describe("The URL that refers to the original location of the bit."),
+    .describe(
+      "Required. The URL that refers to the original location of the bit."
+    ),
   image_url: z
-    .optional(z.string())
-    .describe("The URL of an image, associated with the bit."),
-  title: z.optional(z.string()),
-  description: z.optional(z.string()),
+    .optional(z.union([z.string(), z.null()]))
+    .describe("The URL of an image, associated with the bit. Can be null."),
+  title: z.optional(z.union([z.string(), z.null()])),
+  description: z.optional(z.union([z.string(), z.null()])),
+});
+
+const accessTag = z.string();
+
+const bitId = z.string();
+
+const bit = z.object({
+  //Omit settings could lead to anhy part of Bit being omitted.
+  id: bitId.optional(),
+  text: z.string().optional(),
+  token_count: z.number().optional(),
+  embedding: embeddingVector.optional(),
+  info: bitInfo.optional(),
+  similarity: z.number().optional(),
+  access_tag: accessTag.optional(),
+});
+
+const packedBit = bit.extend({
+  embedding: base64Embedding.optional(),
+});
+
+const omitConfigurationField = z.enum([
+  "text",
+  "info",
+  "embedding",
+  "similarity",
+  "token_count",
+]);
+
+const omitConfiguration = z.union([
+  z.literal("*"),
+  z.literal(""),
+  omitConfigurationField,
+  z.array(omitConfigurationField),
+]);
+
+const sort = z.literal("similarity");
+
+const countType = z.enum(["token", "bit"]);
+
+const libraryData = z.object({
+  version: z.number(),
+  embedding_model: embeddingModelName,
+  omit: omitConfiguration.optional(),
+  count_type: countType.optional(),
+  sort: sort.optional(),
+  bits: z.array(bit),
+});
+
+const packedLibraryData = libraryData.extend({
+  bits: z.array(packedBit),
+});
+
+const askOptions = z.object({
+  version: z.number().optional(),
+  query_embedding: embeddingVector.optional(),
+  query_embedding_model: embeddingModelName.optional(),
+  count: z.number().optional(),
+  count_type: countType.optional(),
+  omit: omitConfiguration.optional(),
+  access_token: z.string().optional(),
+  sort: sort.optional(),
+});
+
+const endpointArgs = askOptions.extend({
+  version: z.number().default(1),
+  query_embedding: embeddingVector,
+  query_embedding_model: embeddingModelName.default(
+    "openai.com:text-embedding-ada-002"
+  ),
 });
 
 export const schemas = {
@@ -44,4 +120,11 @@ export const schemas = {
   completionModelName,
   modelName,
   bitInfo,
+  bit,
+  packedBit,
+  libraryData,
+  countType,
+  packedLibraryData,
+  askOptions,
+  endpointArgs,
 };

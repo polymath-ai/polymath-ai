@@ -38,7 +38,7 @@ class PolymathResults {
   }
 
   bits(maxTokensWorth = 0): PackedBit[] {
-    let bits = maxTokensWorth > 0 ? this.maxBits(maxTokensWorth) : this._bits;
+    const bits = maxTokensWorth > 0 ? this.maxBits(maxTokensWorth) : this._bits;
     return bits;
   }
 
@@ -127,7 +127,7 @@ class PolymathResults {
 
   // Return a JSON response appropriate for sending back to a client
   response(): PackedLibraryData {
-    let response: PackedLibraryData = {
+    const response: PackedLibraryData = {
       version:
         this._askOptions && this._askOptions.version
           ? this._askOptions.version
@@ -143,7 +143,7 @@ class PolymathResults {
       response.omit = this._askOptions.omit;
     }
     if (this._askOptions?.count_type) {
-      response.count_type = this._askOptions.count_type || "bits";
+      response.count_type = this._askOptions.count_type || "bit";
     }
     // default to sorting
     if (this._askOptions?.sort == "similarity" || !this._askOptions?.sort) {

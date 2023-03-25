@@ -1,55 +1,47 @@
 import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./utils.js";
 
 import { Validator } from "@polymath-ai/validation";
+import {
+  validateResponse,
+  validateEndpointArgs,
+} from "@polymath-ai/validation";
 
 import {
   AskOptions,
-  EmbeddingVector,
+  EndpointArgs,
   PackedLibraryData,
   Server,
+  TypedObject,
 } from "@polymath-ai/types";
 
 //
 // Talk to remote servers and ask for their bits
 //
 class PolymathEndpoint {
-  _server: Server;
+  #server: Server;
 
   constructor(server: Server) {
-    this._server = server;
+    this.#server = server;
   }
 
-  async ask(
-    queryEmbedding: EmbeddingVector,
-    askOptions?: AskOptions
-  ): Promise<PackedLibraryData> {
-    if (!queryEmbedding) {
-      throw new Error("You need to ask a question of the Polymath");
-    }
-
-    // Configure all of the options
+  prepareFormData(args: EndpointArgs): FormData {
     const form = new FormData();
-    form.append("version", "" + (askOptions?.version || 1));
-    form.append(
-      "query_embedding_model",
-      askOptions?.query_embedding_model || "openai.com:text-embedding-ada-002"
+    TypedObject.keys(args).forEach((key) =>
+      form.append(
+        key,
+        key == "query_embedding"
+          ? encodeEmbedding(args[key])
+          : String(args[key])
+      )
     );
-    form.append("query_embedding", encodeEmbedding(queryEmbedding));
+    return form;
+  }
 
-    if (askOptions?.count) form.append("count", "" + askOptions?.count);
+  async ask(askOptions: AskOptions): Promise<PackedLibraryData> {
+    const args = validateEndpointArgs(askOptions);
+    const form = this.prepareFormData(args);
 
-    // TODO: let the consumer know if passing in something that isn't valid (not token nor bit)
-    if (askOptions?.count_type == "token" || askOptions?.count_type == "bit")
-      form.append("count_type", askOptions?.count_type);
-
-    // TODO: validate that the string is a list of valid items to omit (e.g. "embeddings,similarity")
-    if (askOptions?.omit) form.append("omit", "" + askOptions?.omit);
-
-    if (askOptions?.access_token)
-      form.append("access_token", "" + askOptions?.access_token);
-
-    // Send it all over to the Endpoint
-    const url = new URL(this._server);
+    const url = new URL(this.#server);
     const result = await (
       await fetch(url, {
         method: "POST",
@@ -57,7 +49,7 @@ class PolymathEndpoint {
       })
     ).json();
 
-    return result;
+    return validateResponse(result);
   }
 
   async validate() {
@@ -67,7 +59,10 @@ class PolymathEndpoint {
       .map(() => Math.random());
 
     const ask = async (args?: AskOptions) => {
-      return await this.ask(randomEmbedding, args);
+      args = args
+        ? { ...args, query_embedding: randomEmbedding }
+        : { query_embedding: randomEmbedding };
+      return await this.ask(args);
     };
 
     const validator = new Validator(ask);
