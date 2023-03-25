@@ -21,7 +21,7 @@ export function Loading() {
       if (dotCount > 3) {
         dotCount = 0;
         messageCount++;
-        if (messageCount > loadingMessages.length) messageCount = 0;
+        if (messageCount >= loadingMessages.length) messageCount = 0;
       }
       setBody(loadingMessages[messageCount] + ".".repeat(dotCount));
     }, 500);
