@@ -1,2 +1,2 @@
 export { Validator } from "./src/validator.js";
-export { validateResponse } from "./src/response.js";
+export { validateResponse, validateEndpointArgs } from "./src/endpoint.js";

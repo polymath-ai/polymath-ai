@@ -94,6 +94,25 @@ const packedLibraryData = libraryData.extend({
   bits: z.array(packedBit),
 });
 
+const askOptions = z.object({
+  version: z.number().optional(),
+  query_embedding: embeddingVector.optional(),
+  query_embedding_model: embeddingModelName.optional(),
+  count: z.number().optional(),
+  count_type: countType.optional(),
+  omit: omitConfiguration.optional(),
+  access_token: z.string().optional(),
+  sort: sort.optional(),
+});
+
+const endpointArgs = askOptions.extend({
+  version: z.number().default(1),
+  query_embedding: embeddingVector,
+  query_embedding_model: embeddingModelName.default(
+    "openai.com:text-embedding-ada-002"
+  ),
+});
+
 export const schemas = {
   embeddingVector,
   base64Embedding,
@@ -106,4 +125,6 @@ export const schemas = {
   libraryData,
   countType,
   packedLibraryData,
+  askOptions,
+  endpointArgs,
 };

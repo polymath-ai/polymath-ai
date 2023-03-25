@@ -105,16 +105,8 @@ export type CompletionResult = {
   completion?: string;
 };
 
-export type AskOptions = {
-  version?: number;
-  query_embedding?: EmbeddingVector;
-  query_embedding_model?: EmbeddingModelName;
-  count?: number;
-  count_type?: CountType;
-  omit?: OmitConfiguration;
-  access_token?: AccessToken;
-  sort?: Sort;
-};
+export type AskOptions = z.infer<typeof schemas.askOptions>;
+export type EndpointArgs = z.infer<typeof schemas.endpointArgs>;
 
 export type IngestOptions = {
   destination: string;
