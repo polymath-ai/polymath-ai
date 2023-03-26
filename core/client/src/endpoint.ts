@@ -1,4 +1,4 @@
-import { EMBEDDING_VECTOR_LENGTH, encodeEmbedding } from "./utils.js";
+import { encodeEmbedding } from "./utils.js";
 
 import { Validator } from "@polymath-ai/validation";
 import {
@@ -53,19 +53,7 @@ class PolymathEndpoint {
   }
 
   async validate() {
-    // prepare a random embedding to send to the server
-    const randomEmbedding = new Array(EMBEDDING_VECTOR_LENGTH)
-      .fill(0)
-      .map(() => Math.random());
-
-    const ask = async (args?: AskOptions) => {
-      args = args
-        ? { ...args, query_embedding: randomEmbedding }
-        : { query_embedding: randomEmbedding };
-      return await this.ask(args);
-    };
-
-    const validator = new Validator(ask);
+    const validator = new Validator(this.ask.bind(this));
     return await validator.run();
   }
 }
