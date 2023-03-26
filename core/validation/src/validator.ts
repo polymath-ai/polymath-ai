@@ -22,26 +22,31 @@ export class Validator {
 
     const harness = new Harness(this.endpoint);
     const count_type = "token";
+    let count = 1500;
 
     // prepare a random embedding to send to the server
     const query_embedding = new Array(EMBEDDING_VECTOR_LENGTH)
       .fill(0)
       .map(() => Math.random());
 
-    await harness.validate(
-      { query_embedding, count: 1500, count_type },
-      check("Result contains bits", (c) => !!c.response.bits),
-      check(
-        "Endpoint accurately responds to `token` parameter",
-        (c) => countTokens(c.response.bits) < (c.args.count || 0)
-      )
-    );
+    let bits: PackedBit[] = [];
 
     await harness.validate(
-      { query_embedding, count: 1000, count_type },
+      { query_embedding, count, count_type },
+      check("Result contains bits", (c) => !!c.response.bits),
+      check("Collect stuff", (c) => {
+        bits = c.response.bits;
+        return true;
+      })
+    );
+
+    count = countTokens(bits.slice(0, -1));
+
+    await harness.validate(
+      { query_embedding, count, count_type },
       check(
-        "Endpoint accurately responds to a different `token` parameter",
-        (c) => countTokens(c.response.bits) < (c.args.count || 0)
+        "Endpoint accurately responds to a `count` argument",
+        (c) => countTokens(c.response.bits) == count
       )
     );
 
