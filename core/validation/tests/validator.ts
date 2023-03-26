@@ -14,8 +14,10 @@ test("validator test", async (t) => {
     0
   );
   const endpoint = async (args: AskOptions): Promise<PackedLibraryData> => {
-    const bits =
-      (args.count || 0) > total_count ? allBits : allBits.slice(0, 1);
+    let bits = allBits;
+    if (args.count_type == "token") {
+      bits = (args.count || 0) > total_count ? allBits : allBits.slice(0, 1);
+    }
     return {
       version: 1,
       embedding_model: "openai.com:text-embedding-ada-002",
