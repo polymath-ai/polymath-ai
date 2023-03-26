@@ -4,8 +4,11 @@ import { Validator } from "../src/validator.js";
 
 import { AskOptions, PackedBit, PackedLibraryData } from "@polymath-ai/types";
 
-test("validator smoke test", async (t) => {
-  const allBits: PackedBit[] = [{ token_count: 1000 }, { token_count: 300 }];
+test("validator test", async (t) => {
+  const allBits: PackedBit[] = [
+    { id: "one", token_count: 1000 },
+    { id: "two", token_count: 300 },
+  ];
   const total_count = allBits.reduce(
     (acc, bit) => acc + (bit.token_count || 0),
     0

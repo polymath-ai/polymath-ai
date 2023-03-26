@@ -40,14 +40,22 @@ export class Validator {
       })
     );
 
-    count = countTokens(bits.slice(0, -1));
+    const fewerBits = bits.slice(0, -1);
+    count = countTokens(fewerBits);
 
     await harness.validate(
       { query_embedding, count, count_type },
       check(
         "Endpoint accurately responds to a `count` argument",
         (c) => countTokens(c.response.bits) == count
-      )
+      ),
+      check("Endpoint consistently returns the same bits", (c) => {
+        const newBits = c.response.bits;
+        return (
+          newBits.length == fewerBits.length &&
+          newBits.every((bit, i) => bit.id == fewerBits[i].id)
+        );
+      })
     );
 
     const details = harness.log.results;
