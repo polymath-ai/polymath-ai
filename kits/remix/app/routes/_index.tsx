@@ -26,11 +26,13 @@ export const loader = async ({ request }: LoaderArgs) => {
         method: "POST",
         body: formdata,
       }).then((res) => res.json()),
+      firstRun: true,
     });
   }
 
   return defer({
     results: Promise.resolve({}),
+    firstRun: false,
   });
 };
 
@@ -167,7 +169,7 @@ function Results(props: {
 }
 
 export default function ClientSingle(): JSX.Element {
-  const { results } = useLoaderData<typeof loader>();
+  const { results, firstRun } = useLoaderData<typeof loader>();
 
   const fetcher = useFetcher();
 
@@ -179,6 +181,8 @@ export default function ClientSingle(): JSX.Element {
   const serverParams = searchParams.getAll("server");
 
   const [queryValue, setQueryValue] = useState(queryParam || "");
+
+  const [firstRunValue, setFirstRunValue] = useState(firstRun || false);
 
   const funQueries = polymathHostConfig?.info?.fun_queries;
   const randomFunQuery = () => {
@@ -285,17 +289,24 @@ export default function ClientSingle(): JSX.Element {
         </div>
       </fetcher.Form>
 
-      {fetcher.state === "submitting" && <Loading />}
+      {fetcher.state === "submitting" && <Loading query={queryValue} />}
 
-      {fetcher?.data === undefined && (
-        <Suspense fallback={<Loading />}>
-          <Await resolve={results}>
-            {(response) => <Results response={response} fetcher={fetcher} />}
-          </Await>
-        </Suspense>
+      {fetcher?.data ? (
+        <Results response={fetcher?.data} fetcher={fetcher} />
+      ) : (
+        <>
+          {firstRunValue && <Loading query={queryParam} />}
+
+          <Suspense fallback={<Loading query={queryParam || queryValue} />}>
+            <Await resolve={results}>
+              {(response) => {
+                setFirstRunValue(false);
+                return <Results response={response} fetcher={fetcher} />;
+              }}
+            </Await>
+          </Suspense>
+        </>
       )}
-
-      {fetcher?.data && <Results response={fetcher?.data} fetcher={fetcher} />}
     </main>
   );
 }
