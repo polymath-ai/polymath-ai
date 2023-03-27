@@ -49,44 +49,42 @@ export class Options extends Base {
     const completionOptions: CompletionOptions = {};
 
     completionOptions.model =
-      commandOptions.completionModel || rawConfig.completions_options?.model;
+      commandOptions.completionModel || rawConfig.completion_options?.model;
     completionOptions.temperature =
       commandOptions.completionTemperature ||
-      rawConfig.completions_options?.temperature;
+      rawConfig.completion_options?.temperature;
     completionOptions.max_tokens =
       commandOptions.completionMaxTokens ||
-      rawConfig.completions_options?.max_tokens;
+      rawConfig.completion_options?.max_tokens;
     completionOptions.top_p =
-      commandOptions.completionTopP || rawConfig.completions_options?.top_p;
-    completionOptions.n = commandOptions.n || rawConfig.completions_options?.n;
-
-    if (Object.prototype.hasOwnProperty.call(commandOptions, "completionStream")) {
-      completionOptions.stream =
-        commandOptions.completionStream.toLowerCase() === "true";
-    } else if (rawConfig.completions_options?.stream) {
-      completionOptions.stream = rawConfig.completions_options.stream;
-    }
+      commandOptions.completionTopP || rawConfig.completion_options?.top_p;
+    completionOptions.n = commandOptions.n || rawConfig.completion_options?.n;
 
     if (
-      commandOptions.completionSystem ||
-      rawConfig.completions_options?.system
-    )
+      Object.prototype.hasOwnProperty.call(commandOptions, "completionStream")
+    ) {
+      completionOptions.stream =
+        commandOptions.completionStream.toLowerCase() === "true";
+    } else if (rawConfig.completion_options?.stream) {
+      completionOptions.stream = rawConfig.completion_options.stream;
+    }
+
+    if (commandOptions.completionSystem || rawConfig.completion_options?.system)
       completionOptions.system =
-        commandOptions.completionSystem ||
-        rawConfig.completions_options?.system;
+        commandOptions.completionSystem || rawConfig.completion_options?.system;
 
     // if there isn't a stop, we don't want one at all!
-    if (commandOptions.completionStop || rawConfig.completions_options?.stop)
+    if (commandOptions.completionStop || rawConfig.completion_options?.stop)
       completionOptions.stop =
-        commandOptions.completionStop || rawConfig.completions_options?.stop;
+        commandOptions.completionStop || rawConfig.completion_options?.stop;
 
     if (
       commandOptions.completionPromptTemplate ||
-      rawConfig.completions_options?.prompt_template
+      rawConfig.completion_options?.prompt_template
     )
       completionOptions.prompt_template =
         commandOptions.completionPromptTemplate ||
-        rawConfig.completions_options?.prompt_template;
+        rawConfig.completion_options?.prompt_template;
 
     return completionOptions;
   }

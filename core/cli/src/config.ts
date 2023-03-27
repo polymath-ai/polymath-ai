@@ -1,4 +1,5 @@
 import type { HostConfig } from "@polymath-ai/types";
+import { validateHostConfig } from "@polymath-ai/validation";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -52,6 +53,6 @@ export class Config extends Base {
       }
     }
 
-    return rawConfig;
+    return validateHostConfig(rawConfig);
   }
 }
