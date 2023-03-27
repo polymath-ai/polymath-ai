@@ -8,7 +8,6 @@ import { Config } from "../src/config.js";
 import mockfs from "mock-fs";
 
 test("homedir path", (t) => {
-  const config = new Config({ debug: false });
   const result = Config.homeDirPath("foo");
   const expected = path.join(os.homedir(), ".polymath", "config", "foo.json");
   t.deepEqual(result, expected);
@@ -47,5 +46,13 @@ test("load default config", (t) => {
   const config = new Config({ debug: false });
   const result = config.load(null);
   t.deepEqual(result, answer);
+  mockfs.restore();
+});
+
+test("handle no config file gracefully", (t) => {
+  mockfs({});
+  const config = new Config({ debug: false });
+  const result = config.load(null);
+  t.deepEqual(result, {});
   mockfs.restore();
 });

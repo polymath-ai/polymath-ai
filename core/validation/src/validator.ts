@@ -65,10 +65,7 @@ export class Validator {
       { query_embedding, count, count_type },
       check(
         "Endpoint accurately responds to a `count` argument for bits",
-        (c) => {
-          console.log(c.response.bits.length);
-          return c.response.bits.length == count;
-        }
+        (c) => c.response.bits.length == count
       )
     );
 

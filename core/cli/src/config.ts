@@ -43,8 +43,13 @@ export class Config extends Base {
 
       debug(`Now, looking for a default config at ${configPath}`);
 
-      const config = fs.readFileSync(configPath, "utf8");
-      rawConfig = JSON.parse(config);
+      try {
+        const config = fs.readFileSync(configPath, "utf8");
+        rawConfig = JSON.parse(config);
+      } catch (e) {
+        debug("No default config found.");
+        rawConfig = {};
+      }
     }
 
     return rawConfig;
