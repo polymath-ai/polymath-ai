@@ -44,13 +44,14 @@ export class Config extends Base {
 
       debug(`Now, looking for a default config at ${configPath}`);
 
+      let config = "";
       try {
-        const config = fs.readFileSync(configPath, "utf8");
-        rawConfig = JSON.parse(config);
+        config = fs.readFileSync(configPath, "utf8");
       } catch (e) {
         debug("No default config found.");
-        rawConfig = {};
+        return {};
       }
+      rawConfig = JSON.parse(config);
     }
 
     return validateHostConfig(rawConfig);
