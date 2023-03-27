@@ -1,4 +1,5 @@
 import type { HostConfig } from "@polymath-ai/types";
+import { validateHostConfig } from "@polymath-ai/validation";
 import fs from "fs";
 import os from "os";
 import path from "path";
@@ -43,10 +44,16 @@ export class Config extends Base {
 
       debug(`Now, looking for a default config at ${configPath}`);
 
-      const config = fs.readFileSync(configPath, "utf8");
+      let config = "";
+      try {
+        config = fs.readFileSync(configPath, "utf8");
+      } catch (e) {
+        debug("No default config found.");
+        return {};
+      }
       rawConfig = JSON.parse(config);
     }
 
-    return rawConfig;
+    return validateHostConfig(rawConfig);
   }
 }

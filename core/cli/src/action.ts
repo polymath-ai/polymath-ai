@@ -31,7 +31,7 @@ export abstract class Action extends Base {
     this.#options = options;
   }
 
-  abstract run(...arg: any[]): Promise<void>;
+  abstract run(...arg: unknown[]): Promise<void>;
 
   // TODO: get this into complete
   completionOptions(subcommandOptions: CompletionArgs): CompletionOptions {

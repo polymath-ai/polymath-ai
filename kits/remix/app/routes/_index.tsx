@@ -1,8 +1,9 @@
 import type { FetcherWithComponents } from "@remix-run/react";
+import { Await } from "@remix-run/react";
 import { useLoaderData, useFetcher, useSearchParams } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useEffect, useRef, useState } from "react";
+import { defer } from "@remix-run/node";
+import { Suspense, useEffect, useRef, useState, version } from "react";
 import { polymathHostConfig } from "~/utils/polymath.config";
 import { Loading } from "~/components/loading";
 
@@ -12,8 +13,6 @@ export const loader = async ({ request }: LoaderArgs) => {
   const queryParam = url.searchParams.get("query");
   const serverParams = url.searchParams.getAll("server");
 
-  let endpointResults = {};
-
   if (queryParam) {
     const formdata = new FormData();
     formdata.append("query", queryParam);
@@ -21,17 +20,20 @@ export const loader = async ({ request }: LoaderArgs) => {
     serverParams.forEach((server) => {
       formdata.append("server", server);
     });
-    const results = await fetch(
-      new URL(request.url).origin + "/endpoint/complete",
-      {
+
+    return defer({
+      results: fetch(new URL(request.url).origin + "/endpoint/complete", {
         method: "POST",
         body: formdata,
-      }
-    );
-    endpointResults = await results.json();
+      }).then((res) => res.json()),
+      firstRun: true,
+    });
   }
 
-  return json(endpointResults);
+  return defer({
+    results: Promise.resolve({}),
+    firstRun: false,
+  });
 };
 
 // function areAllCheckboxesDisabled(formEl: HTMLFormElement | null): boolean {
@@ -125,7 +127,7 @@ function Results(props: {
         <h2 className="text-xl font-bold border-b border-indigo-500/30 hover:border-indigo-500/60">
           Sources
         </h2>
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul className="divide-y divide-gray-200">
           {response?.infos?.map(
             (
               info: {
@@ -167,12 +169,11 @@ function Results(props: {
 }
 
 export default function ClientSingle(): JSX.Element {
-  // let json = useLoaderData<typeof loader>();
-  const json = useLoaderData() as any;
+  const { results, firstRun } = useLoaderData<typeof loader>();
 
   const fetcher = useFetcher();
 
-  const submitRef = useRef<HTMLButtonElement>(null);
+  // const submitRef = useRef<HTMLButtonElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -180,6 +181,8 @@ export default function ClientSingle(): JSX.Element {
   const serverParams = searchParams.getAll("server");
 
   const [queryValue, setQueryValue] = useState(queryParam || "");
+
+  const [firstRunValue, setFirstRunValue] = useState(firstRun || false);
 
   const funQueries = polymathHostConfig?.info?.fun_queries;
   const randomFunQuery = () => {
@@ -215,7 +218,7 @@ export default function ClientSingle(): JSX.Element {
 
       setSearchParams(new URLSearchParams(newSearchParams));
     }
-  }, [fetcher]);
+  }, [fetcher, queryParam, queryValue, setSearchParams]);
 
   // once when the page loads, if there is a query param, submit the form and get the results
   // useEffect(() => {
@@ -286,9 +289,24 @@ export default function ClientSingle(): JSX.Element {
         </div>
       </fetcher.Form>
 
-      {fetcher.state === "submitting" && <Loading />}
+      {fetcher.state === "submitting" && <Loading query={queryValue} />}
 
-      <Results response={fetcher?.data || json} fetcher={fetcher} />
+      {fetcher?.data ? (
+        <Results response={fetcher?.data} fetcher={fetcher} />
+      ) : (
+        <>
+          {firstRunValue && <Loading query={queryParam} />}
+
+          <Suspense fallback={<Loading query={queryParam || queryValue} />}>
+            <Await resolve={results}>
+              {(response) => {
+                setFirstRunValue(false);
+                return <Results response={response} fetcher={fetcher} />;
+              }}
+            </Await>
+          </Suspense>
+        </>
+      )}
     </main>
   );
 }

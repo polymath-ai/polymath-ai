@@ -1,19 +1,24 @@
 import { useState, useEffect } from "react";
 
-let loadingMessages = [
-  "☎️ Giving the Polymaths a ring",
-  "🙏 Praying to the AI gods",
-  "🪥 Quickly brushing teeth",
-  "☕ Brewing some coffee",
-  "🏃 Running around the block",
-  "🏌️‍♂️ Packing for a round of golf",
-  "⚽ Watching Spurs beat Arsenal",
+const loadingMessages = [
+  "Giving the Polymaths a ring ☎️",
+  "Praying to the AI gods 🙏",
+  "Quickly brushing teeth 🪥",
+  "Brewing some coffee ☕",
+  "Running around the block 🏃",
+  "Packing for a round of golf 🏌️‍♂️",
+  "Watching Spurs beat Arsenal ⚽",
 ];
 
-export function Loading() {
+export function Loading(props: { query: string }) {
   const [body, setBody] = useState("");
   let dotCount = 0;
   let messageCount = 0;
+
+  let prefix = "";
+  if (props.query) {
+    prefix = `🔎 Waiting for the answer to "${props.query}" while `;
+  }
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -21,9 +26,9 @@ export function Loading() {
       if (dotCount > 3) {
         dotCount = 0;
         messageCount++;
-        if (messageCount > loadingMessages.length) messageCount = 0;
+        if (messageCount >= loadingMessages.length) messageCount = 0;
       }
-      setBody(loadingMessages[messageCount] + ".".repeat(dotCount));
+      setBody(prefix + loadingMessages[messageCount] + ".".repeat(dotCount));
     }, 500);
 
     return () => clearInterval(intervalId);

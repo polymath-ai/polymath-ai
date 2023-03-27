@@ -105,16 +105,8 @@ export type CompletionResult = {
   completion?: string;
 };
 
-export type AskOptions = {
-  version?: number;
-  query_embedding?: EmbeddingVector;
-  query_embedding_model?: EmbeddingModelName;
-  count?: number;
-  count_type?: CountType;
-  omit?: OmitConfiguration;
-  access_token?: AccessToken;
-  sort?: Sort;
-};
+export type AskOptions = z.infer<typeof schemas.askOptions>;
+export type EndpointArgs = z.infer<typeof schemas.endpointArgs>;
 
 export type IngestOptions = {
   destination: string;
@@ -150,38 +142,4 @@ export class TypedObject {
 
 //TODO: rename to a better name.
 //A HostConfig is what you might have in your `.polymath/config.SECRET.json`
-export type HostConfig = {
-  endpoint?: string;
-  default_private_access_tag?: string;
-  default_api_key?: string;
-  //TODO: refactor to be literally PolymathOptions?
-  client_options?: ClientOptions;
-  //TODO: rename to hosts?
-  server_options?: ServerOption[];
-  completions_options?: CompletionOptions;
-  info?: WebAppViewOptions;
-};
-
-type ServerOption = {
-  default?: boolean;
-  url: string;
-  name: string;
-};
-
-type ClientOptions = {
-  servers?: Server[];
-  pinecone?: PineconeConfig;
-  libraryFiles?: LibraryFileName[];
-  omit?: OmitConfiguration;
-  debug?: boolean;
-};
-
-// Rename and change the key too. This is only used in the web application clients so far
-type WebAppViewOptions = {
-  headername?: string;
-  placeholder?: string;
-  fun_queries?: string[];
-  source_prefixes?: {
-    [key: string]: string;
-  };
-};
+export type HostConfig = z.infer<typeof schemas.hostConfig>;

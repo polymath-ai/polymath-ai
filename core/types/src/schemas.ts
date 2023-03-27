@@ -94,6 +94,90 @@ const packedLibraryData = libraryData.extend({
   bits: z.array(packedBit),
 });
 
+const askOptions = z.object({
+  version: z.number().optional(),
+  query_embedding: embeddingVector.optional(),
+  query_embedding_model: embeddingModelName.optional(),
+  count: z.number().optional(),
+  count_type: countType.optional(),
+  omit: omitConfiguration.optional(),
+  access_token: z.string().optional(),
+  sort: sort.optional(),
+});
+
+const endpointArgs = askOptions.extend({
+  version: z.number().default(1),
+  query_embedding: embeddingVector,
+  query_embedding_model: embeddingModelName.default(
+    "openai.com:text-embedding-ada-002"
+  ),
+});
+
+const server = z.string().url();
+// TODO: Validate as path.
+const libraryFileName = z.string();
+
+const pineconeConfig = z.object({
+  apiKey: z.string().optional(),
+  baseUrl: z.string().url().optional(),
+  namespace: z.string().optional(),
+  topK: z.number().optional(),
+});
+
+const clientOptions = z.object({
+  servers: z.array(server).optional(),
+  pinecone: pineconeConfig.optional(),
+  libraryFiles: z.array(libraryFileName).optional(),
+  omit: omitConfiguration.optional(),
+  debug: z.boolean().optional(),
+});
+
+const serverOption = z.object({
+  default: z.boolean().optional(),
+  url: z.string().url(),
+  name: z.string(),
+});
+
+const promptTemplate = z.string();
+
+const completionOptions = z.object({
+  prompt_template: promptTemplate.optional(),
+  model: completionModelName.optional(),
+  stream: z.boolean().optional(),
+  system: z.string().optional(),
+  temperature: z.number().optional(),
+  max_tokens: z.number().optional(),
+  top_p: z.number().optional(),
+  presence_penalty: z.number().optional(),
+  frequency_penalty: z.number().optional(),
+  n: z.number().optional(),
+  stop: z.union([z.string(), z.array(z.string())]).optional(),
+  best_of: z.number().optional(),
+  echo: z.boolean().optional(),
+  logprobs: z.number().optional(),
+});
+
+// TODO: Rename and change the key too.
+// This is only used in the web application clients so far.
+const webAppViewOptions = z.object({
+  headername: z.string().optional(),
+  placeholder: z.string().optional(),
+  fun_queries: z.array(z.string()).optional(),
+  source_prefixes: z.record(z.string()).optional(),
+});
+
+const hostConfig = z.object({
+  endpoint: z.string().url().optional(),
+  default_private_access_tag: accessTag.optional(),
+  default_api_key: z.string().optional(),
+  //TODO: refactor to be literally PolymathOptions?
+  client_options: clientOptions.optional(),
+  //TODO: rename to hosts?
+  server_options: z.array(serverOption).optional(),
+  completion_options: completionOptions.optional(),
+  info: webAppViewOptions.optional(),
+});
+
 export const schemas = {
   embeddingVector,
   base64Embedding,
@@ -106,4 +190,7 @@ export const schemas = {
   libraryData,
   countType,
   packedLibraryData,
+  askOptions,
+  endpointArgs,
+  hostConfig,
 };
