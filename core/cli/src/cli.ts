@@ -42,15 +42,11 @@ class CLI {
         "OPENAI_API_KEY"
       )
     );
-    program
-      .option("-s, --servers <endpoints...>", "Polymath server endpoints")
-      .alias("server");
-    program
-      .option(
-        "-l, --libraries <libOrDirectory...>",
-        "Library files or directory"
-      )
-      .alias("library");
+    program.option("-s, --servers <endpoints...>", "Polymath server endpoints");
+    program.option(
+      "-l, --libraries <libOrDirectory...>",
+      "Library files or directory"
+    );
 
     program.option("-p, --pinecone", "Use pinecone");
     program.addOption(
@@ -133,13 +129,19 @@ class CLI {
         "-o, --destination <destination>",
         "The directory where the output should be written."
       )
-      .action((ingestLibrary: string, sources: string[], options: IngestOptions & CLIBaseOptions) => {
-        for (const source of sources) {
-          const allOptions = { ...options, ...program.opts() };
-          const action = new IngestAction(allOptions);
-          action.run({ importer: ingestLibrary, source });
+      .action(
+        (
+          ingestLibrary: string,
+          sources: string[],
+          options: IngestOptions & CLIBaseOptions
+        ) => {
+          for (const source of sources) {
+            const allOptions = { ...options, ...program.opts() };
+            const action = new IngestAction(allOptions);
+            action.run({ importer: ingestLibrary, source });
+          }
         }
-      });
+      );
 
     program.parse();
   }
