@@ -13,7 +13,7 @@ export class Options extends Base {
     programOptions: CLIBaseOptions,
     config: HostConfig
   ): PolymathOptions {
-    const skipEmpties = (obj: any) =>
+    const skipEmpties = (obj: Record<string, unknown>) =>
       Object.fromEntries(Object.entries(obj).filter(([_, v]) => !!v));
 
     // convert a main host config into the bits needed for the Polymath
