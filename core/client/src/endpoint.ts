@@ -1,3 +1,4 @@
+import { discoverEndpoint } from "./discover.js";
 import { encodeEmbedding } from "./utils.js";
 
 import { Validator } from "@polymath-ai/validation";
@@ -13,6 +14,38 @@ import {
   Server,
   TypedObject,
 } from "@polymath-ai/types";
+
+/*
+ Fetch the API response, but if it fails, try to discover the endpoint.
+
+ We will only do one attempt at discovery, and if that fails, we will throw.
+*/
+async function fetchAPIResponse(url: URL, form: FormData): Promise<PackedLibraryData | undefined> {
+
+  const response = await fetch(url, {
+    method: "POST",
+    body: form,
+  });
+
+  if (response.ok && response.headers.get("content-type") === "application/json") {
+    return response.json();
+  }
+
+  const newUrl = await discoverEndpoint(url);
+  
+  if (newUrl == undefined) {
+    throw new Error("Could not discover endpoint");
+  }
+  
+  // Call what we think is the API.
+  const newResponse = await fetch(newUrl, { method: "POST", body: form });
+  if (newResponse.ok == false) {
+    throw new Error("Server responded with " + newResponse.status);
+  }
+  
+  return newResponse.json();
+
+}
 
 //
 // Talk to remote servers and ask for their bits
@@ -42,12 +75,7 @@ class PolymathEndpoint {
     const form = this.prepareFormData(args);
 
     const url = new URL(this.#server);
-    const result = await (
-      await fetch(url, {
-        method: "POST",
-        body: form,
-      })
-    ).json();
+    const result = await fetchAPIResponse(url, form);
 
     return validateResponse(result);
   }
