@@ -6,54 +6,45 @@ import path from "path";
 
 import { Base } from "./base.js";
 
+const loadJSON = (path: string): HostConfig => {
+  const json = fs.readFileSync(path, "utf8");
+  return validateHostConfig(JSON.parse(json));
+};
+
 export class Config extends Base {
   static homeDirPath(name: string): string {
     return path.join(os.homedir(), ".polymath", "config", `${name}.json`);
   }
 
   // Hunt around the filesystem for a config file
-  load(configOption?: string | null): HostConfig {
-    let rawConfig: HostConfig = {};
-    const { debug, error } = this.say;
+  load(configFile?: string | null): HostConfig {
+    const { debug } = this.say;
 
     // if there is a configOption:
-    if (configOption) {
+    if (configFile) {
       // try to load it as a filename
-      try {
-        const filename = path.resolve(configOption);
-        debug(`Looking for config at: ${filename}`);
+      const filename = path.resolve(configFile);
+      debug(`Looking for config at: ${filename}`);
 
-        const config = fs.readFileSync(filename, "utf8");
-        rawConfig = JSON.parse(config);
-      } catch (e) {
-        // if that fails, try to load ~/.polymath/config/<configOption>.json
-        try {
-          const configPath = Config.homeDirPath(configOption);
-          debug(`Now, looking for config at: ${configPath}`);
+      if (fs.existsSync(filename)) return loadJSON(filename);
 
-          const config = fs.readFileSync(configPath, "utf8");
-          rawConfig = JSON.parse(config);
-        } catch (e) {
-          error("No config file at that location.", e);
-          process.exit(1);
-        }
-      }
-    } else {
-      // if that fails, try to load ~/.polymath/config/default.json
-      const configPath = Config.homeDirPath("default");
+      // try to load ~/.polymath/config/<configOption>.json
+      const configPath = Config.homeDirPath(configFile);
+      debug(`Now, looking for config at: ${configPath}`);
 
-      debug(`Now, looking for a default config at ${configPath}`);
+      if (fs.existsSync(configPath)) return loadJSON(configPath);
 
-      let config = "";
-      try {
-        config = fs.readFileSync(configPath, "utf8");
-      } catch (e) {
-        debug("No default config found.");
-        return {};
-      }
-      rawConfig = JSON.parse(config);
+      throw new Error(`No config file at "${filename}" or "${configPath}"`);
     }
 
-    return validateHostConfig(rawConfig);
+    // try to load ~/.polymath/config/default.json
+    const configPath = Config.homeDirPath("default");
+
+    debug(`Now, looking for a default config at ${configPath}`);
+
+    if (fs.existsSync(configPath)) return loadJSON(configPath);
+
+    debug("No default config found.");
+    return {};
   }
 }
