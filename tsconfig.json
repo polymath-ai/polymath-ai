@@ -6,6 +6,7 @@
     { "path": "core/validation" },
     { "path": "core/client" },
     { "path": "core/types" },
-    { "path": "core/ingest" }
+    { "path": "core/ingest" },
+    { "path": "seeds/discord" }
   ]
 }
