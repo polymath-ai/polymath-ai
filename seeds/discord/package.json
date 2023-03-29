@@ -2,6 +2,7 @@
   "name": "discord",
   "version": "0.0.1",
   "description": "A simple Polymath discord bot",
+  "type": "module",
   "main": "dist/src/index.js",
   "scripts": {
     "test": "ava",
