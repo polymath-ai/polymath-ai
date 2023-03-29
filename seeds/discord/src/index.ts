@@ -4,6 +4,7 @@ import { config } from "dotenv";
 import { Client, Events, GatewayIntentBits } from "discord.js";
 
 import { Polymath } from "@polymath-ai/client";
+import { CompletionResult } from "@polymath-ai/types";
 
 async function main() {
   config();
@@ -21,9 +22,17 @@ async function main() {
         apiKey: process.env.OPENAI_API_KEY,
         servers: ["https://polymath.glazkov.com"],
       });
-      const result = await polylmath.completion(question);
+      const result: CompletionResult = await polylmath.completion(question);
       const answer = result.completion;
-      return `**Answering the question for ${user}**:\n${answer}`;
+      const sources = result.infos
+        .map((info) => {
+          return `:link: <${info.url}>`;
+        })
+        .join("\n");
+      return `**Answering the question for ${user}**:\n
+${answer}\n
+**Sources**:
+${sources}`;
     })
   );
 
