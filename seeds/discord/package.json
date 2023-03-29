@@ -7,8 +7,9 @@
   "scripts": {
     "test": "ava",
     "build": "tsc --b",
+    "start": "npm run build && node .",
     "register": "tsc -b && node dist/src/register.js",
-    "dev": "nodemon -w ./src -e ts,json --exec 'tsc --b && node dist/src/index.js'",
+    "dev": "nodemon -w ./src -e ts,json --exec 'npm run start'",
     "watch": "tsc --b --watch"
   },
   "repository": {
