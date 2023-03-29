@@ -1,4 +1,5 @@
 import { join } from "path";
+import {createHash} from "crypto";
 
 import { Polymath } from "@polymath-ai/client";
 import chalk from "chalk";
@@ -11,6 +12,8 @@ const error = (...args: unknown[]) =>
   console.error(chalk.red("ERROR:", ...args));
 const log = (msg: string, ...args: unknown[]) =>
   console.log(chalk.green(`\n${msg}`), chalk.bold(...args));
+
+const generateId = (input: string): string => createHash('md5').update(input).digest("hex");
 
 export type IngestOptions = {
   destination?: string;
@@ -32,8 +35,6 @@ export class Ingest {
     const apiKey = args.options?.apiKey;
 
     let loadedImporter: Ingester;
-
-    console.log(args);
 
     if (apiKey == null) {
       error("Please provide an OpenAI API key");
@@ -69,15 +70,22 @@ export class Ingest {
     const polymath = new Polymath({ apiKey, debug });
 
     for await (const chunk of importer.generateChunks(source)) {
-      log(`Importing chunk ${chunk.info?.url} \`${chunk.text}\``);
-
+      log(`Importing chunk ${chunk.info?.url}`);
       if (chunk.text == null) {
         continue;
       }
 
+      const id = generateId(source.trim() + '\n' + chunk.text.trim());
+      log(`Id: ${id}`);
+      const tokenCount = polymath.getPromptTokenCount(chunk.text);
+      chunk.id = id;
+      chunk.token_count = tokenCount;
       chunk.embedding = encodeEmbedding(
         await polymath.generateEmbedding(chunk.text)
       );
+
+      log(`Token count: ${tokenCount}`);
+
       yield chunk;
     }
 
