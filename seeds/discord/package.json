@@ -8,7 +8,7 @@
     "test": "ava",
     "build": "tsc --b",
     "register": "tsc -b && node dist/src/register.js",
-    "dev": "nodemon --watch dist",
+    "dev": "nodemon -w ./src -e ts,json --exec 'tsc --b && node dist/src/index.js'",
     "watch": "tsc --b --watch"
   },
   "repository": {
