@@ -61,7 +61,7 @@ export abstract class Ingester {
     for await (const source of stringSources) {
       console.log(`[LOG] Processing source: ${source.info?.url}`);
       const stringToEncode = source.text || "";
-      console.log(`[LOG] ${stringToEncode}`);
+      
       const cleanedText = cleanText(stringToEncode);
 
       if (cleanText.length == 0) {
@@ -71,7 +71,7 @@ export abstract class Ingester {
       // Add to the buffer because if it's too large we will break it up anyway.
       buffer += cleanedText;
 
-      if (buffer.length + cleanedText.length <= GOLDIELOCKS.max) {
+      if (buffer.length >= GOLDIELOCKS.min && buffer.length <= GOLDIELOCKS.max) {
         yield {
           text: "\n" + buffer,
           info: source.info,
@@ -97,30 +97,25 @@ export abstract class Ingester {
         }
 
         const fullSentence = trimmedBuffer.substring(0, sentenceEnd + 1);
-        remainingBuffer =
-          trimmedBuffer.substring(sentenceEnd + 1) + remainingBuffer;
+        const remainingSentence = trimmedBuffer.substring(sentenceEnd + 1);
+        
+        yield {
+          text: fullSentence,
+          info: source.info,
+        };
 
-        if (sentenceEnd == fullSentence.length) {
-          // The sentence end is at the end of the buffer, so we can just yield and move on.
-          console.warn(
-            "[WARN] The sentence is still too long and can't be broken down further. Emitting."
-          );
-          yield {
-            text: fullSentence,
-            info: source.info,
-          };
-          break;
-        }
+        remainingBuffer = remainingSentence + remainingBuffer;
 
         // Add the scraps of the sentence to the remaining buffer.
+        // In an ideal world this would split on a word/sentence boundary.
         trimmedBuffer = remainingBuffer.substring(0, GOLDIELOCKS.max);
         remainingBuffer = remainingBuffer.substring(GOLDIELOCKS.max);
       } while (remainingBuffer.length > GOLDIELOCKS.max);
 
       // Yield the last chunk
-      if (buffer.length > 0) {
+      if (remainingBuffer.length > 0) {
         yield {
-          text: "\n" + buffer,
+          text: "\n" + remainingBuffer,
           info: source.info,
         };
       }
