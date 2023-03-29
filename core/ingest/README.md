@@ -8,17 +8,17 @@ See: @polymath/cli
 
 ## API
 
-### Extend `Importer` for use in the CLI
+### Extend `Ingester` for use in the CLI
 
-You are able to extend the `Importer` class to create your own importer.
+You are able to extend the `Ingester` class to create your own importer.
 
-1. Create a new class that extends `Importer`
+1. Create a new class that extends `Ingester`
 2. Implement the `getStringsFromSource` method
-   a. getStringsFromSource should return an AsyncGenerator of partially filled out bits that is the full string of data from the source.
+   a. getStringsFromSource should return an AsyncGenerator of partially filled out bits that is the *full string* of data from the source.
    b. The `text` property of the bit should be the full string of data from the source. The `info` property of the bit should be an object that contains any additional information about the bit. The `info` property is optional.
 
 ```
-class MYRSS extends Importer {
+class MYRSS extends Ingester {
 
   constructor() {
     super();
@@ -45,16 +45,16 @@ class MYRSS extends Importer {
 E.g:
 `> polymath ingest rss https://paul.kinlan.me/index.xml`
 
-### Embed the `Import` process
+### Embed the `Ingest` process
 
-It is possible to use the `Import` process directly in your own code.
+It is possible to use the `Ingest` process directly in your own code, for example if you want to run a custom export as the embeddings are generated. The process will load the correct plugin and start processing it.
 
 ```
-import { Importer } from "./importer.js";
+import { Ingest } from "@polymath/ingest";
 
-const importer = new Importer({ /* options */ });
+const ingest = new Ingest({ /* options */ });
 
-for await(const bit of importer.run({ args, options, command })) {
+for await(const bit of ingest.run({ args, options, command })) {
   console.log(`${bit.url}: Embedding: ${bit.embedding}`);)  
 }
 
