@@ -20,7 +20,11 @@ async function main() {
     questionAnswerCommand(async ({ question, user }) => {
       const polylmath = new Polymath({
         apiKey: process.env.OPENAI_API_KEY,
-        servers: ["https://polymath.glazkov.com"],
+        servers: [
+          "https://polymath.almaer.com",
+          "https://polymath.komoroske.com",
+          "https://polymath.glazkov.com",
+        ],
       });
       const result: CompletionResult = await polylmath.completion(question);
       const answer = result.completion;
