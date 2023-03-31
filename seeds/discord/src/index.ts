@@ -11,9 +11,13 @@ import { Prompts } from "./prompts.js";
 const REASONABLE_CONTEXT_WINDOW = 4000;
 const MAX_SOURCES_PER_PARTICIPANT = 3;
 
+// TODO: Don't hardcode this.
 const knownParticipants: Record<string, string> = {
   Dion: "https://polymath.almaer.com",
-  // For some reasone, this all barfs when Alex's endpoint is included.
+  // Currently returns "Could not discover endpoint"
+  // TODO: Figure out why.
+  // Paul: "https://paul.kinlan.me/api/ask",
+  // For some reasons, this all barfs when Alex's endpoint is included.
   // TODO: Figure out why.
   // Alex: "https://polymath.komoroske.com",
   Dimitri: "https://polymath.glazkov.com",
