@@ -16,7 +16,7 @@ const knownParticipants: Record<string, string> = {
   Dion: "https://polymath.almaer.com",
   // Currently returns "Could not discover endpoint"
   // TODO: Figure out why.
-  // Paul: "https://paul.kinlan.me/api/ask",
+  Paul: "https://paul.kinlan.me/polymath",
   // For some reasons, this all barfs when Alex's endpoint is included.
   // TODO: Figure out why.
   // Alex: "https://polymath.komoroske.com",
