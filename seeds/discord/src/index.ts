@@ -6,6 +6,7 @@ import { Bit, EndpointArgs } from "@polymath-ai/types";
 
 import { questionAnswerCommand } from "./commands.js";
 import { AI } from "./ai.js";
+import { Prompts } from "./prompts.js";
 
 const REASONABLE_CONTEXT_WINDOW = 4000;
 const MAX_SOURCES_PER_PARTICIPANT = 3;
@@ -24,34 +25,24 @@ type Context = {
   urls: string[];
 };
 
+const prompts = new Prompts();
+
 const createDirectionsPrompt = (question: string) => {
   const names = Object.keys(knownParticipants).join(", ");
-  return `Given a request, analyze it and discern participants in this request using the list of all known participants, then synthesize the "general request" that each individual participant must be asked in order to fulfill the request, so that their answers could be later compared. This "general request" must be the same for each participant. The "general request" must not mention participants by name, addressing them as "you". The "general request" must not mention other participants.
-
-The list of all known participants is: ${names}. Reply with only the participants that are part of the request or an empty list if none of these participants were mentioned. If an unknown participant was mentioned, omit them from the list.
-  
-Reply as a JSON object with these keys: "participants" (a list),  "request".
-  
-Request: "${question}"
-Answer:`;
+  return prompts.get("directions", {
+    names,
+    question,
+  });
 };
 
-const createSynthesisPrompt = (question: string, context: Context[]) => {
-  return `Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don't know". 
-
-Context is partitioned into sections of multiple participant. Each section begins with "<participant's name> says:" and denotes the perspective, presented by this participant. When answering the question, make sure to acknowledge each participant's perspective in your answer.
-  
-Context:
-
-${context
-  .map(
-    (c) => `${c.participant} says:
-${c.context}`
-  )
-  .join("\n\n")}
-  
-Question: "${question}"
-Answer:`;
+const createSummarizingPrompt = (question: string, contexts: Context[]) => {
+  const context = contexts
+    .map((c) => `${c.participant} says:\n${c.context}`)
+    .join("\n\n");
+  return prompts.get("summarize", {
+    context,
+    question,
+  });
 };
 
 async function main() {
@@ -69,12 +60,17 @@ async function main() {
       const ai = new AI({
         apiKey: process.env.OPENAI_API_KEY || "",
       });
-      const directionPrompt = createDirectionsPrompt(question);
-      const directionsResult = await ai.completion(directionPrompt);
+      const directionsResult = await ai.completion(
+        createDirectionsPrompt(question)
+      );
       console.log(directionsResult);
 
       const directions = JSON.parse(directionsResult);
       console.log(directions);
+
+      if (directions.participants?.length === 0) {
+        throw new Error("I don't know any of the participants.");
+      }
 
       const query_embedding = await ai.embedding(directions.request);
       const token_count =
@@ -109,17 +105,18 @@ async function main() {
         };
       });
       console.log("context", context);
-      const synthesisPrompt = createSynthesisPrompt(question, context);
-      const synthesisResult = await ai.completion(synthesisPrompt);
+      const summary = await ai.completion(
+        createSummarizingPrompt(question, context)
+      );
+      console.log(summary);
       const sources = []
         .concat(...context.map((c) => c.urls))
         .map((url) => `:link: <${url}>`)
         .join("\n");
-      console.log(synthesisResult);
       return `**Answering the question for ${user}**:\n
-${synthesisResult}\n
+${summary}\n
 **Sources**:
-      ${sources}`;
+${sources}`;
     })
   );
 

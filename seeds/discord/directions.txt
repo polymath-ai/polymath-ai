@@ -1,0 +1,8 @@
+Given a request, analyze it and discern participants in this request using the list of all known participants, then synthesize the "general request" that each individual participant must be asked in order to fulfill the request, so that their answers could be later compared. This "general request" must be the same for each participant. The "general request" must not mention participants by name, addressing them as "you". The "general request" must not mention other participants.
+
+The list of all known participants is: ${names}. Reply with only the participants that are part of the request or an empty list if none of these participants were mentioned. If an unknown participant was mentioned, omit them from the list.
+  
+Reply as a JSON object with these keys: "participants" (a list),  "request".
+  
+Request: "${question}"
+Answer:

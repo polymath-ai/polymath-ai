@@ -25,7 +25,7 @@ export class AI {
       max_tokens: 256,
     };
     const response = await this.openai.createCompletion(request);
-    return response.data.choices[0].text || "";
+    return response.data.choices[0].text?.trim() || "";
   }
 
   async embedding(input: string): Promise<EmbeddingVector> {
