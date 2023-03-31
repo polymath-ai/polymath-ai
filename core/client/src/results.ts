@@ -97,10 +97,12 @@ class PolymathResults {
   }
 
   trim(count: number, countType: CountType = "bit"): void {
-    if (countType != "bit") {
-      throw new Error("Only bits are supported at this time");
+    if (countType == "bit") {
+      this._bits = this._bits.slice(0, count);
     }
-    this._bits = this._bits.slice(0, count);
+    else if (countType == "token") {
+      this._bits = this.maxBits(count);
+    }
   }
 
   sortBitsBySimilarity(): void {
