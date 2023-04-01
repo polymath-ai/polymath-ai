@@ -20,31 +20,31 @@ import {
 
  We will only do one attempt at discovery, and if that fails, we will throw.
 */
-async function fetchAPIResponse(url: URL, form: FormData): Promise<PackedLibraryData | undefined> {
-
+async function fetchAPIResponse(
+  url: URL,
+  form: FormData
+): Promise<PackedLibraryData | undefined> {
   const response = await fetch(url, {
     method: "POST",
     body: form,
   });
 
-  if (response.ok && response.headers.get("content-type") === "application/json") {
+  if (
+    response.ok &&
+    response.headers.get("content-type") === "application/json"
+  ) {
     return response.json();
   }
 
   const newUrl = await discoverEndpoint(url);
-  
-  if (newUrl == undefined) {
-    throw new Error("Could not discover endpoint");
-  }
-  
+
   // Call what we think is the API.
   const newResponse = await fetch(newUrl, { method: "POST", body: form });
   if (newResponse.ok == false) {
     throw new Error("Server responded with " + newResponse.status);
   }
-  
-  return newResponse.json();
 
+  return newResponse.json();
 }
 
 //
