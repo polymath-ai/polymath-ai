@@ -24,8 +24,10 @@ export class AI {
       temperature: 0.7,
       max_tokens: 256,
     };
-    const response = await this.openai.createCompletion(request);
-    return response.data.choices[0].text?.trim() || "";
+    const completion = await this.openai.createCompletion(request);
+    const result = completion.data.choices[0].text?.trim() || "";
+    console.log("Completion result: ", result);
+    return result;
   }
 
   async embedding(input: string): Promise<EmbeddingVector> {

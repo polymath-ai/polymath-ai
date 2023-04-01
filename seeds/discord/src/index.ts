@@ -67,10 +67,8 @@ async function main() {
       const directionsResult = await ai.completion(
         createDirectionsPrompt(question)
       );
-      console.log(directionsResult);
 
       const directions = JSON.parse(directionsResult);
-      console.log(directions);
 
       if (directions.participants?.length === 0) {
         directions.participants.concat(knownParticipants);
@@ -87,7 +85,6 @@ async function main() {
               throw new Error(`Unknown participant: ${name}`);
             }
             const server = knownParticipants[name];
-            console.log("Asking server: ", server);
             const endpoint = new PolymathEndpoint(server);
             const args: EndpointArgs = {
               version: 1,
@@ -108,11 +105,9 @@ async function main() {
             .slice(0, MAX_SOURCES_PER_PARTICIPANT),
         };
       });
-      console.log("context", context);
       const summary = await ai.completion(
         createSummarizingPrompt(question, context)
       );
-      console.log(summary);
       const sources = []
         .concat(...context.map((c) => c.urls))
         .map((url) => `:link: <${url}>`)
