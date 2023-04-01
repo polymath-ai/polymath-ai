@@ -1,5 +1,11 @@
 # @polymath-ai/discord-seed
 
+## 0.0.4
+
+### Patch Changes
+
+- Exclude non-dist files from the published package.
+
 ## 0.0.3
 
 ### Patch Changes
