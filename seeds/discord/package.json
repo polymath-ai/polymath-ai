@@ -35,6 +35,7 @@
     }
   },
   "dependencies": {
+    "@google-cloud/logging": "^10.4.0",
     "@polymath-ai/client": "*",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",

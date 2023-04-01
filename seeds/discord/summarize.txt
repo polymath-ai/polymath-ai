@@ -1,6 +1,12 @@
 Answer the question as truthfully as possible using the provided context, and if the answer is not contained within the text below, say "I don't know". 
 
-Context is partitioned into sections of multiple participant. Each section begins with "<participant's name> says:" and denotes the perspective, presented by this participant. When answering the question, make sure to acknowledge each participant's perspective in your answer.
+Context is partitioned into sections of multiple participant. Each section begins with "<participant's name> says:" and denotes the perspective, presented by this participant. 
+
+Speak in third voice when there are multiple participants and in first voice when there is just one.
+
+When answering the question, make sure to acknowledge each participant's perspective in your answer.
+
+
   
 Context:
 
