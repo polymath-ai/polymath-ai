@@ -40,7 +40,7 @@ async function fetchAPIResponse(
 
   // Call what we think is the API.
   const newResponse = await fetch(newUrl, { method: "POST", body: form });
-  if (newResponse.ok == false) {
+  if (!newResponse.ok) {
     throw new Error("Server responded with " + newResponse.status);
   }
 

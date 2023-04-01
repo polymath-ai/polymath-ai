@@ -14,7 +14,7 @@ class ValidationLogger {
 
   exception(exception: Error) {
     const success = false;
-    const description = exception.message;
+    const description = exception.name;
     this.results.push({ description, success, exception });
   }
 
@@ -37,14 +37,15 @@ class ValidationCheck {
     this.handler = handler;
   }
 
-  run(log: ValidationLogger, c: ValidationContext) {
-    log.log(this.handler(c), this.description);
+  run(logger: ValidationLogger, c: ValidationContext) {
+    logger.log(this.handler(c), this.description);
   }
 }
 
 // A simple test-like validation harness.
 export class Harness {
   endpoint: Endpoint;
+  fatal = false;
   log: ValidationLogger = new ValidationLogger();
 
   constructor(endpoint: Endpoint) {
@@ -52,11 +53,14 @@ export class Harness {
   }
 
   async validate(args: AskOptions, ...checks: ValidationCheck[]) {
+    if (this.fatal) return;
+
     let response: PackedLibraryData;
     try {
       response = await this.endpoint(args);
     } catch (e) {
       this.log.exception(e as Error);
+      this.fatal = true;
       return;
     }
     try {

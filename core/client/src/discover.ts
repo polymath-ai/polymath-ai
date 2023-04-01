@@ -39,7 +39,7 @@ export class DiscoveryError extends Error {
 
   constructor(data: ResponseData) {
     super(data.statusText);
-    this.name = "DiscoverError";
+    this.name = "DiscoveryError";
     this.data = data;
   }
 }

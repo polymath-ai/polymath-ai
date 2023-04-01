@@ -382,3 +382,4 @@ class Polymath {
 
 // Polymath, go back and help people!
 export { Polymath, PolymathEndpoint };
+export { DiscoveryError } from "./discover.js";
