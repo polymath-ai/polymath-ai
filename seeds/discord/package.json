@@ -1,5 +1,5 @@
 {
-  "name": "discord",
+  "name": "@polymath-ai/discord-seed",
   "version": "0.0.1",
   "description": "A simple Polymath discord bot",
   "type": "module",
