@@ -23,8 +23,9 @@ export class Validate extends Action {
       }
 
       log("Validation details:");
+
       result.details.forEach((item: ValidationResult, i) => {
-        log(`${i + 1}) ${item.description}`);
+        log(`${i + 1}) [${(item.success ? "Pass": "Fail")}] ${item.description}`);
         if (item.exception) {
           const exception = item.exception;
           if (exception instanceof DiscoveryError) {
