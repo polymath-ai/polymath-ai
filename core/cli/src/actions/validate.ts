@@ -23,7 +23,7 @@ export class Validate extends Action {
       }
 
       log("Validation details:");
-      console.log(result.details)
+
       result.details.forEach((item: ValidationResult, i) => {
         log(`${i + 1}) [${(item.success ? "Pass": "Fail")}] ${item.description}`);
         if (item.exception) {
@@ -32,7 +32,7 @@ export class Validate extends Action {
             const discoveryError = exception as DiscoveryError;
             const data = discoveryError.data;
             if (data.status) {
-              error(`Errorr Status: ${data.status} ${data.statusText}`);
+              error(`Status: ${data.status} ${data.statusText}`);
             }
             error(data.text);
           } else {
