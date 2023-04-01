@@ -41,7 +41,7 @@ const createDirectionsPrompt = (question: string) => {
 
 const createSummarizingPrompt = (question: string, contexts: Context[]) => {
   const context = contexts
-    .map((c) => `${c.participant} says:\n${c.context}`)
+    .map((c) => `==${c.participant} says==\n${c.context}`)
     .join("\n\n");
   return prompts.get("summarize", {
     context,
