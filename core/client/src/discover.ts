@@ -84,13 +84,13 @@ export async function discoverEndpoint(url: URL): Promise<URL> {
     throw new DiscoveryError({
       status: discoveryResponse.status,
       statusText: discoveryResponse.statusText,
-      text: "No body found in response",
+      text: `No link in HTTP Headers, and empty body at ${url}`,
     });
 
   const polymathURL = parseBody(body, url);
   if (!polymathURL)
     throw new DiscoveryError({
-      text: "No link found in body",
+      text: `No link in HTTP Headers, and no <link rel="polymath" ...> found in the body of "${url}"`,
     });
   return polymathURL;
 }
