@@ -17,7 +17,6 @@ import {
 
 import contentTypeParser from "content-type-parser";
 
-
 /*
  Fetch the API response, but if it fails, try to discover the endpoint.
 
