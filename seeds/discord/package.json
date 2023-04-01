@@ -17,12 +17,15 @@
     "url": "git+https://github.com/polymath-ai/polymath-ai.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "The Polymath Crew",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/polymath-ai/polymath-ai/issues"
   },
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "files": [
+    "dist"
+  ],
   "ava": {
     "files": [
       "tests/**/*.ts"
