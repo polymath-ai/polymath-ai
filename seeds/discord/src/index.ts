@@ -73,7 +73,7 @@ async function main() {
       console.log(directions);
 
       if (directions.participants?.length === 0) {
-        throw new Error("I don't know any of the participants.");
+        directions.participants.concat(knownParticipants);
       }
 
       const query_embedding = await ai.embedding(directions.request);
