@@ -44,6 +44,7 @@
     "@polymath-ai/validation": "*",
     "@types/htmlparser2": "^3.10.3",
     "@types/http-link-header": "^1.0.3",
+    "content-type-parser": "^1.0.2",
     "dotenv": "^16.0.3",
     "esm": "^3.2.25",
     "find-up": "^6.3.0",

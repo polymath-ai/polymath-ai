@@ -15,6 +15,9 @@ import {
   TypedObject,
 } from "@polymath-ai/types";
 
+import contentTypeParser from "content-type-parser";
+
+
 /*
  Fetch the API response, but if it fails, try to discover the endpoint.
 
@@ -29,11 +32,13 @@ async function fetchAPIResponse(
     body: form,
   });
 
-  if (
-    response.ok &&
-    response.headers.get("content-type") === "application/json"
-  ) {
-    return response.json();
+  if (response.ok) {
+    const rawContentType = response.headers.get("content-type")
+    const contentType = contentTypeParser(rawContentType);
+
+    if (contentType.type === "application" && contentType.subtype === "json") {
+      return response.json();
+    }
   }
 
   const newUrl = await discoverEndpoint(url);
