@@ -1,5 +1,11 @@
 # @polymath-ai/client
 
+## 2.0.1
+
+### Patch Changes
+
+- Fix dependencies and publish `discord-seed`
+
 ## 2.0.0
 
 ### Major Changes
