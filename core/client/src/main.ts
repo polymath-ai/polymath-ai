@@ -143,7 +143,7 @@ class Polymath {
     if (this.pinecone) {
       const ps = new PolymathPinecone(this.pinecone);
       //TODO: shouldn't pinecone also take an askOptions and filter appropriately?
-      const results = await ps.askPacked(args);
+      const results = await ps.queryPacked(args);
 
       this.debug("Pinecone Results: " + JSON.stringify(results, null, 2));
 
@@ -153,7 +153,7 @@ class Polymath {
     // Third, look for local bits
     if (Array.isArray(this.libraries)) {
       const ls = new PolymathLocal(this.libraries);
-      const results = await ls.askPacked(args);
+      const results = await ls.queryPacked(args);
 
       this.debug("Local Results: " + JSON.stringify(results, null, 2));
 

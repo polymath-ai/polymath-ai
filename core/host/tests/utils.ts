@@ -1,6 +1,22 @@
 import test from "ava";
 
-import { encodeEmbedding, decodeEmbedding } from "../src/utils.js";
+import {
+  encodeEmbedding,
+  decodeEmbedding,
+  fromFormData,
+} from "../src/utils.js";
+
+// TODO: Deduplicate this constant.
+const EMBEDDING_VECTOR_LENGTH = 1536;
+
+function arrayEquals(a: unknown, b: unknown) {
+  return (
+    Array.isArray(a) &&
+    Array.isArray(b) &&
+    a.length === b.length &&
+    a.every((val, index) => val === b[index])
+  );
+}
 
 test("When decoding an encoded it comes back the same", (t) => {
   const sampleEmbedding = [
@@ -20,11 +36,15 @@ test("When decoding an encoded it comes back the same", (t) => {
   }
 });
 
-function arrayEquals(a: unknown, b: unknown) {
-  return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
-  );
-}
+test("fromFormData correctly converts FormData to AskOptions", (t) => {
+  const formData = new FormData();
+  const vector = new Array(EMBEDDING_VECTOR_LENGTH).fill(0);
+  const packedVector = encodeEmbedding(vector);
+  formData.append("query_embedding", packedVector);
+
+  const askOptions = fromFormData(formData);
+
+  t.deepEqual(askOptions.query_embedding, vector);
+  t.is(askOptions.version, 1);
+  t.is(askOptions.query_embedding_model, "openai.com:text-embedding-ada-002");
+});

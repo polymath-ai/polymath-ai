@@ -85,7 +85,7 @@ class PolymathLocal extends PolymathHost {
     );
   }
 
-  async ask(args: AskOptions): Promise<LibraryData> {
+  async query(args: AskOptions): Promise<LibraryData> {
     const queryEmbedding = args.query_embedding;
     if (!queryEmbedding)
       throw new Error("Ask options are missing query_embedding");

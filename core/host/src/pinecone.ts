@@ -26,7 +26,7 @@ class PolymathPinecone extends PolymathHost {
     this._topK = config.topK || 10;
   }
 
-  async ask(args: AskOptions): Promise<LibraryData> {
+  async query(args: AskOptions): Promise<LibraryData> {
     const queryEmbedding = args.query_embedding as EmbeddingVector;
     const result = await this._pinecone.query({
       vector: queryEmbedding,

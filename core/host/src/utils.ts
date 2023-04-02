@@ -1,4 +1,5 @@
 import { Base64Embedding, EmbeddingVector } from "@polymath-ai/types";
+import { AskOptions, schemas } from "@polymath-ai/types";
 
 function dotProduct(vecA: EmbeddingVector, vecB: EmbeddingVector): number {
   let product = 0;
@@ -36,3 +37,13 @@ export function decodeEmbedding(data: Base64Embedding): EmbeddingVector {
 export function encodeEmbedding(data: EmbeddingVector): Base64Embedding {
   return Buffer.from(new Float32Array(data).buffer).toString("base64");
 }
+
+export const fromFormData = (formData: FormData): AskOptions => {
+  const data: Record<string, unknown> = {};
+  formData.forEach((value, key) => {
+    data[key] = value;
+  });
+  data.query_embedding = decodeEmbedding(data.query_embedding as string);
+  // Important: Using `endpointArgs` fills in good defaults.
+  return schemas.endpointArgs.parse(data) as AskOptions;
+};
