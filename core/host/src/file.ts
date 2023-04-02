@@ -17,7 +17,7 @@ import { decodeEmbedding, cosineSimilarity } from "./utils.js";
 // --------------------------------------------------------------------------
 // Query a local library of bits
 // --------------------------------------------------------------------------
-class PolymathLocal extends PolymathHost {
+class PolymathFile extends PolymathHost {
   _libraryBits: Bit[];
 
   constructor(libraries: LibraryFileNamePattern[]) {
@@ -103,4 +103,4 @@ class PolymathLocal extends PolymathHost {
   }
 }
 
-export { PolymathLocal };
+export { PolymathFile };

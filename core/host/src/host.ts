@@ -2,7 +2,7 @@ import { AskOptions, LibraryData, PackedLibraryData } from "@polymath-ai/types";
 import { encodeEmbedding, fromFormData } from "./utils.js";
 
 export abstract class PolymathHost {
-  ask(formData: FormData): Promise<PackedLibraryData> {
+  async ask(formData: FormData): Promise<PackedLibraryData> {
     const args = fromFormData(formData);
     return this.queryPacked(args);
   }

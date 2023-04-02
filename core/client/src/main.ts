@@ -1,6 +1,6 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
-import { PolymathPinecone, PolymathLocal } from "@polymath-ai/host";
+import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
 import {
@@ -152,7 +152,7 @@ class Polymath {
 
     // Third, look for local bits
     if (Array.isArray(this.libraries)) {
-      const ls = new PolymathLocal(this.libraries);
+      const ls = new PolymathFile(this.libraries);
       const results = await ls.queryPacked(args);
 
       this.debug("Local Results: " + JSON.stringify(results, null, 2));
