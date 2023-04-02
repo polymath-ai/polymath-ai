@@ -64,6 +64,7 @@ export class Ingest {
     }
 
     // <any> is needed here because the typescript compiler doesn't like it when we use the `new` keyword on a dynamic import.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const importer: Ingester = new (loadedImporter as any)(
       args.options
     ) as Ingester;
