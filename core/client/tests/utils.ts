@@ -1,6 +1,7 @@
 import test from "ava";
 
-import { encodeEmbedding, decodeEmbedding } from "../src/utils.js";
+import { encodeEmbedding } from "../src/utils.js";
+import { decodeEmbedding } from "@polymath-ai/host";
 
 test("When decoding an encoded it comes back the same", (t) => {
   const sampleEmbedding = [
@@ -20,7 +21,7 @@ test("When decoding an encoded it comes back the same", (t) => {
   }
 });
 
-function arrayEquals(a: any, b: any) {
+function arrayEquals(a: unknown, b: unknown) {
   return (
     Array.isArray(a) &&
     Array.isArray(b) &&
