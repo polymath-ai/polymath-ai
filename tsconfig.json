@@ -4,6 +4,7 @@
   "references": [
     { "path": "core/cli" },
     { "path": "core/validation" },
+    { "path": "core/host" },
     { "path": "core/client" },
     { "path": "core/types" },
     { "path": "core/ingest" },
