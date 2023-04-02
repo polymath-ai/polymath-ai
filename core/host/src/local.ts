@@ -1,6 +1,9 @@
 import fs from "fs";
 import { globbySync } from "globby";
 
+import { PolymathHost } from "./host.js";
+import { AskOptions, LibraryData } from "@polymath-ai/types";
+
 import {
   Bit,
   EmbeddingVector,
@@ -14,7 +17,7 @@ import { decodeEmbedding, cosineSimilarity } from "./utils.js";
 // --------------------------------------------------------------------------
 // Query a local library of bits
 // --------------------------------------------------------------------------
-class PolymathLocal {
+class PolymathLocal implements PolymathHost {
   _libraryBits: Bit[];
 
   constructor(libraries: LibraryFileNamePattern[]) {
@@ -81,8 +84,21 @@ class PolymathLocal {
     );
   }
 
-  ask(queryEmbedding: EmbeddingVector): Bit[] {
-    return this.similarBits(queryEmbedding);
+  async ask(args: AskOptions): Promise<LibraryData> {
+    const queryEmbedding = args.query_embedding;
+    if (!queryEmbedding)
+      throw new Error("Ask options are missing query_embedding");
+    return new Promise((resolve) => {
+      // TODO: Do something better here. Hard-coding "version" and
+      // "embedding_model" is just a workaround. Ideally, these come down
+      // from the libraries themselves.
+      const result: LibraryData = {
+        version: 1,
+        embedding_model: "openai.com:text-embedding-ada-002",
+        bits: this.similarBits(queryEmbedding),
+      };
+      resolve(result);
+    });
   }
 }
 

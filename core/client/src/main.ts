@@ -114,16 +114,16 @@ class Polymath {
     const queryEmbedding =
       askOptions?.query_embedding || (await this.generateEmbedding(query));
 
+    const args = askOptions
+      ? { ...askOptions, query_embedding: queryEmbedding }
+      : { query_embedding: queryEmbedding };
+
     // For each server and/or local library, get the results and merge it all together!
     const bits: PackedBit[] = [];
 
     // First, let's ask each of the servers
     if (Array.isArray(this.servers)) {
       this.debug("Asking servers: " + this.servers.join("\n"));
-
-      const args = askOptions
-        ? { ...askOptions, query_embedding: queryEmbedding }
-        : { query_embedding: queryEmbedding };
 
       const promises = this.servers.map((server) => {
         const endpoint = new PolymathEndpoint(server);
@@ -156,13 +156,13 @@ class Polymath {
     // Third, look for local bits
     if (Array.isArray(this.libraries)) {
       const ls = new PolymathLocal(this.libraries);
-      const results = ls.ask(queryEmbedding);
+      const results = await ls.ask(args);
 
       this.debug("Local Results: " + JSON.stringify(results, null, 2));
 
       if (results) {
         bits.push(
-          ...results.map((bit) => ({
+          ...results.bits.map((bit) => ({
             ...bit,
             embedding: encodeEmbedding(bit.embedding || []),
           }))

@@ -1,7 +1,5 @@
-import { AskOptions, PackedLibraryData } from "@polymath-ai/types";
+import { AskOptions, LibraryData } from "@polymath-ai/types";
 
-export class PolymathHost {
-  async ask(args: AskOptions): Promise<PackedLibraryData> {
-    return {} as PackedLibraryData;
-  }
+export abstract class PolymathHost {
+  abstract ask(args: AskOptions): Promise<LibraryData>;
 }
