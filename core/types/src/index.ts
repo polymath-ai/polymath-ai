@@ -1,15 +1,29 @@
-import { schemas } from "./schemas.js";
 import { z } from "zod";
 
-export { schemas };
+import {
+  base64Embedding,
+  completionModelName,
+  embeddingModelName,
+  embeddingVector,
+  modelName,
+  bitInfo,
+  bit,
+  packedBit,
+  libraryData,
+  countType,
+  packedLibraryData,
+  askOptions,
+  endpointArgs,
+  hostConfig,
+} from "./schemas.js";
 
 //TODO: consider having an enumeration of valid lenghts for known models
-export type EmbeddingVector = z.infer<typeof schemas.embeddingVector>;
-export type Base64Embedding = z.infer<typeof schemas.base64Embedding>;
+export type EmbeddingVector = z.infer<typeof embeddingVector>;
+export type Base64Embedding = z.infer<typeof base64Embedding>;
 
-export type EmbeddingModelName = z.infer<typeof schemas.embeddingModelName>;
-export type CompletionModelName = z.infer<typeof schemas.completionModelName>;
-export type ModelName = z.infer<typeof schemas.modelName>;
+export type EmbeddingModelName = z.infer<typeof embeddingModelName>;
+export type CompletionModelName = z.infer<typeof completionModelName>;
+export type ModelName = z.infer<typeof modelName>;
 
 //A filename like './mybits/file.json'
 export type LibraryFileName = string;
@@ -38,12 +52,12 @@ export type PineconeBit = BitInfo & {
   access_tag?: AccessTag;
 };
 
-export type BitInfo = z.infer<typeof schemas.bitInfo>;
-export type Bit = z.infer<typeof schemas.bit>;
-export type PackedBit = z.infer<typeof schemas.packedBit>;
+export type BitInfo = z.infer<typeof bitInfo>;
+export type Bit = z.infer<typeof bit>;
+export type PackedBit = z.infer<typeof packedBit>;
 export type Sort = "similarity";
-export type LibraryData = z.infer<typeof schemas.libraryData>;
-export type PackedLibraryData = z.infer<typeof schemas.packedLibraryData>;
+export type LibraryData = z.infer<typeof libraryData>;
+export type PackedLibraryData = z.infer<typeof packedLibraryData>;
 
 export const OmitKeys = {
   text: true,
@@ -64,7 +78,7 @@ export type OmitConfiguration =
 export type AccessToken = string;
 
 //TODO: audit uses of these, is it supposed to be bits or tokens?
-export type CountType = z.infer<typeof schemas.countType>;
+export type CountType = z.infer<typeof countType>;
 
 //May include `{context}` and `{query}`
 export type PromptTemplate = string;
@@ -105,8 +119,8 @@ export type CompletionResult = {
   completion?: string;
 };
 
-export type AskOptions = z.infer<typeof schemas.askOptions>;
-export type EndpointArgs = z.infer<typeof schemas.endpointArgs>;
+export type AskOptions = z.infer<typeof askOptions>;
+export type EndpointArgs = z.infer<typeof endpointArgs>;
 
 export type IngestOptions = {
   destination: string;
@@ -142,4 +156,22 @@ export class TypedObject {
 
 //TODO: rename to a better name.
 //A HostConfig is what you might have in your `.polymath/config.SECRET.json`
-export type HostConfig = z.infer<typeof schemas.hostConfig>;
+export type HostConfig = z.infer<typeof hostConfig>;
+
+// Convenient export of all schemas
+export const schemas = {
+  embeddingVector,
+  base64Embedding,
+  embeddingModelName,
+  completionModelName,
+  modelName,
+  bitInfo,
+  bit,
+  packedBit,
+  libraryData,
+  countType,
+  packedLibraryData,
+  askOptions,
+  endpointArgs,
+  hostConfig,
+};

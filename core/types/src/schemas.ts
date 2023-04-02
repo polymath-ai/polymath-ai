@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const EMBEDDING_VECTOR_LENGTH = 1536;
 
-const embeddingVector = z
+export const embeddingVector = z
   .array(z.number())
   .length(
     EMBEDDING_VECTOR_LENGTH,
@@ -12,25 +12,27 @@ const embeddingVector = z
     "A list of floating point numbers that represent an embedding vector."
   );
 
-const base64Embedding = z
+export const base64Embedding = z
   .string()
   .describe("A base64 encoded string that represents an embedding vector.");
 
-const embeddingModelName = z.literal("openai.com:text-embedding-ada-002");
+export const embeddingModelName = z.literal(
+  "openai.com:text-embedding-ada-002"
+);
 
-const completionModelName = z.enum([
+export const completionModelName = z.enum([
   "text-davinci-003",
   "gpt-3.5-turbo",
   "gpt-4",
 ]);
 
-const modelName = z.union([embeddingModelName, completionModelName]);
+export const modelName = z.union([embeddingModelName, completionModelName]);
 
 // TODO: Remove the nulls from these fields.
 // Currently, the info fields are nullable and optional. This is because
 // our old Python implementation is happy to send nulls. We should make these
 // just not come through over the wire.
-const bitInfo = z.object({
+export const bitInfo = z.object({
   url: z
     .string({ required_error: "URL is required" })
     .describe(
@@ -47,7 +49,7 @@ const accessTag = z.string();
 
 const bitId = z.string();
 
-const bit = z.object({
+export const bit = z.object({
   //Omit settings could lead to anhy part of Bit being omitted.
   id: bitId.optional(),
   text: z.string().optional(),
@@ -58,11 +60,11 @@ const bit = z.object({
   access_tag: accessTag.optional(),
 });
 
-const packedBit = bit.extend({
+export const packedBit = bit.extend({
   embedding: base64Embedding.optional(),
 });
 
-const omitConfigurationField = z.enum([
+export const omitConfigurationField = z.enum([
   "text",
   "info",
   "embedding",
@@ -70,18 +72,18 @@ const omitConfigurationField = z.enum([
   "token_count",
 ]);
 
-const omitConfiguration = z.union([
+export const omitConfiguration = z.union([
   z.literal("*"),
   z.literal(""),
   omitConfigurationField,
   z.array(omitConfigurationField),
 ]);
 
-const sort = z.literal("similarity");
+export const sort = z.literal("similarity");
 
-const countType = z.enum(["token", "bit"]);
+export const countType = z.enum(["token", "bit"]);
 
-const libraryData = z.object({
+export const libraryData = z.object({
   version: z.number(),
   embedding_model: embeddingModelName,
   omit: omitConfiguration.optional(),
@@ -90,11 +92,11 @@ const libraryData = z.object({
   bits: z.array(bit),
 });
 
-const packedLibraryData = libraryData.extend({
+export const packedLibraryData = libraryData.extend({
   bits: z.array(packedBit),
 });
 
-const askOptions = z.object({
+export const askOptions = z.object({
   version: z.number().optional(),
   query_embedding: embeddingVector.optional(),
   query_embedding_model: embeddingModelName.optional(),
@@ -105,7 +107,7 @@ const askOptions = z.object({
   sort: sort.optional(),
 });
 
-const endpointArgs = askOptions.extend({
+export const endpointArgs = askOptions.extend({
   version: z.number().default(1),
   query_embedding: embeddingVector,
   query_embedding_model: embeddingModelName.default(
@@ -113,18 +115,18 @@ const endpointArgs = askOptions.extend({
   ),
 });
 
-const server = z.string().url();
+export const server = z.string().url();
 // TODO: Validate as path.
-const libraryFileName = z.string();
+export const libraryFileName = z.string();
 
-const pineconeConfig = z.object({
+export const pineconeConfig = z.object({
   apiKey: z.string().optional(),
   baseUrl: z.string().url().optional(),
   namespace: z.string().optional(),
   topK: z.number().optional(),
 });
 
-const clientOptions = z.object({
+export const clientOptions = z.object({
   apiKey: z.string().optional(),
   servers: z.array(server).optional(),
   pinecone: pineconeConfig.optional(),
@@ -133,7 +135,7 @@ const clientOptions = z.object({
   debug: z.boolean().optional(),
 });
 
-const serverOption = z.object({
+export const serverOption = z.object({
   default: z.boolean().optional(),
   url: z.string().url(),
   name: z.string(),
@@ -141,7 +143,7 @@ const serverOption = z.object({
 
 const promptTemplate = z.string();
 
-const completionOptions = z.object({
+export const completionOptions = z.object({
   prompt_template: promptTemplate.optional(),
   model: completionModelName.optional(),
   stream: z.boolean().optional(),
@@ -160,14 +162,14 @@ const completionOptions = z.object({
 
 // TODO: Rename and change the key too.
 // This is only used in the web application clients so far.
-const webAppViewOptions = z.object({
+export const webAppViewOptions = z.object({
   headername: z.string().optional(),
   placeholder: z.string().optional(),
   fun_queries: z.array(z.string()).optional(),
   source_prefixes: z.record(z.string()).optional(),
 });
 
-const hostConfig = z.object({
+export const hostConfig = z.object({
   endpoint: z.string().url().optional(),
   default_private_access_tag: accessTag.optional(),
   default_api_key: z.string().optional(),
@@ -178,20 +180,3 @@ const hostConfig = z.object({
   completion_options: completionOptions.optional(),
   info: webAppViewOptions.optional(),
 });
-
-export const schemas = {
-  embeddingVector,
-  base64Embedding,
-  embeddingModelName,
-  completionModelName,
-  modelName,
-  bitInfo,
-  bit,
-  packedBit,
-  libraryData,
-  countType,
-  packedLibraryData,
-  askOptions,
-  endpointArgs,
-  hostConfig,
-};
