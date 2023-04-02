@@ -126,6 +126,12 @@ export type IngestOptions = {
   destination: string;
 };
 
+export type PolymathHostType = "pinecone" | "file";
+
+export type ServeArgs = {
+  type: PolymathHostType;
+};
+
 export type StreamProcessor = {
   processDelta: (delta: string) => void;
   processResults: (results: CompletionResult) => void;

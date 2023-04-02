@@ -7,8 +7,9 @@ import { Ask } from "./actions/ask.js";
 import { Complete, CompletionArgs } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
 import { IngestAction } from "./actions/ingest.js";
-import { IngestOptions } from "@polymath-ai/types";
+import { IngestOptions, PolymathHostType } from "@polymath-ai/types";
 import { CLIBaseOptions } from "./action.js";
+import { Serve } from "./actions/serve.js";
 
 type NPMPackageConfig = {
   version: string;
@@ -143,6 +144,18 @@ class CLI {
         }
       );
 
+    program
+      .command("serve")
+      .description("Serve a Polymath library")
+      .argument(
+        "[type]",
+        'The type of library to serve. Can be either "pinecone" or "file" (default).',
+        "file"
+      )
+      .action((type: PolymathHostType) => {
+        const action = new Serve(program.opts());
+        action.run({ type });
+      });
     program.parse();
   }
 }
