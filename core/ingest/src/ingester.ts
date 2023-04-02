@@ -9,7 +9,6 @@ const GOLDIELOCKS = {
   min: MAX_CHUNK_SIZE - MIN_CHUNK_SIZE,
   max: MAX_CHUNK_SIZE + MIN_CHUNK_SIZE,
 };
-const MEH_SIZE = GOLDIELOCKS.min / 2;
 
 function getLastPunctuation(input: string): number {
   const lastPeriod = input.lastIndexOf(".");
@@ -42,6 +41,7 @@ export abstract class Ingester {
 
   Returns partial bits.
   */
+  // eslint-disable-next-line require-yield
   async *getStringsFromSource(_source: string): AsyncGenerator<PackedBit> {
     // e.g yield { url: source, fullText: "" };
     throw new Error("getStringsFromSource not implemented");
