@@ -1,11 +1,7 @@
 // --------------------------------------------------------------------------
 //  Helpers for tokens, models, and math to be used elsewhere
 
-import {
-  Base64Embedding,
-  EmbeddingVector,
-  ModelName,
-} from "@polymath-ai/types";
+import { ModelName } from "@polymath-ai/types";
 
 // --------------------------------------------------------------------------
 const DEFAULT_MAX_TOKENS_COMPLETION = 1024; // tokens reserved for the answer
@@ -18,15 +14,11 @@ const MAX_TOKENS_FOR_MODEL: { [name in ModelName]: number } = {
 };
 const EMBEDDING_VECTOR_LENGTH = 1536;
 
-function encodeEmbedding(data: EmbeddingVector): Base64Embedding {
-  return Buffer.from(new Float32Array(data).buffer).toString("base64");
-}
 function getMaxTokensForModel(model: ModelName): number {
   return MAX_TOKENS_FOR_MODEL[model] || DEFAULT_MAX_TOKENS_FOR_MODEL;
 }
 
 export {
-  encodeEmbedding,
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
   DEFAULT_MAX_TOKENS_FOR_MODEL,

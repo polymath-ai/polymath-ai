@@ -17,10 +17,11 @@ import { decodeEmbedding, cosineSimilarity } from "./utils.js";
 // --------------------------------------------------------------------------
 // Query a local library of bits
 // --------------------------------------------------------------------------
-class PolymathLocal implements PolymathHost {
+class PolymathLocal extends PolymathHost {
   _libraryBits: Bit[];
 
   constructor(libraries: LibraryFileNamePattern[]) {
+    super();
     const expandedLibraries = this.expandLibraries(libraries);
     this._libraryBits = this.loadLibraryBits(expandedLibraries);
   }

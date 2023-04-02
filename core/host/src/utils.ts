@@ -32,3 +32,7 @@ export function decodeEmbedding(data: Base64Embedding): EmbeddingVector {
     new Float32Array(new Uint8Array(Buffer.from(data, "base64")).buffer)
   );
 }
+
+export function encodeEmbedding(data: EmbeddingVector): Base64Embedding {
+  return Buffer.from(new Float32Array(data).buffer).toString("base64");
+}

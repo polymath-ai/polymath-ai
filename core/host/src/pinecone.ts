@@ -16,11 +16,12 @@ import { PolymathHost } from "./host.js";
 // --------------------------------------------------------------------------
 // Talk to Pinecone to do the vector search
 // --------------------------------------------------------------------------
-class PolymathPinecone implements PolymathHost {
+class PolymathPinecone extends PolymathHost {
   _pinecone: PineconeClient<PineconeBit>;
   _topK: number;
 
   constructor(config: PineconeConfig) {
+    super();
     this._pinecone = new PineconeClient(config);
     this._topK = config.topK || 10;
   }

@@ -1,12 +1,15 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
-import { PolymathPinecone, PolymathLocal } from "@polymath-ai/host";
+import {
+  PolymathPinecone,
+  PolymathLocal,
+  encodeEmbedding,
+} from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
 import {
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
-  encodeEmbedding,
 } from "./utils.js";
 
 // Initialize .env variables
@@ -144,35 +147,21 @@ class Polymath {
     if (this.pinecone) {
       const ps = new PolymathPinecone(this.pinecone);
       //TODO: shouldn't pinecone also take an askOptions and filter appropriately?
-      const results = await ps.ask(args);
+      const results = await ps.askPacked(args);
 
       this.debug("Pinecone Results: " + JSON.stringify(results, null, 2));
 
-      if (results) {
-        bits.push(
-          ...results.bits.map((bit) => ({
-            ...bit,
-            embedding: encodeEmbedding(bit.embedding || []),
-          }))
-        );
-      }
+      bits.push(...results.bits);
     }
 
     // Third, look for local bits
     if (Array.isArray(this.libraries)) {
       const ls = new PolymathLocal(this.libraries);
-      const results = await ls.ask(args);
+      const results = await ls.askPacked(args);
 
       this.debug("Local Results: " + JSON.stringify(results, null, 2));
 
-      if (results) {
-        bits.push(
-          ...results.bits.map((bit) => ({
-            ...bit,
-            embedding: encodeEmbedding(bit.embedding || []),
-          }))
-        );
-      }
+      bits.push(...results.bits);
     }
 
     // Finally, clean up the results and return them!

@@ -1,7 +1,6 @@
 import test from "ava";
 
-import { encodeEmbedding } from "../src/utils.js";
-import { decodeEmbedding } from "@polymath-ai/host";
+import { encodeEmbedding, decodeEmbedding } from "../src/utils.js";
 
 test("When decoding an encoded it comes back the same", (t) => {
   const sampleEmbedding = [

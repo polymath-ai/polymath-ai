@@ -1,5 +1,5 @@
 import { discoverEndpoint } from "./discover.js";
-import { encodeEmbedding } from "./utils.js";
+import { encodeEmbedding } from "@polymath-ai/host";
 
 import { Validator } from "@polymath-ai/validation";
 import {
@@ -32,7 +32,7 @@ async function fetchAPIResponse(
   });
 
   if (response.ok) {
-    const rawContentType = response.headers.get("content-type")
+    const rawContentType = response.headers.get("content-type");
     const contentType = contentTypeParser(rawContentType);
 
     if (contentType.type === "application" && contentType.subtype === "json") {
