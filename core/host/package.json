@@ -1,0 +1,59 @@
+{
+  "name": "@polymath-ai/host",
+  "version": "0.0.1",
+  "description": "Polymath Host library",
+  "type": "module",
+  "main": "./dist/src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "ava",
+    "build": "tsc --b",
+    "watch": "tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "keywords": [
+    "cli",
+    "polymath",
+    "genai",
+    "llm"
+  ],
+  "author": "The Polymath Crew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-ai/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "files": [
+    "dist",
+    "index.js"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
+  "dependencies": {
+    "@polymath-ai/types": "*",
+    "@polymath-ai/validation": "*",
+    "@types/node": "^18.15.5"
+  },
+  "devDependencies": {
+    "@ava/typescript": "^3.0.1",
+    "@polymath-ai/infra": "*",
+    "ava": "^5.2.0"
+  },
+  "directories": {
+    "test": "tests"
+  }
+}
