@@ -1,6 +1,6 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
-import { PolymathPinecone } from "./pinecone.js";
+import { PolymathPinecone } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
 import { PolymathLocal } from "./local.js";

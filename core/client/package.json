@@ -42,6 +42,7 @@
   "dependencies": {
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
+    "@polymath-ai/host": "*",
     "@types/htmlparser2": "^3.10.3",
     "@types/http-link-header": "^1.0.3",
     "content-type-parser": "^1.0.2",
