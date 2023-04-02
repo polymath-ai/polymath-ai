@@ -17,13 +17,13 @@ export async function action({ request }: ActionArgs) {
   const body = await request.formData();
   const query = body.get("query");
 
-  const otherOptions: Record<string, any> = {};
+  const otherOptions: Record<string, unknown> = {};
   for (const pair of body.entries()) {
     if (pair[0] !== "query") otherOptions[pair[0]] = pair[1];
   }
 
   // TODO: get these settings from a config file and switch to configuration system when ready
-  const clientOptions: any = polymathHostConfig.client_options;
+  const clientOptions = polymathHostConfig.client_options || {};
   clientOptions.apiKey =
     polymathHostConfig.default_api_key || process.env.OPENAI_API_KEY;
   const client = new Polymath(clientOptions);

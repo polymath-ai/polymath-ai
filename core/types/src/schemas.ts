@@ -125,6 +125,7 @@ const pineconeConfig = z.object({
 });
 
 const clientOptions = z.object({
+  apiKey: z.string().optional(),
   servers: z.array(server).optional(),
   pinecone: pineconeConfig.optional(),
   libraryFiles: z.array(libraryFileName).optional(),

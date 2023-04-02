@@ -1,4 +1,5 @@
-import { ActionArgs, json } from "@remix-run/node";
+import type { ActionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { Polymath } from "~/utils/polymath.server";
 import { polymathHostConfig } from "~/utils/polymath.config";
 
@@ -16,18 +17,18 @@ export async function action({ request }: ActionArgs) {
   const body = await request.formData();
   const query = body.get("query");
 
-  const otherOptions: Record<string, any> = {};
-  const servers = [];
+  const otherOptions: Record<string, unknown> = {};
+  const servers: string[] = [];
   for (const pair of body.entries()) {
     if (pair[0] === "server") {
-      servers.push(pair[1]);
+      servers.push(pair[1] as string);
     } else if (pair[0] !== "query") {
       otherOptions[pair[0]] = pair[1];
     }
   }
 
   // TODO: get these settings from a config file and switch to configuration system when ready
-  let clientOptions: any = polymathHostConfig.client_options;
+  const clientOptions = polymathHostConfig.client_options || {};
   clientOptions.apiKey =
     polymathHostConfig.default_api_key || process.env.OPENAI_API_KEY;
 
@@ -35,7 +36,7 @@ export async function action({ request }: ActionArgs) {
     if (!clientOptions.servers) clientOptions.servers = [];
     clientOptions.servers = clientOptions.servers.concat(servers);
   }
-  let client = new Polymath(clientOptions);
+  const client = new Polymath(clientOptions);
 
   if (!client.validate()) {
     client.servers = [];
@@ -56,7 +57,7 @@ export async function action({ request }: ActionArgs) {
   //     infos: polymathResults.infoSortedBySimilarity(),
   //     completion: response.data.choices[0].text.trim(),
   // }
-  let results = await client.completion(query, undefined, otherOptions);
+  const results = await client.completion(query, undefined, otherOptions);
 
   return json(results);
 }
