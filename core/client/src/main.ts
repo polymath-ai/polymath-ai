@@ -144,12 +144,17 @@ class Polymath {
     if (this.pinecone) {
       const ps = new PolymathPinecone(this.pinecone);
       //TODO: shouldn't pinecone also take an askOptions and filter appropriately?
-      const results = await ps.ask(queryEmbedding);
+      const results = await ps.ask(args);
 
       this.debug("Pinecone Results: " + JSON.stringify(results, null, 2));
 
       if (results) {
-        bits.push(...results);
+        bits.push(
+          ...results.bits.map((bit) => ({
+            ...bit,
+            embedding: encodeEmbedding(bit.embedding || []),
+          }))
+        );
       }
     }
 

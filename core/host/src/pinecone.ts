@@ -1,18 +1,22 @@
 import { PineconeClient } from "pinecone-client";
 
 import {
+  AskOptions,
+  Bit,
   BitInfo,
   EmbeddingVector,
-  PackedBit,
+  LibraryData,
   PineconeBit,
   PineconeConfig,
   PineconeResult,
 } from "@polymath-ai/types";
 
+import { PolymathHost } from "./host.js";
+
 // --------------------------------------------------------------------------
 // Talk to Pinecone to do the vector search
 // --------------------------------------------------------------------------
-class PolymathPinecone {
+class PolymathPinecone implements PolymathHost {
   _pinecone: PineconeClient<PineconeBit>;
   _topK: number;
 
@@ -21,7 +25,8 @@ class PolymathPinecone {
     this._topK = config.topK || 10;
   }
 
-  async ask(queryEmbedding: EmbeddingVector): Promise<PackedBit[]> {
+  async ask(args: AskOptions): Promise<LibraryData> {
+    const queryEmbedding = args.query_embedding as EmbeddingVector;
     const result = await this._pinecone.query({
       vector: queryEmbedding,
       topK: this._topK,
@@ -30,13 +35,21 @@ class PolymathPinecone {
 
     // console.log("Pinecone Results: ", result);
 
-    return result?.matches.map((pineconeResult) => {
+    const bits = result?.matches.map((pineconeResult) => {
       return this.makeBit(pineconeResult);
     });
+
+    const libraryData: LibraryData = {
+      version: 1,
+      embedding_model: "openai.com:text-embedding-ada-002",
+      bits: bits,
+    };
+
+    return libraryData;
   }
 
   makeBit(pineconeResult: PineconeResult) {
-    const bit: PackedBit = {
+    const bit: Bit = {
       id: pineconeResult.id,
     };
 
