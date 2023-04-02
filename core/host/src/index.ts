@@ -1,1 +1,1 @@
-console.log("hello");
+export { PolymathHost } from "./host.js";
