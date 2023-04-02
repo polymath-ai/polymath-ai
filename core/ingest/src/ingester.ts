@@ -1,4 +1,5 @@
-import { Bit, Options } from "./types.js";
+import { Options } from "./types.js";
+import { PackedBit } from "@polymath-ai/types";
 import { cleanText } from "./utils.js";
 
 // NOTE: Dependant on the model we are using with OpenAI, we need to chunk the data in to optimal sizes. In some cases we might only have one bit for an entire document.
@@ -41,7 +42,7 @@ export abstract class Ingester {
 
   Returns partial bits.
   */
-  async *getStringsFromSource(_source: string): AsyncGenerator<Bit> {
+  async *getStringsFromSource(_source: string): AsyncGenerator<PackedBit> {
     // e.g yield { url: source, fullText: "" };
     throw new Error("getStringsFromSource not implemented");
   }
@@ -53,7 +54,7 @@ export abstract class Ingester {
 
     Yields a partial Bit.
   */
-  async *generateChunks(source: string): AsyncGenerator<Bit> {
+  async *generateChunks(source: string): AsyncGenerator<PackedBit> {
     console.log("[LOG] Generating Chunks");
     // Accumulate the buffer.
     let buffer = "";
@@ -61,7 +62,7 @@ export abstract class Ingester {
     for await (const source of stringSources) {
       console.log(`[LOG] Processing source: ${source.info?.url}`);
       const stringToEncode = source.text || "";
-      
+
       const cleanedText = cleanText(stringToEncode);
 
       if (cleanText.length == 0) {
@@ -71,7 +72,10 @@ export abstract class Ingester {
       // Add to the buffer because if it's too large we will break it up anyway.
       buffer += cleanedText;
 
-      if (buffer.length >= GOLDIELOCKS.min && buffer.length <= GOLDIELOCKS.max) {
+      if (
+        buffer.length >= GOLDIELOCKS.min &&
+        buffer.length <= GOLDIELOCKS.max
+      ) {
         yield {
           text: "\n" + buffer,
           info: source.info,
@@ -98,7 +102,7 @@ export abstract class Ingester {
 
         const fullSentence = trimmedBuffer.substring(0, sentenceEnd + 1);
         const remainingSentence = trimmedBuffer.substring(sentenceEnd + 1);
-        
+
         yield {
           text: fullSentence,
           info: source.info,

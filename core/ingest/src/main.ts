@@ -1,10 +1,10 @@
 import { join } from "path";
-import {createHash} from "crypto";
+import { createHash } from "crypto";
 
 import { Polymath } from "@polymath-ai/client";
 import chalk from "chalk";
 import { Ingester } from "./ingester.js";
-import { Bit } from "./types.js";
+import { PackedBit } from "@polymath-ai/types";
 import { encodeEmbedding } from "./utils.js";
 import { PolymathOptions } from "@polymath-ai/types";
 
@@ -13,7 +13,8 @@ const error = (...args: unknown[]) =>
 const log = (msg: string, ...args: unknown[]) =>
   console.log(chalk.green(`\n${msg}`), chalk.bold(...args));
 
-const generateId = (input: string): string => createHash('md5').update(input).digest("hex");
+const generateId = (input: string): string =>
+  createHash("md5").update(input).digest("hex");
 
 export type IngestOptions = {
   destination?: string;
@@ -27,7 +28,7 @@ export type IngestArguments = {
 
 // The importer is an API that can be used by any tool (e.g, the CLI.)
 export class Ingest {
-  async *run(args: IngestArguments): AsyncGenerator<Bit> {
+  async *run(args: IngestArguments): AsyncGenerator<PackedBit> {
     const importerArg = args.importer;
     const source = args.source;
 
@@ -75,7 +76,7 @@ export class Ingest {
         continue;
       }
 
-      const id = generateId(source.trim() + '\n' + chunk.text.trim());
+      const id = generateId(source.trim() + "\n" + chunk.text.trim());
       log(`Id: ${id}`);
       const tokenCount = polymath.getPromptTokenCount(chunk.text);
       chunk.id = id;

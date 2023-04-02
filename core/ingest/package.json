@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "@polymath-ai/client": "^2.0.0",
+    "@polymath-ai/types": "*",
     "chalk": "^5.2.0",
     "commander": "^10.0.0",
     "esm": "^3.2.25",

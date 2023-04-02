@@ -1,12 +1,13 @@
 import { Ingester } from "../../src/ingester.js";
-import { Bit, Options } from "../../src/types.js";
+import { Options } from "../../src/types.js";
+import { PackedBit } from "@polymath-ai/types";
 
 export default class Test extends Ingester {
   constructor(options: Options) {
     super(options);
   }
 
-  async *getStringsFromSource(source: string): AsyncGenerator<Bit> {
+  async *getStringsFromSource(source: string): AsyncGenerator<PackedBit> {
     yield {
       info: { url: source + 1 },
       text: "This is a long string with no punctuation",
