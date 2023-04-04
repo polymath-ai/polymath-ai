@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/host",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Polymath Host library",
   "type": "module",
   "main": "./dist/src/index.js",
