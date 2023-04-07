@@ -61,7 +61,7 @@ If no query is given, we will ask for one.
 It will also takes arguments: ✅
 
 - `--openai-api-key="the openapi key"`: defaults to `$OPENAI_API_KEY` in env / .env
-- `--server https://glazkov.com`: pass as many of these as you want
+- `--servers https://glazkov.com`: pass as many of these as you want
 - `--libraries path/to/libraryOrDirectory`: pass in more of these too
 - `--pinecone --pinecone-api-key="The Key" --pinecone-base-url="The URL" --pinecone-namespace=namespace`: use pinecone with all of it's sub settings. If not found, will also look in env / .env (e.g. PINECONE_API_KEY, PINECONE_BASE_URL, PINECONE_NAMESPACE)
 
@@ -81,7 +81,7 @@ polymath -c local-knowledge complete --completion-stream true --completion-model
 
 This example turns on streaming, and sets the completion model to the new default turbo mode.
 
-### Import content
+### Import content ✅
 
 e.g:
 
@@ -89,7 +89,7 @@ e.g:
 polymath import rss https://pau.kinlan.me/index.xml --destination=./libraries/medium-2023.json
 ```
 
-#### Using a self hosted importer
+#### Using a self hosted importer ✅
 
 ```shell
 polymath ingest ../test/import/html.js https://paul.kinlan.me/
