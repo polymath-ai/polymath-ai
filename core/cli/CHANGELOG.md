@@ -1,5 +1,16 @@
 # @polymath-ai/cli
 
+## 1.0.2
+
+### Patch Changes
+
+- Add `core/db` and update validation logic.
+- Updated dependencies
+  - @polymath-ai/client@2.0.3
+  - @polymath-ai/ingest@1.0.1
+  - @polymath-ai/types@2.0.2
+  - @polymath-ai/validation@2.0.2
+
 ## 1.0.1
 
 ### Patch Changes

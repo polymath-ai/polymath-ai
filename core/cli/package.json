@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/cli",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CLI for Polymath",
   "type": "module",
   "main": "./index.js",
@@ -47,7 +47,7 @@
     }
   },
   "dependencies": {
-    "@polymath-ai/client": "^2.0.1",
+    "@polymath-ai/client": "^2.0.3",
     "@polymath-ai/ingest": "*",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",

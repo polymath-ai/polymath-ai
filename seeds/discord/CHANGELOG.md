@@ -1,5 +1,15 @@
 # @polymath-ai/discord-seed
 
+## 0.0.5
+
+### Patch Changes
+
+- Add `core/db` and update validation logic.
+- Updated dependencies
+  - @polymath-ai/client@2.0.3
+  - @polymath-ai/types@2.0.2
+  - @polymath-ai/validation@2.0.2
+
 ## 0.0.4
 
 ### Patch Changes

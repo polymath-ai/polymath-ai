@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/ingest",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An ingest library for Polymath",
   "type": "module",
   "main": "dist/src/main.js",
@@ -44,7 +44,7 @@
     }
   },
   "dependencies": {
-    "@polymath-ai/client": "^2.0.0",
+    "@polymath-ai/client": "^2.0.3",
     "@polymath-ai/types": "*",
     "chalk": "^5.2.0",
     "commander": "^10.0.0",

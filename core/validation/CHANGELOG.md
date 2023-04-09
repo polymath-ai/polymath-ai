@@ -1,5 +1,11 @@
 # @polymath-ai/validation
 
+## 2.0.2
+
+### Patch Changes
+
+- Add `core/db` and update validation logic.
+
 ## 2.0.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/db",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A simple database for embeddings",
   "main": "./dist/index.js",
   "type": "module",
@@ -36,7 +36,7 @@
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
   "devDependencies": {
     "@ava/typescript": "^4.0.0",
-    "@polymath-ai/infra": "^0.0.1",
+    "@polymath-ai/infra": "^0.0.2",
     "ava": "^5.2.0",
     "tmp-promise": "^3.0.3",
     "typescript": "^5.0.4"
