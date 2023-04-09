@@ -10,6 +10,8 @@ import { VectorStore } from "@polymath-ai/db";
 // - `database.db` -- the duckdb database that stores useful metadata.
 // - `vector.idx` -- the hnswlib index that stores the vector index.
 const path = "/path/to/store";
+// The number of dimensions in the vector.
+const dimensions = 1536;
 const store = new VectorStore(path, dimensions);
 ```
 
@@ -21,7 +23,7 @@ const writer = await store.createWriter();
 await writer.write(bits);
 ```
 
-Two query:
+To query:
 
 ```js
 const query = []; // the vector as an array of numbers

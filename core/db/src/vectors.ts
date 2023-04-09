@@ -107,9 +107,11 @@ export class VectorStoreReader {
 
     return await new Promise((resolve, reject) => {
       conn.all(
-        `SELECT * FROM library WHERE id IN (${results.neighbors
-          .map(() => "?")
-          .join(",")})`,
+        `SELECT * 
+          FROM library 
+            WHERE index_label IN (${results.neighbors
+              .map(() => "?")
+              .join(",")})`,
         ...results.neighbors,
         (err, rows) => {
           if (err) reject(err);
@@ -152,14 +154,37 @@ export class VectorStoreWriter {
 
     await new Promise((resolve) => {
       conn.exec(
-        "CREATE TABLE library (id INTEGER, text VARCHAR, url VARCHAR, token_count INTEGER)",
+        `CREATE TABLE library (
+          id VARCHAR, 
+          text VARCHAR,
+          token_count INTEGER,
+          url VARCHAR, 
+          image_url VARCHAR,
+          title VARCHAR,
+          description VARCHAR,
+          access_tag VARCHAR,
+          index_label INTEGER PRIMARY KEY
+        )`,
         resolve
       );
     });
 
-    const insertion = conn.prepare("INSERT INTO library VALUES (?, ?, ?, ?)");
+    const insertion = conn.prepare(
+      `INSERT INTO library
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`
+    );
     bits.forEach((bit, i) =>
-      insertion.run(i, bit.text, bit.info?.url || "", bit.token_count)
+      insertion.run(
+        bit.id || "",
+        bit.text,
+        bit.token_count || 0,
+        bit.info?.url || "",
+        bit.info?.image_url || "",
+        bit.info?.title || "",
+        bit.info?.description || "",
+        bit.access_tag || "",
+        i
+      )
     );
     await new Promise((resolve) => {
       insertion.finalize(resolve);

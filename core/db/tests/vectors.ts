@@ -46,7 +46,7 @@ test("Store paths are created", async (t) => {
   });
 });
 
-test("omnibus test to help me with bring up", async (t) => {
+test("End to end test", async (t) => {
   await withDir(
     async ({ path }) => {
       const store = new VectorStore(path, EMBEDDING_VECTOR_LENGTH);
@@ -61,6 +61,45 @@ test("omnibus test to help me with bring up", async (t) => {
       const results = await reader.search(query, 5);
       t.is(results.length, 5);
       const result = results[0];
+      t.truthy(result.text);
+      t.assert(result.text?.length || 0 > 0);
+      t.truthy(result.token_count);
+    },
+    { unsafeCleanup: true }
+  );
+});
+
+test("Multiple searches work", async (t) => {
+  await withDir(
+    async ({ path }) => {
+      const store = new VectorStore(path, EMBEDDING_VECTOR_LENGTH);
+
+      const writer = await store.createWriter();
+      const bits = loadBits();
+      await writer.write(bits);
+
+      const reader = await store.createReader();
+
+      let query = random_query();
+      let results = await reader.search(query, 5);
+      t.is(results.length, 5);
+      let result = results[0];
+      t.truthy(result.text);
+      t.assert(result.text?.length || 0 > 0);
+      t.truthy(result.token_count);
+
+      query = random_query();
+      results = await reader.search(query, 3);
+      t.is(results.length, 3);
+      result = results[0];
+      t.truthy(result.text);
+      t.assert(result.text?.length || 0 > 0);
+      t.truthy(result.token_count);
+
+      query = random_query();
+      results = await reader.search(query, 10);
+      t.is(results.length, 10);
+      result = results[0];
       t.truthy(result.text);
       t.assert(result.text?.length || 0 > 0);
       t.truthy(result.token_count);
