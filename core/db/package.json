@@ -1,0 +1,43 @@
+{
+  "name": "@polymath-ai/db",
+  "version": "0.0.1",
+  "description": "A simple database for embeddings",
+  "main": "./dist/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "ava",
+    "build": "tsc --b",
+    "watch": "tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
+  "keywords": [],
+  "author": "The Polymath Crew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-ai/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "devDependencies": {
+    "@ava/typescript": "^4.0.0",
+    "@polymath-ai/infra": "^0.0.1",
+    "ava": "^5.2.0",
+    "typescript": "^5.0.4"
+  }
+}
