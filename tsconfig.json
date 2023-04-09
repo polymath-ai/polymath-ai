@@ -3,6 +3,7 @@
   "files": [],
   "references": [
     { "path": "core/cli" },
+    { "path": "core/db" },
     { "path": "core/validation" },
     { "path": "core/host" },
     { "path": "core/client" },
