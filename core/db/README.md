@@ -1,4 +1,4 @@
-# Lightweight vector store for Poylmath.
+# Lightweight vector store for Polymath.
 
 To use:
 
@@ -7,8 +7,8 @@ import { VectorStore } from "@polymath-ai/db";
 
 // A directory where the database will reside.
 // The store will create the directory and populate it with two files:
-// - `database.db` -- the duckdb database that stores useful metadata.
-// - `vector.idx` -- the hnswlib index that stores the vector index.
+// - `database.db` -- the [duckdb](https://duckdb.org) database that stores useful metadata.
+// - `vector.idx` -- the [hnswlib](https://github.com/nswlib/hnswlib) index that stores the vector index.
 const path = "/path/to/store";
 // The number of dimensions in the vector.
 const dimensions = 1536;
