@@ -44,6 +44,8 @@ export class PathMaker {
   }
 }
 
+type RawBit = Record<string, string | number>;
+
 export class VectorStore {
   path: string;
   dimensions: number;
@@ -105,9 +107,17 @@ export class VectorStoreReader {
 
     const conn = this.duckdb.connect();
 
-    return await new Promise((resolve, reject) => {
+    const rawBits: RawBit[] = await new Promise((resolve, reject) => {
       conn.all(
-        `SELECT * 
+        `SELECT
+          id as id,
+          text as text,
+          token_count as token_count,
+          url as url,
+          image_url as image_url,
+          title as title,
+          description as description,
+          access_tag as access_tag
           FROM library 
             WHERE index_label IN (${results.neighbors
               .map(() => "?")
@@ -118,6 +128,24 @@ export class VectorStoreReader {
           else resolve(rows);
         }
       );
+    });
+
+    return rawBits.map((rawBit: RawBit) => {
+      const bit: Bit = {};
+
+      if (rawBit.id) bit.id = rawBit.id as string;
+      if (rawBit.text) bit.text = rawBit.text as string;
+      if (rawBit.token_count) bit.token_count = rawBit.token_count as number;
+      if (rawBit.url) {
+        bit.info = { url: rawBit.url as string };
+        if (rawBit.image_url) bit.info.image_url = rawBit.image_url as string;
+        if (rawBit.title) bit.info.title = rawBit.title as string;
+        if (rawBit.description)
+          bit.info.description = rawBit.description as string;
+      }
+      if (rawBit.access_tag) bit.access_tag = rawBit.access_tag as string;
+
+      return bit;
     });
   }
 }
