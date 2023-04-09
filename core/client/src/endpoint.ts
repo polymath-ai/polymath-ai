@@ -18,9 +18,9 @@ import {
 import contentTypeParser from "content-type-parser";
 
 /*
- Fetch the API response, but if it fails, try to discover the endpoint.
+ Fetch the API response and check the content Type.
 
- We will only do one attempt at discovery, and if that fails, we will throw.
+ Returns a valid response or undefined.
 */
 async function fetchAPIResponse(
   url: URL,
@@ -36,19 +36,11 @@ async function fetchAPIResponse(
     const contentType = contentTypeParser(rawContentType);
 
     if (contentType.type === "application" && contentType.subtype === "json") {
-      return response.json();
+      return validateResponse(await response.json());
     }
   }
 
-  const newUrl = await discoverEndpoint(url);
-
-  // Call what we think is the API.
-  const newResponse = await fetch(newUrl, { method: "POST", body: form });
-  if (!newResponse.ok) {
-    throw new Error("Server responded with " + newResponse.status);
-  }
-
-  return newResponse.json();
+  return undefined;
 }
 
 //
@@ -74,14 +66,28 @@ class PolymathEndpoint {
     return form;
   }
 
+  // Fetch the data, if it fails, try to discover the endpoint and retry.
   async ask(askOptions: AskOptions): Promise<PackedLibraryData> {
     const args = validateEndpointArgs(askOptions);
     const form = this.prepareFormData(args);
 
     const url = new URL(this.#server);
-    const result = await fetchAPIResponse(url, form);
 
-    return validateResponse(result);
+    let result = await fetchAPIResponse(url, form);
+
+    if (result == undefined) {
+      // Try to discover the endpoint - throws an error if not found.
+      const newUrl = await discoverEndpoint(url);
+      
+      result = await fetchAPIResponse(newUrl, form);
+
+      if (result == undefined) {
+        throw new Error(`${url} failed and ${newUrl} did not respond with valid data`);
+      }
+    }
+
+    // The result is validated, return it
+    return result;
   }
 
   async validate() {
