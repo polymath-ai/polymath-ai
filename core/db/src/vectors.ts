@@ -6,8 +6,13 @@ import fs from "fs";
 
 import { Bit } from "@polymath-ai/types";
 
-// TODO: Do not hardcode this.
-const DIMENSIONS = 1536;
+export interface IReader {
+  search(query: number[], k: number): Promise<Bit[]>;
+}
+
+export interface IWriter {
+  write(bits: Bit[]): Promise<void>;
+}
 
 export class PathMaker {
   path: string;
@@ -18,6 +23,12 @@ export class PathMaker {
 
   async ensure() {
     await makeDir(this.path);
+  }
+
+  filesExist() {
+    return (
+      fs.existsSync(this.databaseFile) && fs.existsSync(this.vectorIndexFile)
+    );
   }
 
   exists() {
@@ -44,20 +55,26 @@ export class VectorStore {
     this.dimensions = dimensions;
   }
 
-  async createNew() {
+  async createReader(): Promise<IReader> {
+    if (this.duckdb && this.hnsw) return new VectorStoreReader(this);
+
+    const pathMaker = new PathMaker(this.path);
+    if (!pathMaker.filesExist()) {
+      throw new Error(`Store "${this.path}" does not exist`);
+    }
+    this.duckdb = new duckdb.Database(pathMaker.databaseFile);
+    this.hnsw = new hnswlib.HierarchicalNSW("cosine", this.dimensions);
+    await this.hnsw.readIndex(pathMaker.vectorIndexFile);
+    return new VectorStoreReader(this);
+  }
+
+  async createWriter(): Promise<IWriter> {
     const pathMaker = new PathMaker(this.path);
     await pathMaker.ensure();
     // TODO: Delete existing store files.
     this.duckdb = new duckdb.Database(pathMaker.databaseFile);
     this.hnsw = new hnswlib.HierarchicalNSW("cosine", this.dimensions);
-  }
-
-  async loadExisting() {
-    const pathMaker = new PathMaker(this.path);
-    // TODO: Check for existence of store files.
-    this.duckdb = new duckdb.Database(pathMaker.databaseFile);
-    this.hnsw = new hnswlib.HierarchicalNSW("cosine", this.dimensions);
-    await this.hnsw.readIndex(pathMaker.vectorIndexFile);
+    return new VectorStoreWriter(this);
   }
 
   async close() {
@@ -71,29 +88,22 @@ export class VectorStore {
 }
 
 export class VectorStoreReader {
-  store?: VectorStore;
+  hnsw: hnswlib.HierarchicalNSW;
+  duckdb: duckdb.Database;
 
-  async init(path: string) {
-    if (path === ":memory:") throw new Error("Cannot use :memory: for path");
-    if (this.store) {
-      await this.store.close();
-    }
-    this.store = new VectorStore(path, DIMENSIONS);
-    await this.store.loadExisting();
+  constructor(store: VectorStore) {
+    if (!store.hnsw) throw new Error("hnsw not initialized");
+    if (!store.duckdb) throw new Error("duckdb not initialized");
+    this.hnsw = store.hnsw;
+    this.duckdb = store.duckdb;
   }
 
   async search(query: number[], k: number): Promise<Bit[]> {
-    if (!this.store) throw new Error("VectorStore not initialized");
-
-    if (!this.store.hnsw) throw new Error("hnsw not initialized");
-
-    const results = this.store.hnsw.searchKnn(query, k);
+    const results = this.hnsw.searchKnn(query, k);
 
     if (!results) throw new Error("No results found");
 
-    if (!this.store.duckdb) throw new Error("duckdb not initialized");
-
-    const conn = this.store.duckdb.connect();
+    const conn = this.duckdb.connect();
 
     return await new Promise((resolve, reject) => {
       conn.all(
@@ -111,22 +121,22 @@ export class VectorStoreReader {
 }
 
 export class VectorStoreWriter {
-  path: string;
-  store?: VectorStore;
+  hnsw: hnswlib.HierarchicalNSW;
+  duckdb: duckdb.Database;
+  vectorIndexFilename: string;
 
-  constructor(path: string) {
-    this.path = path;
+  constructor(store: VectorStore) {
+    if (!store.hnsw) throw new Error("hnsw not initialized");
+    if (!store.duckdb) throw new Error("duckdb not initialized");
+    this.hnsw = store.hnsw;
+    this.duckdb = store.duckdb;
+    this.vectorIndexFilename = new PathMaker(store.path).vectorIndexFile;
   }
 
-  async write(bits: Bit[]) {
-    const store = new VectorStore(this.path, DIMENSIONS);
-    await store.createNew();
-
+  async write(bits: Bit[]): Promise<void> {
     const numElements = bits.length;
-    const hnsw = store.hnsw;
-    const db = store.duckdb;
-    if (!hnsw) throw new Error("hnsw not initialized");
-    if (!db) throw new Error("duckdb not initialized");
+    const hnsw = this.hnsw;
+    const db = this.duckdb;
 
     hnsw.initIndex(numElements);
     bits.forEach((bit, i) => {
@@ -155,7 +165,6 @@ export class VectorStoreWriter {
       insertion.finalize(resolve);
     });
 
-    const pathMaker = new PathMaker(this.path);
-    await hnsw.writeIndex(pathMaker.vectorIndexFile);
+    await hnsw.writeIndex(this.vectorIndexFilename);
   }
 }

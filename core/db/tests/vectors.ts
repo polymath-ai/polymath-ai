@@ -2,12 +2,7 @@ import test from "ava";
 import fs from "fs";
 import { withDir } from "tmp-promise";
 
-import {
-  PathMaker,
-  VectorStore,
-  VectorStoreReader,
-  VectorStoreWriter,
-} from "../src/vectors.js";
+import { PathMaker, VectorStore } from "../src/vectors.js";
 import { PackedBit, Bit } from "@polymath-ai/types";
 
 // Helper functions and constants for loading the library.
@@ -54,12 +49,13 @@ test("Store paths are created", async (t) => {
 test("omnibus test to help me with bring up", async (t) => {
   await withDir(
     async ({ path }) => {
-      const writer = new VectorStoreWriter(path);
+      const store = new VectorStore(path, EMBEDDING_VECTOR_LENGTH);
+
+      const writer = await store.createWriter();
       const bits = loadBits();
       await writer.write(bits);
 
-      const reader = new VectorStoreReader();
-      await reader.init(path);
+      const reader = await store.createReader();
 
       const query = random_query();
       const results = await reader.search(query, 5);
