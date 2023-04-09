@@ -206,9 +206,11 @@ To publish packages, we use [changesets](https://github.com/changesets/changeset
 
 2. Run `npx changeset version` to bump the version numbers of the packages that have changed. This will update the `package.json` files of the packages that have changed, and will create a new commit with the changes.
 
-3. Run `npx changeset publish` to publish the packages that have changed. This will create a new tag for the new version, and will publish the packages to the npm registry.
+3. Run `turbo build` to build the packages that have changed and make sure that the latest output is published.
 
-4. Run `git push --follow-tags` to push the tags created by the steps above to the main repo.
+4. Run `npx changeset publish` to publish the packages that have changed. This will create a new tag for the new version, and will publish the packages to the npm registry.
+
+5. Run `git push --follow-tags` to push the tags created by the steps above to the main repo.
 
 ## Filing bugs
 
