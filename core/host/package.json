@@ -29,8 +29,7 @@
   },
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
   "files": [
-    "dist",
-    "index.js"
+    "dist"
   ],
   "ava": {
     "files": [
@@ -44,6 +43,7 @@
     }
   },
   "dependencies": {
+    "@polymath-ai/db": "^0.0.2",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
     "@types/node": "^18.15.5",

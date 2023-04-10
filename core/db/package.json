@@ -2,7 +2,7 @@
   "name": "@polymath-ai/db",
   "version": "0.0.2",
   "description": "A simple database for embeddings",
-  "main": "./dist/index.js",
+  "main": "./dist/src/index.js",
   "type": "module",
   "scripts": {
     "test": "ava",

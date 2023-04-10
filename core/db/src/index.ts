@@ -1,1 +1,1 @@
-export { VectorStoreWriter, VectorStoreReader } from "./vectors.js";
+export { VectorStore } from "./vectors.js";

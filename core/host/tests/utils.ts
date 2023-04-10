@@ -7,7 +7,7 @@ import {
 } from "../src/utils.js";
 
 // TODO: Deduplicate this constant.
-const EMBEDDING_VECTOR_LENGTH = 1536;
+export const EMBEDDING_VECTOR_LENGTH = 1536;
 
 function arrayEquals(a: unknown, b: unknown) {
   return (
