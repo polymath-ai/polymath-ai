@@ -46,6 +46,8 @@ export class PathMaker {
 
 type RawBit = Record<string, string | number>;
 
+const READ_ONLY_ACCESS_MODE = 1;
+
 export class VectorStore {
   path: string;
   dimensions: number;
@@ -64,7 +66,10 @@ export class VectorStore {
     if (!pathMaker.filesExist()) {
       throw new Error(`Store "${this.path}" does not exist`);
     }
-    this.duckdb = new duckdb.Database(pathMaker.databaseFile);
+    this.duckdb = new duckdb.Database(
+      pathMaker.databaseFile,
+      READ_ONLY_ACCESS_MODE
+    );
     this.hnsw = new hnswlib.HierarchicalNSW("cosine", this.dimensions);
     await this.hnsw.readIndex(pathMaker.vectorIndexFile);
     return new VectorStoreReader(this);
