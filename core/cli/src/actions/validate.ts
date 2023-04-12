@@ -1,6 +1,6 @@
 import { PolymathEndpoint, DiscoveryError } from "@polymath-ai/client";
 import { PolymathOptions } from "@polymath-ai/types";
-import { ValidationResult } from "@polymath-ai/validation/dist/src/harness.js";
+import { ValidationResult } from "@polymath-ai/validation";
 import { Action } from "../action.js";
 
 export class Validate extends Action {
@@ -25,7 +25,9 @@ export class Validate extends Action {
       log("Validation details:");
 
       result.details.forEach((item: ValidationResult, i) => {
-        log(`${i + 1}) [${(item.success ? "Pass": "Fail")}] ${item.description}`);
+        log(
+          `${i + 1}) [${item.success ? "Pass" : "Fail"}] ${item.description}`
+        );
         if (item.exception) {
           const exception = item.exception;
           if (exception instanceof DiscoveryError) {
