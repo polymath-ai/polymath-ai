@@ -1,6 +1,9 @@
 import { Base64Embedding, EmbeddingVector } from "@polymath-ai/types";
 import { AskOptions, schemas } from "@polymath-ai/types";
 
+// TODO: Deduplicate this constant.
+export const EMBEDDING_VECTOR_LENGTH = 1536;
+
 function dotProduct(vecA: EmbeddingVector, vecB: EmbeddingVector): number {
   let product = 0;
   for (let i = 0; i < vecA.length; i++) {

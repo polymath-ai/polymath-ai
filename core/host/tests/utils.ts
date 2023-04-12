@@ -4,10 +4,8 @@ import {
   encodeEmbedding,
   decodeEmbedding,
   fromFormData,
+  EMBEDDING_VECTOR_LENGTH,
 } from "../src/utils.js";
-
-// TODO: Deduplicate this constant.
-export const EMBEDDING_VECTOR_LENGTH = 1536;
 
 function arrayEquals(a: unknown, b: unknown) {
   return (

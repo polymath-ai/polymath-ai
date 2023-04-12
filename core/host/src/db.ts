@@ -3,7 +3,7 @@ import { PolymathHost } from "./host.js";
 import { AskOptions, LibraryData } from "@polymath-ai/types";
 import { VectorStore } from "@polymath-ai/db";
 
-import { EMBEDDING_VECTOR_LENGTH } from "../tests/utils.js";
+import { EMBEDDING_VECTOR_LENGTH } from "./utils.js";
 
 const MAX_RESULTS = 10;
 
