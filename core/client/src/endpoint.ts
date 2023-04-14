@@ -78,11 +78,13 @@ class PolymathEndpoint {
     if (result == undefined) {
       // Try to discover the endpoint - throws an error if not found.
       const newUrl = await discoverEndpoint(url);
-      
+
       result = await fetchAPIResponse(newUrl, form);
 
       if (result == undefined) {
-        throw new Error(`${url} failed and ${newUrl} did not respond with valid data`);
+        throw new Error(
+          `${url} failed and ${newUrl} did not respond with valid data`
+        );
       }
     }
 

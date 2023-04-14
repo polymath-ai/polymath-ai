@@ -41,12 +41,19 @@ export function encodeEmbedding(data: EmbeddingVector): Base64Embedding {
   return Buffer.from(new Float32Array(data).buffer).toString("base64");
 }
 
+export const fromObject = (data: Record<string, unknown>): AskOptions => {
+  if (data.query_embedding)
+    data.query_embedding = decodeEmbedding(data.query_embedding as string);
+  if (data.version) data.version = parseInt(data.version as string);
+  if (data.count) data.count = parseInt(data.count as string);
+  // Important: Using `endpointArgs` fills in good defaults.
+  return schemas.endpointArgs.parse(data) as AskOptions;
+};
+
 export const fromFormData = (formData: FormData): AskOptions => {
   const data: Record<string, unknown> = {};
   formData.forEach((value, key) => {
     data[key] = value;
   });
-  data.query_embedding = decodeEmbedding(data.query_embedding as string);
-  // Important: Using `endpointArgs` fills in good defaults.
-  return schemas.endpointArgs.parse(data) as AskOptions;
+  return fromObject(data);
 };
