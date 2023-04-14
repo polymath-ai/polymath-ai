@@ -1,4 +1,9 @@
-import { AskOptions, LibraryData, PackedLibraryData } from "@polymath-ai/types";
+import {
+  AskOptions,
+  Bit,
+  LibraryData,
+  PackedLibraryData,
+} from "@polymath-ai/types";
 import { encodeEmbedding } from "./utils.js";
 
 export abstract class PolymathHost {
@@ -15,6 +20,10 @@ export abstract class PolymathHost {
     };
 
     return packed;
+  }
+
+  protected applyOptions(args: AskOptions, bits: Bit[]): Bit[] {
+    return bits;
   }
 
   abstract query(args: AskOptions): Promise<LibraryData>;
