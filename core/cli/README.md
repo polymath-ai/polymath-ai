@@ -115,3 +115,9 @@ polymath info --server https://glazkov.com`
 To hack on the CLI, once you git clone, you will probably want to `npm link` in the root directory and then you will have access to running the `polymath` shell command.
 
 Setup at least a `~/.polymath/config/default.json` and you are off to the races.
+
+You can run `npm run dev` to run the CLI in watch mode. This is useful for commands like `serve`:
+
+```shell
+npm run dev  -- serve -l path/to/library.json
+```

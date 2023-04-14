@@ -12,8 +12,10 @@
   },
   "scripts": {
     "test": "ava",
+    "start": "npm run build && node .",
     "build": "tsc --b",
-    "watch": "tsc --b --watch"
+    "watch": "tsc --b --watch",
+    "dev": "nodemon -w . -e ts,json,txt --exec 'npm run start --'"
   },
   "repository": {
     "type": "git",
@@ -48,9 +50,9 @@
   },
   "dependencies": {
     "@polymath-ai/client": "^2.0.3",
+    "@polymath-ai/host": "*",
     "@polymath-ai/ingest": "*",
     "@polymath-ai/types": "*",
-    "@polymath-ai/host": "*",
     "@polymath-ai/validation": "*",
     "@types/express": "^4.17.17",
     "@types/multer": "^1.4.7",
@@ -69,6 +71,7 @@
     "@types/inquirer": "^9.0.3",
     "@types/mock-fs": "^4.13.1",
     "ava": "^5.2.0",
-    "mock-fs": "^5.2.0"
+    "mock-fs": "^5.2.0",
+    "nodemon": "^2.0.22"
   }
 }
