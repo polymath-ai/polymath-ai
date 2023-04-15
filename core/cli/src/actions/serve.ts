@@ -9,7 +9,7 @@ const PORT = 8008;
 
 export class Serve extends Action {
   override async run(opts: ServeArgs): Promise<void> {
-    const { log, error } = this.say;
+    const { log } = this.say;
     if (opts.type !== "file") {
       throw new Error("Only file serve type is supported at this time.");
     }

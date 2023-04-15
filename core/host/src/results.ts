@@ -5,11 +5,10 @@ import {
   OmitConfigurationField,
   OmitKeys,
   TypedObject,
-  CountType,
   AskOptions,
 } from "@polymath-ai/types";
 
-const KeysToOmit = (omit: OmitConfiguration): OmitConfigurationField[] => {
+const keysToOmit = (omit: OmitConfiguration): OmitConfigurationField[] => {
   if (omit == "") return [];
   if (omit == "*") return TypedObject.keys(OmitKeys);
   if (typeof omit == "string") omit = [omit];
@@ -17,11 +16,9 @@ const KeysToOmit = (omit: OmitConfiguration): OmitConfigurationField[] => {
 };
 
 // Remove fields from the given bits in place.
-export const omit = (
-  omitString: OmitConfiguration,
-  bits: Bit[] | PackedBit[]
-): void => {
-  const omitKeys = KeysToOmit(omitString);
+export const omit = (options: AskOptions, bits: Bit[] | PackedBit[]): void => {
+  const omitString = options.omit || "";
+  const omitKeys = keysToOmit(omitString);
   for (let i = 0; i < bits.length; i++) {
     for (let j = 0; j < omitKeys.length; j++) {
       switch (omitKeys[j]) {
@@ -47,7 +44,7 @@ export const omit = (
   }
 };
 
-export const filterByTokenCount = (
+const filterByTokenCount = (
   maxTokens: number,
   bits: PackedBit[]
 ): PackedBit[] => {
@@ -66,12 +63,10 @@ export const filterByTokenCount = (
   return includedBits;
 };
 
-export const trim = (
-  count: number,
-  countType: CountType = "bit",
-  bits: PackedBit[]
-): PackedBit[] => {
-  if (countType == "token") return filterByTokenCount(count, bits);
+export const trim = (options: AskOptions, bits: PackedBit[]): PackedBit[] => {
+  const count = options.count || 0;
+  const countType = options.count_type;
+  if (countType === "token") return filterByTokenCount(count, bits);
   return bits.slice(0, count);
 };
 
@@ -79,7 +74,7 @@ export const filterResults = (
   options: AskOptions,
   bits: PackedBit[]
 ): PackedBit[] => {
-  if (options.count) bits = trim(options.count, options.count_type, bits);
-  if (options.omit) omit(options.omit, bits);
+  bits = trim(options, bits);
+  omit(options, bits);
   return bits;
 };

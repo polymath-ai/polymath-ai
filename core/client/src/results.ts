@@ -3,8 +3,6 @@ import { encode } from "gpt-3-encoder";
 import {
   AskOptions,
   BitInfo,
-  CountType,
-  OmitConfiguration,
   PackedBit,
   PackedLibraryData,
 } from "@polymath-ai/types";
@@ -42,7 +40,7 @@ class PolymathResults {
 
   // Return as many bits as can fit the number of tokens
   // This is currently duplicated in `core/host/src/results.ts`
-  // as filterByTokenCount
+  // as `filterByTokenCount`
   // TODO: Deduplicate.
   maxBits(maxTokens = DEFAULT_MAX_TOKENS_FOR_MODEL): PackedBit[] {
     let totalTokens = 0;
@@ -62,14 +60,6 @@ class PolymathResults {
   // Add the new bits, resort, and re-max
   mergeBits(bits: PackedBit[]) {
     this._bits.push(...bits);
-  }
-
-  omit(omitString: OmitConfiguration): void {
-    omit(omitString, this._bits);
-  }
-
-  trim(count: number, countType: CountType = "bit"): void {
-    this._bits = trim(count, countType, this._bits);
   }
 
   sortBitsBySimilarity(): void {
@@ -108,7 +98,7 @@ class PolymathResults {
       bits: this._bits,
     };
     if (this._askOptions?.omit) {
-      this.omit(this._askOptions.omit);
+      omit(this._askOptions, this._bits);
       response.omit = this._askOptions.omit;
     }
     if (this._askOptions?.count_type) {
@@ -119,7 +109,7 @@ class PolymathResults {
       this.sortBitsBySimilarity();
     }
     if (this._askOptions?.count) {
-      this.trim(this._askOptions.count, this._askOptions?.count_type);
+      this._bits = trim(this._askOptions, this._bits);
     }
 
     return response;
