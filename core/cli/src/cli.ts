@@ -153,14 +153,11 @@ class CLI {
       .description("Serve a Polymath library")
       .argument(
         "[type]",
-        'The type of library to serve. Can be either "pinecone" or "file" (default).',
+        'The type of library to serve. Can be either "pinecone" or "file".',
         "file"
       )
       .addOption(
-        new Option(
-          "-p, --port <port>",
-          "The port to serve on (8008 or PORT env variable by default)"
-        )
+        new Option("-p, --port <port>", "The port to serve the library on.")
           .default(8008)
           .env("PORT")
       )
