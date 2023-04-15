@@ -22,7 +22,7 @@ export abstract class PolymathHost {
     return packed;
   }
 
-  protected applyOptions(args: AskOptions, bits: Bit[]): Bit[] {
+  protected filterResults(args: AskOptions, bits: Bit[]): Bit[] {
     return bits;
   }
 
