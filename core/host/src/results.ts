@@ -6,6 +6,7 @@ import {
   OmitKeys,
   TypedObject,
   CountType,
+  AskOptions,
 } from "@polymath-ai/types";
 
 const KeysToOmit = (omit: OmitConfiguration): OmitConfigurationField[] => {
@@ -46,7 +47,6 @@ export const omit = (
   }
 };
 
-// Return as many bits as can fit the number of tokens
 export const filterByTokenCount = (
   maxTokens: number,
   bits: PackedBit[]
@@ -73,4 +73,13 @@ export const trim = (
 ): PackedBit[] => {
   if (countType == "token") return filterByTokenCount(count, bits);
   return bits.slice(0, count);
+};
+
+export const filterResults = (
+  options: AskOptions,
+  bits: PackedBit[]
+): PackedBit[] => {
+  if (options.count) bits = trim(options.count, options.count_type, bits);
+  if (options.omit) omit(options.omit, bits);
+  return bits;
 };

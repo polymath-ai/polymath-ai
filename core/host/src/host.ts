@@ -1,10 +1,7 @@
-import {
-  AskOptions,
-  Bit,
-  LibraryData,
-  PackedLibraryData,
-} from "@polymath-ai/types";
+import { AskOptions, LibraryData, PackedLibraryData } from "@polymath-ai/types";
 import { encodeEmbedding } from "./utils.js";
+
+import { filterResults } from "./results.js";
 
 export abstract class PolymathHost {
   async queryPacked(args: AskOptions): Promise<PackedLibraryData> {
@@ -13,17 +10,16 @@ export abstract class PolymathHost {
     const packed: PackedLibraryData = {
       version: results.version,
       embedding_model: results.embedding_model,
-      bits: results.bits.map((bit) => ({
-        ...bit,
-        embedding: encodeEmbedding(bit.embedding || []),
-      })),
+      bits: filterResults(
+        args,
+        results.bits.map((bit) => ({
+          ...bit,
+          embedding: encodeEmbedding(bit.embedding || []),
+        }))
+      ),
     };
 
     return packed;
-  }
-
-  protected filterResults(bits: Bit[], args: AskOptions): Bit[] {
-    return bits;
   }
 
   abstract query(args: AskOptions): Promise<LibraryData>;
