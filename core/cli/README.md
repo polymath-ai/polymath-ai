@@ -86,7 +86,7 @@ This example turns on streaming, and sets the completion model to the new defaul
 e.g:
 
 ```shell
-polymath ingest rss https://pau.kinlan.me/index.xml --destination=./libraries/medium-2023.json
+polymath ingest rss https://pau.kinlan.me/index.xml --destination=./libraries
 ```
 
 #### Using a self hosted importer ✅
