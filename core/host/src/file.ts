@@ -96,7 +96,7 @@ class PolymathFile extends PolymathHost {
       const result: LibraryData = {
         version: 1,
         embedding_model: "openai.com:text-embedding-ada-002",
-        bits: this.applyOptions(args, this.similarBits(queryEmbedding)),
+        bits: this.filterResults(this.similarBits(queryEmbedding), args),
       };
       resolve(result);
     });

@@ -7,3 +7,4 @@ export {
   fromObject,
   fromFormData,
 } from "./utils.js";
+export { omit, trim } from "./results.js";

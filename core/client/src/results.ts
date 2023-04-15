@@ -5,21 +5,13 @@ import {
   BitInfo,
   CountType,
   OmitConfiguration,
-  OmitKeys,
-  OmitConfigurationField,
   PackedBit,
   PackedLibraryData,
-  TypedObject,
 } from "@polymath-ai/types";
 
-import { DEFAULT_MAX_TOKENS_FOR_MODEL } from "./utils.js";
+import { omit, trim } from "@polymath-ai/host";
 
-const KeysToOmit = (omit: OmitConfiguration): OmitConfigurationField[] => {
-  if (omit == "") return [];
-  if (omit == "*") return TypedObject.keys(OmitKeys);
-  if (typeof omit == "string") omit = [omit];
-  return omit;
-};
+import { DEFAULT_MAX_TOKENS_FOR_MODEL } from "./utils.js";
 
 // --------------------------------------------------------------------------
 // A container for the resulting bits
@@ -49,6 +41,9 @@ class PolymathResults {
   }
 
   // Return as many bits as can fit the number of tokens
+  // This is currently duplicated in `core/host/src/results.ts`
+  // as filterByTokenCount
+  // TODO: Deduplicate.
   maxBits(maxTokens = DEFAULT_MAX_TOKENS_FOR_MODEL): PackedBit[] {
     let totalTokens = 0;
     const includedBits = [];
@@ -70,39 +65,11 @@ class PolymathResults {
   }
 
   omit(omitString: OmitConfiguration): void {
-    const omitKeys = KeysToOmit(omitString);
-    for (let i = 0; i < this._bits.length; i++) {
-      for (let j = 0; j < omitKeys.length; j++) {
-        switch (omitKeys[j]) {
-          case "text":
-            delete this._bits[i].text;
-            break;
-          case "info":
-            delete this._bits[i].info;
-            break;
-          case "embedding":
-            delete this._bits[i].embedding;
-            break;
-          case "similarity":
-            delete this._bits[i].similarity;
-            break;
-          case "token_count":
-            delete this._bits[i].token_count;
-            break;
-          default:
-            throw new Error("Unknown omit key: " + omitKeys[j]);
-        }
-      }
-    }
+    omit(omitString, this._bits);
   }
 
   trim(count: number, countType: CountType = "bit"): void {
-    if (countType == "bit") {
-      this._bits = this._bits.slice(0, count);
-    }
-    else if (countType == "token") {
-      this._bits = this.maxBits(count);
-    }
+    this._bits = trim(count, countType, this._bits);
   }
 
   sortBitsBySimilarity(): void {
