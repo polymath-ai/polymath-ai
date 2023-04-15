@@ -128,8 +128,13 @@ export type IngestOptions = {
 
 export type PolymathHostType = "pinecone" | "file";
 
+export type ServeOptions = {
+  port: number;
+};
+
 export type ServeArgs = {
   type: PolymathHostType;
+  options: ServeOptions;
 };
 
 export type StreamProcessor = {

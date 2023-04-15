@@ -7,7 +7,11 @@ import { Ask } from "./actions/ask.js";
 import { Complete, CompletionArgs } from "./actions/complete.js";
 import { Validate } from "./actions/validate.js";
 import { IngestAction } from "./actions/ingest.js";
-import { IngestOptions, PolymathHostType } from "@polymath-ai/types";
+import {
+  IngestOptions,
+  PolymathHostType,
+  ServeOptions,
+} from "@polymath-ai/types";
 import { CLIBaseOptions } from "./action.js";
 import { Serve } from "./actions/serve.js";
 
@@ -152,9 +156,17 @@ class CLI {
         'The type of library to serve. Can be either "pinecone" or "file" (default).',
         "file"
       )
-      .action((type: PolymathHostType) => {
+      .addOption(
+        new Option(
+          "-p, --port <port>",
+          "The port to serve on (8008 or PORT env variable by default)"
+        )
+          .default(8008)
+          .env("PORT")
+      )
+      .action((type: PolymathHostType, options: ServeOptions) => {
         const action = new Serve(program.opts());
-        action.run({ type });
+        action.run({ type, options });
       });
     program.parse();
   }

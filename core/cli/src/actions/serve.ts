@@ -5,12 +5,11 @@ import { Action } from "../action.js";
 import { ServeArgs } from "@polymath-ai/types";
 import { PolymathFile, fromObject } from "@polymath-ai/host";
 
-const PORT = 8008;
-
 export class Serve extends Action {
-  override async run(opts: ServeArgs): Promise<void> {
+  override async run(args: ServeArgs): Promise<void> {
     const { log } = this.say;
-    if (opts.type !== "file") {
+    const port = args.options.port;
+    if (args.type !== "file") {
       throw new Error("Only file serve type is supported at this time.");
     }
     const libraryFiles = this.clientOptions().libraryFiles;
@@ -35,8 +34,8 @@ export class Serve extends Action {
 
         res.status(200).json(response);
       });
-      app.listen(PORT, () => {
-        log(`Server listening on port ${PORT}`);
+      app.listen(port, () => {
+        log(`Server listening on port ${port}`);
       });
     });
   }
