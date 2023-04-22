@@ -3,6 +3,7 @@ import { encode } from "gpt-3-encoder";
 import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
+import { CompletionStreamer, openai } from "./porcelains.js";
 import {
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
@@ -15,6 +16,7 @@ import { findUpSync } from "find-up";
 import {
   AskOptions,
   CompletionOptions,
+  CompletionResponse,
   CompletionResult,
   EmbeddingVector,
   LibraryFileName,
@@ -45,6 +47,7 @@ dotenv.config({
 // console.log("Context: ", r.context);
 // --------------------------------------------------------------------------
 class Polymath {
+  private apiKey: string;
   askOptions?: AskOptions;
   completionOptions?: CompletionOptions;
   openai: OpenAIApi;
@@ -59,6 +62,7 @@ class Polymath {
     if (!options.apiKey) {
       throw new Error("Polymath requires an api_key");
     }
+    this.apiKey = options.apiKey;
     this.openai = new OpenAIApi(
       new Configuration({
         apiKey: options.apiKey,
@@ -272,8 +276,8 @@ class Polymath {
         }
       } else {
         // text-davinci-003
-        response = await this.openai.createCompletion(
-          {
+        const response = await fetch(
+          openai(this.apiKey).completion({
             model: model,
             prompt: prompt,
             temperature: completionOptions?.temperature || 0,
@@ -288,23 +292,21 @@ class Polymath {
             presence_penalty: completionOptions?.presence_penalty || 0,
             frequency_penalty: completionOptions?.frequency_penalty || 0,
             best_of: completionOptions?.best_of || 1,
-          },
-          axiosExtraInfo
+          })
         );
         if (completionOptions?.stream) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore See https://github.com/openai/openai-node/issues/18#issuecomment-1406961202
-          response.data.on("data", (data: string) => {
-            this.processData(
-              data,
-              model,
-              actualStreamProcessor,
-              responseBitsAndInfo
-            );
-          });
-        } else {
-          responseText = response.data.choices[0].text;
+          const stream = response.body?.pipeThrough(
+            new CompletionStreamer()
+          ) as unknown as AsyncIterable<CompletionResponse>;
+          if (!stream)
+            throw new Error("Invalid response from OpenAI API: empty body");
+          return {
+            ...responseBitsAndInfo,
+            stream,
+          };
         }
+        const data = await response.json();
+        responseText = data.choices[0].text;
       }
 
       // returning the first option for now

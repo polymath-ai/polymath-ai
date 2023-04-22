@@ -120,6 +120,7 @@ export type CompletionResult = {
   bits: PackedBit[];
   infos: BitInfo[];
   completion?: string;
+  stream?: AsyncIterable<CompletionResponse>;
 };
 
 export type AskOptions = z.infer<typeof askOptions>;

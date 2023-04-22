@@ -57,13 +57,20 @@ export class Complete extends Action {
 
         log("The Polymath is answering with...\n");
 
-        client.completion(
+        const results = await client.completion(
           question,
           undefined, // we don't have existing polymath results
           undefined, // we don't need no ask Options
           completionOptions,
           streamProcessor
         );
+        if (results.stream) {
+          for await (const result of results.stream) {
+            process.stdout.write(result.choices[0].text || "");
+          }
+          process.stdout.write("\n\n");
+          log("", this.sources(results.infos));
+        }
       } else {
         // TODO: Match `results` to the type returned by `client.completion`
         // Currently, I am using `any` to avoid a type error.
