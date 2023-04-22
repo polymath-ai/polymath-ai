@@ -1,0 +1,20 @@
+[
+  {
+    "id": "cmpl-uqkvlQyYK7bGYrRHQ0eXlWi7",
+    "object": "text_completion",
+    "created": 1589478378,
+    "model": "text-davinci-003",
+    "choices": [
+      { "text": "One", "index": 0, "logprobs": null, "finish_reason": "length" }
+    ]
+  },
+  {
+    "id": "cmpl-uqkvlQyYK7bGYrRHQ0eXlWi7",
+    "object": "text_completion",
+    "created": 1589478378,
+    "model": "text-davinci-003",
+    "choices": [
+      { "text": "Two", "index": 0, "logprobs": null, "finish_reason": "length" }
+    ]
+  }
+]

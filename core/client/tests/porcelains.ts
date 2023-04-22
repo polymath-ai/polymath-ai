@@ -1,21 +1,30 @@
 import test from "ava";
 
+import fs from "fs";
+
 import { CompletionStreamer } from "../src/porcelains.js";
 
-test("CompletionStreamer", async (t) => {
+const validStreamIn = fs
+  .readFileSync("tests/data/valid-stream-in.txt", "utf-8")
+  .split("\n");
+
+const validStreamOut = JSON.parse(
+  fs.readFileSync("tests/data/valid-stream-out.json", "utf-8")
+);
+
+test("CompletionStreamer happily consumes valid stream data", async (t) => {
   const streamer = new CompletionStreamer();
   const writer = streamer.writable.getWriter();
   const reader = streamer.readable.getReader();
-  writer.write(new TextEncoder().encode('data: [ "hello" ]\n'));
-  writer.write(new TextEncoder().encode('data: [ "world" ]\n'));
-  writer.write(new TextEncoder().encode("data: [DONE]\n"));
+  validStreamIn.forEach((line) => {
+    writer.write(new TextEncoder().encode(line));
+  });
   writer.close();
-  const result = await reader.read();
-  t.deepEqual(result.value, ["hello"]);
-  t.false(result.done);
-  const result2 = await reader.read();
-  t.deepEqual(result2.value, ["world"]);
-  t.false(result2.done);
-  const result3 = await reader.read();
-  t.true(result3.done);
+  validStreamOut.forEach(async (expected: object) => {
+    const result = await reader.read();
+    t.deepEqual(result.value, expected);
+    t.false(result.done);
+  });
+  const done = await reader.read();
+  t.true(done.done);
 });
