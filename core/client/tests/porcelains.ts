@@ -3,6 +3,7 @@ import test from "ava";
 import fs from "fs";
 
 import { CompletionStreamer } from "../src/porcelains.js";
+import { CompletionResponse } from "@polymath-ai/types";
 
 const validStreamIn = fs
   .readFileSync("tests/data/valid-stream-in.txt", "utf-8")
@@ -40,7 +41,7 @@ test("CompletionStreamer knows how to pipe", async (t) => {
   });
   const response = stream.pipeThrough(
     streamer
-  ) as unknown as AsyncIterable<string>;
+  ) as unknown as AsyncIterable<CompletionResponse>;
   let count = 0;
   for await (const chunk of response) {
     t.deepEqual(chunk, validStreamOut[count++]);

@@ -160,6 +160,53 @@ export const completionOptions = z.object({
   logprobs: z.number().optional(),
 });
 
+/**
+ * From the OpenAI API docs:
+ *
+ * ```json
+ * {
+ * "id": "cmpl-uqkvlQyYK7bGYrRHQ0eXlWi7",
+ * "object": "text_completion",
+ * "created": 1589478378,
+ * "model": "text-davinci-003",
+ * "choices": [
+ *   {
+ *     "text": "\n\nThis is indeed a test",
+ *     "index": 0,
+ *     "logprobs": null,
+ *     "finish_reason": "length"
+ *   }
+ * ],
+ * "usage": {
+ *   "prompt_tokens": 5,
+ *   "completion_tokens": 7,
+ *   "total_tokens": 12
+ * }
+ *}
+ *```
+ */
+export const completionResponse = z.object({
+  id: z.string(),
+  object: z.literal("text_completion"),
+  created: z.number(),
+  model: completionModelName,
+  choices: z.array(
+    z.object({
+      text: z.string().optional(),
+      index: z.number().optional(),
+      logprobs: z.any().optional(),
+      finish_reason: z.string().optional(),
+    })
+  ),
+  usage: z
+    .object({
+      prompt_tokens: z.number(),
+      completion_tokens: z.number(),
+      total_tokens: z.number(),
+    })
+    .optional(),
+});
+
 // TODO: Rename and change the key too.
 // This is only used in the web application clients so far.
 export const webAppViewOptions = z.object({

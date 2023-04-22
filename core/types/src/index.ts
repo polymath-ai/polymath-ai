@@ -15,6 +15,7 @@ import {
   askOptions,
   endpointArgs,
   hostConfig,
+  completionResponse,
 } from "./schemas.js";
 
 //TODO: consider having an enumeration of valid lenghts for known models
@@ -113,6 +114,8 @@ export type CompletionOptions = {
   logprobs?: number;
 };
 
+export type CompletionResponse = z.infer<typeof completionResponse>;
+
 export type CompletionResult = {
   bits: PackedBit[];
   infos: BitInfo[];
@@ -185,4 +188,5 @@ export const schemas = {
   askOptions,
   endpointArgs,
   hostConfig,
+  completionResponse,
 };

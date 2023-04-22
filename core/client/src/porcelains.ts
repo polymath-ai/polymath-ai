@@ -1,8 +1,12 @@
+import type { CompletionResponse } from "@polymath-ai/types";
+
 // Playing with porcelains.
-export class CompletionStreamer implements TransformStream<Uint8Array, string> {
+export class CompletionStreamer
+  implements TransformStream<Uint8Array, CompletionResponse>
+{
   writable: WritableStream<Uint8Array>;
-  readable: ReadableStream<string>;
-  controller: ReadableStreamDefaultController<string> | null = null;
+  readable: ReadableStream<CompletionResponse>;
+  controller: ReadableStreamDefaultController<CompletionResponse> | null = null;
 
   constructor() {
     this.writable = new WritableStream({
