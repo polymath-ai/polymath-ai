@@ -41,7 +41,6 @@
     "@polymath-ai/client": "*",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
-    "@types/node": "^18.15.5",
     "discord.js": "^14.8.0",
     "openai": "^3.2.1"
   },

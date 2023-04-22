@@ -46,7 +46,6 @@
     "@polymath-ai/db": "^0.0.2",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
-    "@types/node": "^18.15.5",
     "globby": "^13.1.3"
   },
   "devDependencies": {
