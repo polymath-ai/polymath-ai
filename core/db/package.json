@@ -20,6 +20,7 @@
     "files": [
       "tests/**/*.ts"
     ],
+    "workerThreads": false,
     "typescript": {
       "rewritePaths": {
         "./": "dist/"
