@@ -28,3 +28,21 @@ test("CompletionStreamer happily consumes valid stream data", async (t) => {
   const done = await reader.read();
   t.true(done.done);
 });
+
+test("CompletionStreamer knows how to pipe", async (t) => {
+  const streamer = new CompletionStreamer();
+  const stream = new ReadableStream({
+    start(controller) {
+      validStreamIn.forEach((line) => {
+        controller.enqueue(new TextEncoder().encode(line));
+      });
+    },
+  });
+  const response = stream.pipeThrough(
+    streamer
+  ) as unknown as AsyncIterable<string>;
+  let count = 0;
+  for await (const chunk of response) {
+    t.deepEqual(chunk, validStreamOut[count++]);
+  }
+});
