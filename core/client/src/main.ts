@@ -15,6 +15,7 @@ import { findUpSync } from "find-up";
 
 import {
   AskOptions,
+  ChatCompletionResponse,
   CompletionOptions,
   CompletionResponse,
   CompletionResult,
@@ -188,8 +189,7 @@ class Polymath {
     query: string,
     polymathResults?: PolymathResults,
     askOptions?: AskOptions,
-    completionOptions?: CompletionOptions,
-    streamProcessor?: StreamProcessor
+    completionOptions?: CompletionOptions
   ): Promise<CompletionResult> {
     if (!polymathResults) {
       // get the polymath results here
@@ -201,15 +201,6 @@ class Polymath {
     };
 
     completionOptions ||= this.completionOptions;
-
-    const actualStreamProcessor = streamProcessor || {
-      processDelta: (delta) => {
-        if (delta) process.stdout.write(delta);
-      },
-      processResults: () => {
-        process.stdout.write("\n\n");
-      },
-    };
 
     const model = completionOptions?.model || "text-davinci-003";
 
@@ -226,10 +217,7 @@ class Polymath {
     );
 
     try {
-      let response;
       let responseText;
-      const axiosExtraInfo: { responseType?: "stream" } =
-        completionOptions?.stream ? { responseType: "stream" } : {};
 
       if (this.isChatModel(model)) {
         const messages: ChatCompletionRequestMessage[] = [];
@@ -244,8 +232,8 @@ class Polymath {
           content: prompt,
         });
 
-        response = await this.openai.createChatCompletion(
-          {
+        const response = await fetch(
+          openai(this.apiKey).chatCompletion({
             model: model,
             messages: messages,
             temperature: completionOptions?.temperature || 0,
@@ -257,22 +245,21 @@ class Polymath {
             stop: completionOptions?.stop,
             presence_penalty: completionOptions?.presence_penalty || 0,
             frequency_penalty: completionOptions?.frequency_penalty || 0,
-          },
-          axiosExtraInfo
+          })
         );
         if (completionOptions?.stream) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          //@ts-ignore See https://github.com/openai/openai-node/issues/18#issuecomment-1406961202
-          response.data.on("data", (data: string) => {
-            this.processData(
-              data,
-              model,
-              actualStreamProcessor,
-              responseBitsAndInfo
-            );
-          });
+          const stream = response.body?.pipeThrough(
+            new CompletionStreamer<ChatCompletionResponse>()
+          ) as unknown as AsyncIterable<ChatCompletionResponse>;
+          if (!stream)
+            throw new Error("Invalid response from OpenAI API: empty body");
+          return {
+            ...responseBitsAndInfo,
+            stream,
+          };
         } else {
-          responseText = response.data.choices[0].message?.content;
+          const data = await response.json();
+          responseText = data.choices[0].message?.content;
         }
       } else {
         // text-davinci-003
@@ -296,7 +283,7 @@ class Polymath {
         );
         if (completionOptions?.stream) {
           const stream = response.body?.pipeThrough(
-            new CompletionStreamer()
+            new CompletionStreamer<CompletionResponse>()
           ) as unknown as AsyncIterable<CompletionResponse>;
           if (!stream)
             throw new Error("Invalid response from OpenAI API: empty body");

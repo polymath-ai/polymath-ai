@@ -1,12 +1,10 @@
-import type { CompletionResponse } from "@polymath-ai/types";
-
 // Playing with porcelains.
-export class CompletionStreamer
-  implements TransformStream<Uint8Array, CompletionResponse>
+export class CompletionStreamer<ResponseType>
+  implements TransformStream<Uint8Array, ResponseType>
 {
   writable: WritableStream<Uint8Array>;
-  readable: ReadableStream<CompletionResponse>;
-  controller: ReadableStreamDefaultController<CompletionResponse> | null = null;
+  readable: ReadableStream<ResponseType>;
+  controller: ReadableStreamDefaultController<ResponseType> | null = null;
 
   constructor() {
     this.writable = new WritableStream({
@@ -66,22 +64,27 @@ class OpenAI {
     this.apiKey = apiKey;
   }
 
-  completion(params: object) {
-    const url = "https://api.openai.com/v1/completions";
+  private scaffold() {
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.apiKey}`,
     };
-    return new OpenAIRequest(url, { headers, method: "POST" }, params);
+    return { headers, method: "POST" };
+  }
+
+  completion(params: object) {
+    const url = "https://api.openai.com/v1/completions";
+    return new OpenAIRequest(url, this.scaffold(), params);
+  }
+
+  chatCompletion(params: object) {
+    const url = "https://api.openai.com/v1/chat/completions";
+    return new OpenAIRequest(url, this.scaffold(), params);
   }
 
   embedding(params: object) {
     const url = "https://api.openai.com/v1/embeddings";
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${this.apiKey}`,
-    };
-    return new OpenAIRequest(url, { headers, method: "POST" }, params);
+    return new OpenAIRequest(url, this.scaffold(), params);
   }
 }
 

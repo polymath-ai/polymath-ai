@@ -1,5 +1,11 @@
 import { Polymath } from "@polymath-ai/client";
-import { BitInfo, CompletionResult, StreamProcessor } from "@polymath-ai/types";
+import {
+  BitInfo,
+  ChatCompletionResponse,
+  CompletionResponse,
+  CompletionResult,
+  StreamProcessor,
+} from "@polymath-ai/types";
 import { Action } from "../action.js";
 
 //TODO: rationalize with other existing types
@@ -42,6 +48,9 @@ export class Complete extends Action {
       // completion
       const completionOptions = this.completionOptions(opts);
 
+      const isChat =
+        completionOptions.model && client.isChatModel(completionOptions.model);
+
       if (completionOptions.stream) {
         // async mode baybee
         const streamProcessor: StreamProcessor = {
@@ -65,8 +74,17 @@ export class Complete extends Action {
           streamProcessor
         );
         if (results.stream) {
+          console.log("streaming. Chat = ", isChat);
           for await (const result of results.stream) {
-            process.stdout.write(result.choices[0].text || "");
+            if (isChat) {
+              const chatCompletion = result as ChatCompletionResponse;
+              process.stdout.write(
+                chatCompletion.choices[0].delta?.content || ""
+              );
+            } else {
+              const completion = result as CompletionResponse;
+              process.stdout.write(completion.choices[0].text || "");
+            }
           }
           process.stdout.write("\n\n");
           log("", this.sources(results.infos));
