@@ -138,6 +138,8 @@ test("Polymath gets results with glob library files", async (t) => {
 
     if (r.context()) {
       t.pass();
+    } else {
+      t.fail();
     }
   } catch (e) {
     log("ERROR:", e);
