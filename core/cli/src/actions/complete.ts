@@ -4,7 +4,6 @@ import {
   ChatCompletionResponse,
   CompletionResponse,
   CompletionResult,
-  StreamProcessor,
 } from "@polymath-ai/types";
 import { Action } from "../action.js";
 
@@ -52,29 +51,15 @@ export class Complete extends Action {
         completionOptions.model && client.isChatModel(completionOptions.model);
 
       if (completionOptions.stream) {
-        // async mode baybee
-        const streamProcessor: StreamProcessor = {
-          processDelta: (delta: string | Uint8Array) => {
-            if (delta) process.stdout.write(delta);
-          },
-          processResults: (finalResults: CompletionResult) => {
-            process.stdout.write(
-              "\n\n" + this.sources(finalResults.infos) + "\n"
-            );
-          },
-        };
-
         log("The Polymath is answering with...\n");
 
         const results = await client.completion(
           question,
           undefined, // we don't have existing polymath results
           undefined, // we don't need no ask Options
-          completionOptions,
-          streamProcessor
+          completionOptions
         );
         if (results.stream) {
-          console.log("streaming. Chat = ", isChat);
           for await (const result of results.stream) {
             if (isChat) {
               const chatCompletion = result as ChatCompletionResponse;
@@ -96,8 +81,7 @@ export class Complete extends Action {
           question,
           undefined, // we don't have existing polymath results
           undefined, // we don't need no ask Options
-          completionOptions,
-          undefined // don't have the stream processsor
+          completionOptions
         );
 
         const output =

@@ -1,4 +1,4 @@
-import { ChatCompletionRequestMessage, Configuration, OpenAIApi } from "openai";
+import { Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
 import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
@@ -27,7 +27,6 @@ import {
   PolymathOptions,
   PromptTemplate,
   Server,
-  StreamProcessor,
 } from "@polymath-ai/types";
 
 dotenv.config({
@@ -172,12 +171,14 @@ class Polymath {
   // Given input text such as the users query, return an embedding
   async generateEmbedding(input: string): Promise<EmbeddingVector> {
     try {
-      const response = await this.openai.createEmbedding({
-        model: "text-embedding-ada-002",
-        input: input,
-      });
-
-      return response.data.data[0].embedding;
+      const response = await fetch(
+        openai(this.apiKey).embedding({
+          model: "text-embedding-ada-002",
+          input: input,
+        })
+      );
+      const data = await response.json();
+      return data.data[0].embedding;
     } catch (error) {
       this.debug(`Embedding Error: ${JSON.stringify(error)}`);
       return [];
@@ -220,7 +221,7 @@ class Polymath {
       let responseText;
 
       if (this.isChatModel(model)) {
-        const messages: ChatCompletionRequestMessage[] = [];
+        const messages = [];
         if (completionOptions?.system) {
           messages.push({
             role: "system",
@@ -322,39 +323,6 @@ class Polymath {
   // Does the model work with the OpenAI chat model API?
   isChatModel(model: ModelName): boolean {
     return ["gpt-3.5-turbo", "gpt-4"].includes(model);
-  }
-
-  processData(
-    data: string,
-    model: ModelName,
-    streamProcessor: StreamProcessor,
-    results: CompletionResult
-  ) {
-    const lines = data
-      .toString()
-      .split("\n")
-      .filter((line) => line.trim() !== "");
-
-    for (const line of lines) {
-      const message = line.toString().replace(/^data: /, "");
-      if (message === "[DONE]") {
-        streamProcessor.processResults(results);
-        return; // Stream finished
-      }
-      try {
-        // console.log("Message", message);
-        const parsed = JSON.parse(message);
-        let delta;
-        if (this.isChatModel(model)) {
-          delta = parsed.choices[0].delta?.content;
-        } else {
-          delta = parsed.choices[0].text;
-        }
-        streamProcessor.processDelta(delta);
-      } catch (error) {
-        console.error("Could not JSON parse stream message", message, error);
-      }
-    }
   }
 }
 

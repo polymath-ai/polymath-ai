@@ -237,25 +237,20 @@ test("Polymath gets local completions with the turbo model streaming", async (t)
       stream: true,
     };
 
-    await new Promise((resolve) => {
-      const streamProcessor = {
-        processResults: () => {
-          resolve(null);
-          t.pass();
-        },
-        processDelta: () => {
-          // console.log("STREAMING DELTA:", delta);
-        },
-      };
-
-      client.completion(
-        "How long is a piece of string?",
-        undefined, // PolymathResults
-        undefined, // askOptions
-        completionOptions,
-        streamProcessor
-      );
-    });
+    const results = await client.completion(
+      "How long is a piece of string?",
+      undefined, // PolymathResults
+      undefined, // askOptions
+      completionOptions
+    );
+    t.assert(results.stream, "Stream is present");
+    if (results.stream) {
+      for await (const data of results.stream) {
+        t.assert(data != null);
+        t.pass();
+        break;
+      }
+    }
   } catch (e) {
     log("LOCAL TURBO STREAMING ERROR:", e);
     t.fail();
@@ -274,25 +269,20 @@ test("Polymath gets local completions with the OG model streaming", async (t) =>
       stream: true,
     };
 
-    await new Promise((resolve, _) => {
-      const streamProcessor = {
-        processResults: () => {
-          resolve(null);
-          t.pass();
-        },
-        processDelta: () => {
-          // console.log("STREAMING DELTA:", delta);
-        },
-      };
-
-      client.completion(
-        "How long is a piece of string?",
-        undefined, // PolymathResults
-        undefined, // askOptions
-        completionOptions,
-        streamProcessor
-      );
-    });
+    const results = await client.completion(
+      "How long is a piece of string?",
+      undefined, // PolymathResults
+      undefined, // askOptions
+      completionOptions
+    );
+    t.assert(results.stream, "Stream is present");
+    if (results.stream) {
+      for await (const data of results.stream) {
+        t.assert(data != null);
+        t.pass();
+        break;
+      }
+    }
   } catch (e) {
     log("LOCAL OG STREAMING ERROR:", e);
     t.fail();

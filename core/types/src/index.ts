@@ -170,11 +170,6 @@ export type ServeArgs = {
   options: ServeOptions;
 };
 
-export type StreamProcessor = {
-  processDelta: (delta: string) => void;
-  processResults: (results: CompletionResult) => void;
-};
-
 export type Server = string;
 
 //Versions of Object.entries(), Object.keys(), and Object.values() that preserve
