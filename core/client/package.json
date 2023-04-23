@@ -41,9 +41,9 @@
     }
   },
   "dependencies": {
+    "@polymath-ai/host": "*",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
-    "@polymath-ai/host": "*",
     "@types/htmlparser2": "^3.10.3",
     "@types/http-link-header": "^1.0.3",
     "content-type-parser": "^1.0.2",
@@ -53,7 +53,6 @@
     "gpt-3-encoder": "^1.1.4",
     "htmlparser2": "^8.0.2",
     "http-link-header": "^1.1.0",
-    "openai": "^3.1.0",
     "pinecone-client": "^1.0.1"
   },
   "devDependencies": {

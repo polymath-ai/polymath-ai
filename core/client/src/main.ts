@@ -1,4 +1,3 @@
-import { Configuration, OpenAIApi } from "openai";
 import { encode } from "gpt-3-encoder";
 import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
@@ -50,7 +49,6 @@ class Polymath {
   private apiKey: string;
   askOptions?: AskOptions;
   completionOptions?: CompletionOptions;
-  openai: OpenAIApi;
   libraries: LibraryFileName[];
   servers: Server[];
   pinecone?: PineconeConfig;
@@ -63,11 +61,6 @@ class Polymath {
       throw new Error("Polymath requires an api_key");
     }
     this.apiKey = options.apiKey;
-    this.openai = new OpenAIApi(
-      new Configuration({
-        apiKey: options.apiKey,
-      })
-    );
 
     // Reusable default ask options for embeddings
     this.askOptions = options.askOptions;
