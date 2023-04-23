@@ -1,3 +1,8 @@
+import {
+  validateChatCompletionRequest,
+  validateCompletionRequest,
+} from "@polymath-ai/types";
+
 // Playing with porcelains.
 export class CompletionStreamer<ResponseType>
   implements TransformStream<Uint8Array, ResponseType>
@@ -64,27 +69,29 @@ class OpenAI {
     this.apiKey = apiKey;
   }
 
-  private scaffold() {
+  private scaffold(url: string, params: object) {
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.apiKey}`,
     };
-    return { headers, method: "POST" };
+    return new OpenAIRequest(url, { headers, method: "POST" }, params);
   }
 
-  completion(params: object) {
+  completion(params: unknown) {
     const url = "https://api.openai.com/v1/completions";
-    return new OpenAIRequest(url, this.scaffold(), params);
+    const completionRequest = validateCompletionRequest(params);
+    return this.scaffold(url, completionRequest);
   }
 
-  chatCompletion(params: object) {
+  chatCompletion(params: unknown) {
     const url = "https://api.openai.com/v1/chat/completions";
-    return new OpenAIRequest(url, this.scaffold(), params);
+    const chatCompletionRequest = validateChatCompletionRequest(params);
+    return this.scaffold(url, chatCompletionRequest);
   }
 
   embedding(params: object) {
     const url = "https://api.openai.com/v1/embeddings";
-    return new OpenAIRequest(url, this.scaffold(), params);
+    return this.scaffold(url, params);
   }
 }
 

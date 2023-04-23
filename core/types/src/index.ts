@@ -15,6 +15,8 @@ import {
   askOptions,
   endpointArgs,
   hostConfig,
+  completionRequest,
+  chatCompletionRequest,
   completionResponse,
 } from "./schemas.js";
 
@@ -113,6 +115,9 @@ export type CompletionOptions = {
   echo?: false;
   logprobs?: number;
 };
+
+export type CompletionRequest = z.infer<typeof completionRequest>;
+export type ChatCompletionRequest = z.infer<typeof chatCompletionRequest>;
 
 export type CompletionResponse = z.infer<typeof completionResponse>;
 
@@ -215,3 +220,8 @@ export const schemas = {
   hostConfig,
   completionResponse,
 };
+
+export {
+  validateCompletionRequest,
+  validateChatCompletionRequest,
+} from "./validate.js";

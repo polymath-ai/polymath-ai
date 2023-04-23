@@ -228,17 +228,9 @@ class Polymath {
 
         const response = await fetch(
           openai(this.apiKey).chatCompletion({
+            ...completionOptions,
             model: model,
             messages: messages,
-            temperature: completionOptions?.temperature || 0,
-            max_tokens:
-              completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
-            top_p: completionOptions?.top_p || 1,
-            n: completionOptions?.n || 1,
-            stream: completionOptions?.stream || false,
-            stop: completionOptions?.stop,
-            presence_penalty: completionOptions?.presence_penalty || 0,
-            frequency_penalty: completionOptions?.frequency_penalty || 0,
           })
         );
         if (completionOptions?.stream) {
@@ -259,20 +251,9 @@ class Polymath {
         // text-davinci-003
         const response = await fetch(
           openai(this.apiKey).completion({
+            ...completionOptions,
             model: model,
             prompt: prompt,
-            temperature: completionOptions?.temperature || 0,
-            max_tokens:
-              completionOptions?.max_tokens || DEFAULT_MAX_TOKENS_COMPLETION,
-            top_p: completionOptions?.top_p || 1,
-            n: completionOptions?.n || 1,
-            stream: completionOptions?.stream || false,
-            logprobs: completionOptions?.logprobs || null,
-            echo: completionOptions?.echo || false,
-            stop: completionOptions?.stop || null,
-            presence_penalty: completionOptions?.presence_penalty || 0,
-            frequency_penalty: completionOptions?.frequency_penalty || 0,
-            best_of: completionOptions?.best_of || 1,
           })
         );
         if (completionOptions?.stream) {
