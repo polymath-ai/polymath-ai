@@ -2,7 +2,7 @@ import test from "ava";
 
 import fs from "fs";
 
-import { CompletionStreamer } from "../src/porcelains.js";
+import { CompletionStreamer, openai } from "../src/porcelains.js";
 import { CompletionResponse } from "@polymath-ai/types";
 
 const validStreamIn = fs
@@ -46,4 +46,11 @@ test("CompletionStreamer knows how to pipe", async (t) => {
   for await (const chunk of response) {
     t.deepEqual(chunk, validStreamOut[count++]);
   }
+});
+
+test("Invalid CompletionRequest throws", async (t) => {
+  const error = t.throws(() => {
+    openai("sk-123").completion({});
+  });
+  //t.deepEqual(error?.message, "Invalid request");
 });
