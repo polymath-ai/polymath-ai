@@ -17,6 +17,7 @@ import {
   hostConfig,
   completionRequest,
   chatCompletionRequest,
+  embeddingRequest,
   completionResponse,
 } from "./schemas.js";
 
@@ -118,6 +119,7 @@ export type CompletionOptions = {
 
 export type CompletionRequest = z.infer<typeof completionRequest>;
 export type ChatCompletionRequest = z.infer<typeof chatCompletionRequest>;
+export type EmbeddingRequest = z.infer<typeof embeddingRequest>;
 
 export type CompletionResponse = z.infer<typeof completionResponse>;
 
@@ -224,4 +226,5 @@ export const schemas = {
 export {
   validateCompletionRequest,
   validateChatCompletionRequest,
+  validateEmbeddingRequest,
 } from "./validate.js";

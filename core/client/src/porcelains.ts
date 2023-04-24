@@ -1,6 +1,7 @@
 import {
   validateChatCompletionRequest,
   validateCompletionRequest,
+  validateEmbeddingRequest,
 } from "@polymath-ai/types";
 
 // Playing with porcelains.
@@ -91,7 +92,8 @@ class OpenAI {
 
   embedding(params: object) {
     const url = "https://api.openai.com/v1/embeddings";
-    return this.scaffold(url, params);
+    const embeddingRequest = validateEmbeddingRequest(params);
+    return this.scaffold(url, embeddingRequest);
   }
 }
 
