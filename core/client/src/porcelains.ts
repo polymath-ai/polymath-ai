@@ -44,10 +44,10 @@ export class CompletionStreamer<ResponseType>
   }
 }
 
-class OpenAIRequest extends Request {
-  #params: object;
+class OpenAIRequest<CompletionType> extends Request {
+  #params: CompletionType;
 
-  constructor(url: string, init: RequestInit, params: object) {
+  constructor(url: string, init: RequestInit, params: CompletionType) {
     init.body = JSON.stringify(params);
     super(url, init);
     this.#params = params;
@@ -69,7 +69,7 @@ class OpenAI {
     this.apiKey = apiKey;
   }
 
-  private scaffold(url: string, params: object) {
+  private scaffold<CompletionType>(url: string, params: CompletionType) {
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${this.apiKey}`,
