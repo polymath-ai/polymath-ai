@@ -2,7 +2,7 @@ import test from "ava";
 
 import fs from "fs";
 
-import { CompletionStreamer, openai } from "../src/porcelains.js";
+import { CompletionStreamer, openai } from "../../src/ai/openai.js";
 import { CompletionResponse } from "@polymath-ai/types";
 
 const validStreamIn = fs

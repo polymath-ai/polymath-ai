@@ -2,7 +2,7 @@ import { encode } from "gpt-3-encoder";
 import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
-import { CompletionStreamer, openai } from "./porcelains.js";
+import { CompletionStreamer, openai } from "./ai/openai.js";
 import {
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
