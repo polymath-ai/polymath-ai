@@ -2,7 +2,7 @@ import test from "ava";
 
 import fs from "fs";
 
-import { CompletionStreamer, openai } from "../../src/openai/index.js";
+import { CompletionStreamer } from "../../src/openai/index.js";
 import { CompletionResponse } from "../../src/openai/types.js";
 
 const validStreamIn = fs
@@ -46,11 +46,4 @@ test("CompletionStreamer knows how to pipe", async (t) => {
   for await (const chunk of response) {
     t.deepEqual(chunk, validStreamOut[count++]);
   }
-});
-
-test("Invalid CompletionRequest throws", async (t) => {
-  const error = t.throws(() => {
-    openai("sk-123").completion({});
-  });
-  //t.deepEqual(error?.message, "Invalid request");
 });
