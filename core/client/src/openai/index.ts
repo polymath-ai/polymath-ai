@@ -2,7 +2,7 @@ import {
   validateChatCompletionRequest,
   validateCompletionRequest,
   validateEmbeddingRequest,
-} from "@polymath-ai/types";
+} from "./validate.js";
 
 // Playing with porcelains.
 export class CompletionStreamer<ResponseType>

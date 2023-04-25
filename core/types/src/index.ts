@@ -15,10 +15,6 @@ import {
   askOptions,
   endpointArgs,
   hostConfig,
-  completionRequest,
-  chatCompletionRequest,
-  embeddingRequest,
-  completionResponse,
 } from "./schemas.js";
 
 //TODO: consider having an enumeration of valid lenghts for known models
@@ -117,48 +113,6 @@ export type CompletionOptions = {
   logprobs?: number;
 };
 
-export type CompletionRequest = z.infer<typeof completionRequest>;
-export type ChatCompletionRequest = z.infer<typeof chatCompletionRequest>;
-export type EmbeddingRequest = z.infer<typeof embeddingRequest>;
-
-export type CompletionResponse = z.infer<typeof completionResponse>;
-
-export interface ChatCompletionResponse {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: ChatCompletionChoice[];
-  usage?: ChatCompletionUsage;
-}
-
-export interface ChatCompletionChoice {
-  index?: number;
-  message?: ChatCompletionResponseMessage;
-  delta?: ChatCompletionResponseMessage;
-  finish_reason?: string;
-}
-
-export interface ChatCompletionUsage {
-  prompt_tokens: number;
-  completion_tokens: number;
-  total_tokens: number;
-}
-
-export interface ChatCompletionResponseMessage {
-  role: "system" | "user" | "assistant";
-  content: string;
-}
-
-export type CompletionResult = {
-  bits: PackedBit[];
-  infos: BitInfo[];
-  completion?: string;
-  stream?:
-    | AsyncIterable<CompletionResponse>
-    | AsyncIterable<ChatCompletionResponse>;
-};
-
 export type AskOptions = z.infer<typeof askOptions>;
 export type EndpointArgs = z.infer<typeof endpointArgs>;
 
@@ -220,11 +174,4 @@ export const schemas = {
   askOptions,
   endpointArgs,
   hostConfig,
-  completionResponse,
 };
-
-export {
-  validateCompletionRequest,
-  validateChatCompletionRequest,
-  validateEmbeddingRequest,
-} from "./validate.js";

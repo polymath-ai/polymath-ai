@@ -9,7 +9,7 @@ import {
   ChatCompletionRequest,
   CompletionRequest,
   EmbeddingRequest,
-} from "./index.js";
+} from "./types.js";
 
 // This is probably where `core/validation` will live eventually.
 

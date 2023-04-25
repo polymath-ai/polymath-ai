@@ -3,7 +3,7 @@ import test from "ava";
 import fs from "fs";
 
 import { CompletionStreamer, openai } from "../../src/openai/index.js";
-import { CompletionResponse } from "@polymath-ai/types";
+import { CompletionResponse } from "../../src/openai/types.js";
 
 const validStreamIn = fs
   .readFileSync("tests/data/valid-stream-in.txt", "utf-8")

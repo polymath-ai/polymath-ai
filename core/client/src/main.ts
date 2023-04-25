@@ -14,10 +14,7 @@ import { findUpSync } from "find-up";
 
 import {
   AskOptions,
-  ChatCompletionResponse,
   CompletionOptions,
-  CompletionResponse,
-  CompletionResult,
   EmbeddingVector,
   LibraryFileName,
   ModelName,
@@ -27,6 +24,8 @@ import {
   PromptTemplate,
   Server,
 } from "@polymath-ai/types";
+import { CompletionResult } from "./types.js";
+import { ChatCompletionResponse, CompletionResponse } from "./openai/types.js";
 
 dotenv.config({
   path: findUpSync(".env"),
