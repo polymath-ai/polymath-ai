@@ -4,7 +4,6 @@ import {
   validateEmbeddingRequest,
 } from "./validate.js";
 
-// Playing with porcelains.
 export class CompletionStreamer<ResponseType>
   implements TransformStream<Uint8Array, ResponseType>
 {

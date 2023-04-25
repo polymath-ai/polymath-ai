@@ -11,8 +11,6 @@ import {
   EmbeddingRequest,
 } from "./types.js";
 
-// This is probably where `core/validation` will live eventually.
-
 const formatZodError = (error: z.ZodError) => {
   return error;
 };
