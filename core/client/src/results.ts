@@ -1,4 +1,4 @@
-import { encode } from "gpt-3-encoder";
+import { encode } from "gptoken";
 
 import {
   AskOptions,
