@@ -1,11 +1,12 @@
 import { Polymath } from "@polymath-ai/client";
+import { BitInfo } from "@polymath-ai/types";
+import { Action } from "../action.js";
+
 import {
-  BitInfo,
   ChatCompletionResponse,
   CompletionResponse,
   CompletionResult,
-} from "@polymath-ai/types";
-import { Action } from "../action.js";
+} from "@polymath-ai/client";
 
 //TODO: rationalize with other existing types
 export type CompletionArgs = {

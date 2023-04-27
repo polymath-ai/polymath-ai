@@ -4,7 +4,7 @@ import {
   validateCompletionRequest,
 } from "../../src/openai/validate.js";
 
-test("Invalid CompletionRequest throws a friendly error", async (t) => {
+test("Promptless CompletionRequest throws a friendly error", async (t) => {
   const error: ValidationError = t.throws(() => {
     validateCompletionRequest({});
   }) as ValidationError;

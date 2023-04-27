@@ -1,4 +1,4 @@
-import { z, ZodIssueCode } from "zod";
+import { z } from "zod";
 
 import {
   chatCompletionRequest,
@@ -21,9 +21,7 @@ const getDescription = (
   path: (string | number)[]
 ): string => {
   let cursor = validator.shape;
-  path.forEach((key) => {
-    cursor = cursor[key];
-  });
+  path.forEach((key) => (cursor = cursor[key]));
   return cursor.description;
 };
 
@@ -46,9 +44,6 @@ export class ValidationError extends Error {
 }
 
 const formatZodError = (validator: z.AnyZodObject, error: z.ZodError) => {
-  // error.issues.forEach((issue) => {
-  //   console.log(issue);
-  // });
   return new ValidationError(validator, error);
 };
 
