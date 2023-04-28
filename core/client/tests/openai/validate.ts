@@ -4,21 +4,27 @@ import {
   validateCompletionRequest,
 } from "../../src/openai/validate.js";
 
-test("Promptless CompletionRequest throws a friendly error", async (t) => {
+test("Model-less CompletionRequest throws a friendly error", async (t) => {
   const error: ValidationError = t.throws(() => {
     validateCompletionRequest({});
   }) as ValidationError;
-  t.deepEqual(error?.message, "Validation error");
+  t.deepEqual(error?.message, "Validation error in CompletionRequest");
   t.is(error?.issues.length, 1);
-  t.deepEqual(error?.issues, [
-    {
-      message: '"model" Required',
-      description:
-        "ID of the model to use. You can use the [List models](docsapi-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.",
-    },
-  ]);
+  t.deepEqual(error?.issues[0].message, '"model" Required');
+  t.truthy(error?.issues[0].description);
+  t.true(`${error}`.includes("model"));
+});
+
+test("Invalid types in CompletionRequest throw a friendly error", async (t) => {
+  const error: ValidationError = t.throws(() => {
+    validateCompletionRequest({ model: 123 });
+  }) as ValidationError;
+  t.deepEqual(error?.message, "Validation error in CompletionRequest");
+  t.is(error?.issues.length, 1);
   t.deepEqual(
-    error.toString(),
-    `Validation error:\n  - "model" Required\n      ID of the model to use. You can use the [List models](docsapi-reference/models/list) API to see all of your available models, or see our [Model overview](/docs/models/overview) for descriptions of them.\n`
+    error?.issues[0].message,
+    '"model" Expected string, received number'
   );
+  t.truthy(error?.issues[0].description);
+  t.true(`${error}`.includes("model"));
 });

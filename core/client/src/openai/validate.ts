@@ -16,6 +16,12 @@ export type ValidationIssue = {
   description: string;
 };
 
+export type ValidationData = {
+  name: string;
+  validator: z.AnyZodObject;
+  error: z.ZodError;
+};
+
 const getDescription = (
   validator: z.AnyZodObject,
   path: (string | number)[]
@@ -27,12 +33,12 @@ const getDescription = (
 
 export class ValidationError extends Error {
   issues: ValidationIssue[];
-  constructor(validator: z.AnyZodObject, zodError: z.ZodError) {
-    super("Validation error");
+  constructor(data: ValidationData) {
+    super(`Validation error in ${data.name}`);
     this.name = "ValidationError";
-    this.issues = zodError.issues.map((issue) => ({
+    this.issues = data.error.issues.map((issue) => ({
       message: `"${issue.path.join("/")}" ${issue.message}`,
-      description: getDescription(validator, issue.path),
+      description: getDescription(data.validator, issue.path),
     }));
   }
 
@@ -43,8 +49,8 @@ export class ValidationError extends Error {
   }
 }
 
-const formatZodError = (validator: z.AnyZodObject, error: z.ZodError) => {
-  return new ValidationError(validator, error);
+const formatZodError = (data: ValidationData) => {
+  return new ValidationError(data);
 };
 
 export const validateCompletionRequest = (
@@ -52,7 +58,11 @@ export const validateCompletionRequest = (
 ): CompletionRequest => {
   const validation = completionRequest.safeParse(request);
   if (validation.success) return validation.data;
-  throw formatZodError(completionRequest, validation.error);
+  throw formatZodError({
+    name: "CompletionRequest",
+    validator: completionRequest,
+    error: validation.error,
+  });
 };
 
 export const validateChatCompletionRequest = (
@@ -60,7 +70,11 @@ export const validateChatCompletionRequest = (
 ): ChatCompletionRequest => {
   const validation = chatCompletionRequest.safeParse(request);
   if (validation.success) return validation.data;
-  throw formatZodError(chatCompletionRequest, validation.error);
+  throw formatZodError({
+    name: "ChatCompletionRequest",
+    validator: chatCompletionRequest,
+    error: validation.error,
+  });
 };
 
 export const validateEmbeddingRequest = (
@@ -68,5 +82,9 @@ export const validateEmbeddingRequest = (
 ): EmbeddingRequest => {
   const validation = embeddingRequest.safeParse(request);
   if (validation.success) return validation.data;
-  throw formatZodError(embeddingRequest, validation.error);
+  throw formatZodError({
+    name: "EmbeddingRequest",
+    validator: embeddingRequest,
+    error: validation.error,
+  });
 };
