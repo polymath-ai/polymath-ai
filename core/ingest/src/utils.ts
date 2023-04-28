@@ -1,3 +1,5 @@
+import { uint8ArrayToBase64, base64ToUint8Array } from './base64/core.js';
+
 export function cleanFilePath(path: string): string {
   return path.replace(/[.\/\:\?]/g, "-");
 }
@@ -14,11 +16,9 @@ export function cleanText(input: string): string {
 }
 
 export function encodeEmbedding(data : number[]) : string {
-  return Buffer.from(new Float32Array(data).buffer).toString("base64");
+  return uint8ArrayToBase64(new Uint8Array(new Float32Array(data)), 'base64', false, null).result;
 }
 
 export function decodeEmbedding(data : string) : number[] {
-  return Array.from(
-    new Float32Array(new Uint8Array(Buffer.from(data, "base64")).buffer)
-  );
+  return Array.from(new Float32Array(base64ToUint8Array(data, 'base64', false, null).result.buffer));
 }

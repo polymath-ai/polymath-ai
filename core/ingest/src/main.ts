@@ -26,6 +26,8 @@ export type IngestArguments = {
   options?: IngestOptions;
 };
 
+export { Ingester };
+
 // The importer is an API that can be used by any tool (e.g, the CLI.)
 export class Ingest {
   async *run(args: IngestArguments): AsyncGenerator<PackedBit> {
