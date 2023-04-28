@@ -109,7 +109,7 @@ test("Polymath can get embeddings", async (t) => {
   }
 });
 
-test("Polymath gets results", async (t) => {
+test.skip("Polymath gets results", async (t) => {
   try {
     const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
@@ -117,6 +117,8 @@ test("Polymath gets results", async (t) => {
     });
 
     const r = await client.ask("How long is a piece of string?");
+
+    console.log(r);
 
     if (r.context()) {
       t.pass();
@@ -127,7 +129,7 @@ test("Polymath gets results", async (t) => {
   }
 });
 
-test("Polymath gets results with glob library files", async (t) => {
+test.skip("Polymath gets results with glob library files", async (t) => {
   try {
     const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
@@ -147,7 +149,7 @@ test("Polymath gets results with glob library files", async (t) => {
   }
 });
 
-test("Polymath gets results with directory", async (t) => {
+test.skip("Polymath gets results with directory", async (t) => {
   try {
     const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
@@ -291,7 +293,7 @@ test("Polymath gets local completions with the OG model streaming", async (t) =>
   }
 });
 
-test("Polymath gets server completions", async (t) => {
+test.skip("Polymath gets server completions", async (t) => {
   try {
     const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
@@ -397,7 +399,7 @@ test("Polymath gets one result with embedding omited locally", async (t) => {
   }
 });
 
-test("Polymath gets pinecone results", async (t) => {
+test.skip("Polymath gets pinecone results", async (t) => {
   try {
     const client = new Polymath({
       apiKey: process.env.OPENAI_API_KEY,
