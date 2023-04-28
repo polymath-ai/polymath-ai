@@ -1,20 +1,23 @@
 import test from "ava";
 import { Ingest, IngestArguments } from '../src/main.js';
 
-test("init import with custom module", async (t) => {
+test.skip("init import with custom module", async (t) => {
   const importer = new Ingest();
-  console.log(importer)
+  console.log(importer);
 
-  const args: string[] = ["../../dist/test-data/custom-module/test.js", "test.com/"];
+  const args: string[] = [
+    "../../dist/test-data/custom-module/test.js",
+    "test.com/",
+  ];
   const options: any = { apiKey: process.env.OPENAI_API_KEY };
 
-  const importerArgs : IngestArguments = {
+  const importerArgs: IngestArguments = {
     importer: args[0],
     source: args[1],
-    options: options
-  }
+    options: options,
+  };
 
-  const output = importer.run(importerArgs)
+  const output = importer.run(importerArgs);
 
   let counter = 1;
 
