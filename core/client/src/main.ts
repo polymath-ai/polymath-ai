@@ -1,4 +1,4 @@
-import { encode } from "gpt-3-encoder";
+import { encode } from "gptoken";
 import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
