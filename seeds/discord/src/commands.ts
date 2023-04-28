@@ -37,7 +37,6 @@ export const questionAnswerCommand = (handler: QuestionAnswerHandler) => {
       await interaction.followUp(trim(reply));
     } catch (e) {
       const error = e as Error;
-      console.log(error);
       await interaction.followUp({
         content: `An error has occurred:\n\`\`\`${error.message}\`\`\``,
         ephemeral: true,
