@@ -16,9 +16,11 @@ export function cleanText(input: string): string {
 }
 
 export function encodeEmbedding(data : number[]) : string {
-  return uint8ArrayToBase64(new Uint8Array(new Float32Array(data)), 'base64', false, null).result;
+  const raw = new Float64Array(data).buffer;
+  return uint8ArrayToBase64(new Uint8Array(raw), 'base64', false, null).result;
 }
 
 export function decodeEmbedding(data : string) : number[] {
-  return Array.from(new Float32Array(base64ToUint8Array(data, 'base64', false, null).result.buffer));
+  const embeddingUint8 = base64ToUint8Array(data, 'base64', false, null).result.buffer
+  return Array.from(new Float64Array(embeddingUint8));
 }

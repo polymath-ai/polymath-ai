@@ -21,7 +21,7 @@ export type IngestOptions = {
 } & PolymathOptions;
 
 export type IngestArguments = {
-  importer: string;
+  importer: Ingester | string;
   source: string;
   options?: IngestOptions;
 };
@@ -35,43 +35,28 @@ export class Ingest {
     const debug = args.options?.debug;
     const apiKey = args.options?.apiKey;
 
-    let loadedImporter: Ingester;
-
-    if (apiKey == null) {
-      error("Please provide an OpenAI API key");
-      throw new Error("Please provide an OpenAI API key");
-    }
+    let ingester: Ingester;
 
     if (!importerArg) {
       error("Please configure an importer");
       throw new Error("Please configure an importer");
     }
 
-    if (!importerArg.startsWith("../") && !importerArg.startsWith("./")) {
-      log(`Loading built-in importer: ${importerArg}`);
-      loadedImporter = await Ingester.load(
-        join("builtin-importers", `${importerArg}.js`)
-      );
-    } else {
-      log(`Loading external importer: ${importerArg}`);
-      // We should probably do some validations.
-      loadedImporter = await Ingester.load(importerArg);
+    if (importerArg instanceof Ingester) {
+      ingester = importerArg as Ingester;
+    }
+    else {
+      ingester = await createIngesterInstance(importerArg, args.options);
     }
 
-    if (!loadedImporter) {
-      error(`Importer ${importerArg} not found`);
-      throw new Error(`Importer ${importerArg} not found`);
+    if (apiKey == null) {
+      error("Please provide an OpenAI API key");
+      throw new Error("Please provide an OpenAI API key");
     }
-
-    // <any> is needed here because the typescript compiler doesn't like it when we use the `new` keyword on a dynamic import.
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const importer: Ingester = new (loadedImporter as any)(
-      args.options
-    ) as Ingester;
 
     const polymath = new Polymath({ apiKey, debug });
 
-    for await (const chunk of importer.generateChunks(source)) {
+    for await (const chunk of ingester.generateChunks(source)) {
       log(`Importing chunk ${chunk.info?.url}`);
       if (chunk.text == null) {
         continue;
@@ -93,6 +78,34 @@ export class Ingest {
 
     log("\nDone importing\n\n");
   }
+}
+
+async function createIngesterInstance(importerArg: string, options: IngestArguments["options"]): Promise<Ingester> {
+  let loadedImporter: Ingester;
+
+  if (!importerArg.startsWith("../") && !importerArg.startsWith("./")) {
+    log(`Loading built-in importer: ${importerArg}`);
+    loadedImporter = await Ingester.load(
+      join("builtin-importers", `${importerArg}.js`)
+    );
+  } else {
+    log(`Loading external importer: ${importerArg}`);
+    // We should probably do some validations.
+    loadedImporter = await Ingester.load(importerArg);
+  }
+
+  if (!loadedImporter) {
+    error(`Importer ${importerArg} not found`);
+    throw new Error(`Importer ${importerArg} not found`);
+  }
+
+  // <any> is needed here because the typescript compiler doesn't like it when we use the `new` keyword on a dynamic import.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const importer: Ingester = new (loadedImporter as any)(
+    options
+  ) as Ingester;
+
+  return importer;
 }
 
 export { Ingester };
