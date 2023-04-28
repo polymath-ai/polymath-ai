@@ -11,11 +11,11 @@
     "access": "public"
   },
   "scripts": {
-    "test": "ava",
-    "start": "npm run build && node .",
-    "build": "tsc --b",
-    "watch": "tsc --b --watch",
-    "dev": "nodemon -w . -e ts,json,txt --exec 'npm run start --'"
+    "test": "FORCE_COLOR=1 ava",
+    "start": "FORCE_COLOR=1 npm run build && node .",
+    "build": "FORCE_COLOR=1 tsc --b",
+    "watch": "FORCE_COLOR=1 tsc --b --watch",
+    "dev": "FORCE_COLOR=1 nodemon -w . -e ts,json,txt --exec 'npm run start --'"
   },
   "repository": {
     "type": "git",

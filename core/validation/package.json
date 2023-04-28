@@ -8,9 +8,9 @@
     "access": "public"
   },
   "scripts": {
-    "test": "ava",
-    "build": "tsc --b",
-    "watch": "tsc --b --watch"
+    "test": "FORCE_COLOR=1 ava",
+    "build": "FORCE_COLOR=1 tsc --b",
+    "watch": "FORCE_COLOR=1 tsc --b --watch"
   },
   "repository": {
     "type": "git",
