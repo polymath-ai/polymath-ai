@@ -52,10 +52,10 @@ It is possible to use the `Ingest` process directly in your own code, for exampl
 ```
 import { Ingest } from "@polymath/ingest";
 
-const ingest = new Ingest({ /* options */ });
+const ingest = new Ingest();
 
-for await(const bit of ingest.run({ args, options, command })) {
-  console.log(`${bit.url}: Embedding: ${bit.embedding}`);)  
+for await(const bit of ingest.run({ importer, source, options })) {
+  console.log(`${bit.info?.url}: Embedding: ${bit.embedding}`);
 }
 
 ```
