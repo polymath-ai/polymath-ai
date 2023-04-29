@@ -1,0 +1,46 @@
+{
+  "name": "@polymath-ai/ai",
+  "version": "0.0.1",
+  "description": "A lightweight library for accessing Generative AI APIs",
+  "main": "./dist/src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "FORCE_COLOR=1 ava",
+    "build": "FORCE_COLOR=1 tsc --b",
+    "watch": "FORCE_COLOR=1 tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "workerThreads": false,
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
+  "keywords": [],
+  "author": "The Polymath Crew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-ai/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "devDependencies": {
+    "@ava/typescript": "^4.0.0",
+    "@polymath-ai/infra": "^0.0.2",
+    "ava": "^5.2.0",
+    "tmp-promise": "^3.0.3",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {}
+}
