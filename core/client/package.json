@@ -41,6 +41,7 @@
     }
   },
   "dependencies": {
+    "@polymath-ai/ai": "*",
     "@polymath-ai/host": "*",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",

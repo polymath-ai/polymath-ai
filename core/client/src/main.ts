@@ -2,7 +2,7 @@ import { encode } from "gptoken";
 import { PolymathPinecone, PolymathFile } from "@polymath-ai/host";
 import { PolymathResults } from "./results.js";
 import { PolymathEndpoint } from "./endpoint.js";
-import { CompletionStreamer, openai } from "./openai/index.js";
+import { CompletionStreamer, openai } from "@polymath-ai/ai";
 import {
   getMaxTokensForModel,
   DEFAULT_MAX_TOKENS_COMPLETION,
@@ -25,7 +25,7 @@ import {
   Server,
 } from "@polymath-ai/types";
 import { CompletionResult } from "./types.js";
-import { ChatCompletionResponse, CompletionResponse } from "./openai/types.js";
+import { ChatCompletionResponse, CompletionResponse } from "@polymath-ai/ai";
 
 dotenv.config({
   path: findUpSync(".env"),
@@ -302,9 +302,4 @@ class Polymath {
 // Polymath, go back and help people!
 export { Polymath, PolymathEndpoint };
 export { DiscoveryError } from "./discover.js";
-export type {
-  ChatCompletionResponse,
-  CompletionResponse,
-  CompletionRequest,
-} from "./openai/types.js";
 export type { CompletionResult } from "./types.js";

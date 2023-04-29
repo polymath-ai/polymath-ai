@@ -1,5 +1,5 @@
 import { BitInfo, PackedBit } from "@polymath-ai/types";
-import { ChatCompletionResponse, CompletionResponse } from "./openai/types.js";
+import { ChatCompletionResponse, CompletionResponse } from "@polymath-ai/ai";
 
 export type CompletionResult = {
   bits: PackedBit[];

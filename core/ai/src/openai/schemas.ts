@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-import { schemas } from "@polymath-ai/types";
-
 /**
  * From https://github.com/openai/openai-node/blob/master/api.ts,
  */
@@ -213,7 +211,7 @@ export const completionResponse = z.object({
   id: z.string(),
   object: z.literal("text_completion"),
   created: z.number(),
-  model: schemas.completionModelName,
+  model: z.string(),
   choices: z.array(
     z.object({
       text: z.string().optional(),
