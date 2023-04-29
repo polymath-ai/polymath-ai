@@ -96,4 +96,12 @@ class OpenAI {
   }
 }
 
+/**
+ * Entry point for the OpenAI API. Call this function to start creating valid a
+ *  valid `Request` object that could be used by directly by `fetch`.
+ * 
+ * @param {string} apiKey Your OpenAI API key
+ * @returns {OpenAI} The OpenAI API object that allows choosing a kind of
+ * request to make.  
+ */
 export const openai = (apiKey: string) => new OpenAI(apiKey);
