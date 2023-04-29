@@ -42,5 +42,7 @@
     "tmp-promise": "^3.0.3",
     "typescript": "^5.0.4"
   },
-  "dependencies": {}
+  "dependencies": {
+    "zod": "^3.21.4"
+  }
 }
