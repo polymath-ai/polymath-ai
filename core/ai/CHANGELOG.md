@@ -1,5 +1,11 @@
 # @polymath-ai/ai
 
+## 0.0.4
+
+### Patch Changes
+
+- Add jsdoc comments.
+
 ## 0.0.3
 
 ### Patch Changes
