@@ -1,4 +1,9 @@
 import {
+  ChatCompletionRequest,
+  CompletionRequest,
+  EmbeddingRequest,
+} from "./types.js";
+import {
   validateChatCompletionRequest,
   validateCompletionRequest,
   validateEmbeddingRequest,
@@ -77,19 +82,19 @@ class OpenAI {
     return new OpenAIRequest(url, { headers, method: "POST" }, params);
   }
 
-  completion(params: unknown) {
+  completion(params: CompletionRequest) {
     const url = "https://api.openai.com/v1/completions";
     const completionRequest = validateCompletionRequest(params);
     return this.scaffold(url, completionRequest);
   }
 
-  chatCompletion(params: unknown) {
+  chatCompletion(params: ChatCompletionRequest) {
     const url = "https://api.openai.com/v1/chat/completions";
     const chatCompletionRequest = validateChatCompletionRequest(params);
     return this.scaffold(url, chatCompletionRequest);
   }
 
-  embedding(params: object) {
+  embedding(params: EmbeddingRequest) {
     const url = "https://api.openai.com/v1/embeddings";
     const embeddingRequest = validateEmbeddingRequest(params);
     return this.scaffold(url, embeddingRequest);
@@ -99,9 +104,17 @@ class OpenAI {
 /**
  * Entry point for the OpenAI API. Call this function to start creating valid a
  *  valid `Request` object that could be used by directly by `fetch`.
- * 
- * @param {string} apiKey Your OpenAI API key
- * @returns {OpenAI} The OpenAI API object that allows choosing a kind of
- * request to make.  
+ *
+ * Typical usage:
+ *
+ * ```js
+ * const response = await fetch(openai(key).completion({
+ *   model: "text-davinci-003"
+ *}));
+ * ```
+ *
+ * @param apiKey Your OpenAI API key
+ * @returns The `OpenAI` API object that allows choosing a kind of
+ * request to make.
  */
-export const openai = (apiKey: string) => new OpenAI(apiKey);
+export const openai = (apiKey: string): OpenAI => new OpenAI(apiKey);

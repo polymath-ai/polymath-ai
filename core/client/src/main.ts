@@ -213,7 +213,10 @@ class Polymath {
       let responseText;
 
       if (this.isChatModel(model)) {
-        const messages = [];
+        const messages: {
+          role: "system" | "user" | "assistant";
+          content: string;
+        }[] = [];
         if (completionOptions?.system) {
           messages.push({
             role: "system",
@@ -228,8 +231,8 @@ class Polymath {
         const response = await fetch(
           openai(this.apiKey).chatCompletion({
             ...completionOptions,
-            model: model,
-            messages: messages,
+            model,
+            messages,
           })
         );
         if (completionOptions?.stream) {
@@ -251,8 +254,8 @@ class Polymath {
         const response = await fetch(
           openai(this.apiKey).completion({
             ...completionOptions,
-            model: model,
-            prompt: prompt,
+            model,
+            prompt,
           })
         );
         if (completionOptions?.stream) {

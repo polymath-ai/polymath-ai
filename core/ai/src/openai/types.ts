@@ -8,8 +8,13 @@ import {
 } from "./schemas.js";
 
 export type CompletionRequest = z.input<typeof completionRequest>;
+export type ValidatedCompletionRequest = z.output<typeof completionRequest>;
 export type ChatCompletionRequest = z.input<typeof chatCompletionRequest>;
+export type ValidatedChatCompletionRequest = z.output<
+  typeof chatCompletionRequest
+>;
 export type EmbeddingRequest = z.input<typeof embeddingRequest>;
+export type ValidatedEmbeddingRequest = z.output<typeof embeddingRequest>;
 
 export type CompletionResponse = z.infer<typeof completionResponse>;
 

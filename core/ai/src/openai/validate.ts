@@ -6,9 +6,9 @@ import {
   embeddingRequest,
 } from "./schemas.js";
 import {
-  ChatCompletionRequest,
-  CompletionRequest,
-  EmbeddingRequest,
+  ValidatedChatCompletionRequest,
+  ValidatedCompletionRequest,
+  ValidatedEmbeddingRequest,
 } from "./types.js";
 
 export type ValidationIssue = {
@@ -55,7 +55,7 @@ const formatZodError = (data: ValidationData) => {
 
 export const validateCompletionRequest = (
   request: unknown
-): CompletionRequest => {
+): ValidatedCompletionRequest => {
   const validation = completionRequest.safeParse(request);
   if (validation.success) return validation.data;
   throw formatZodError({
@@ -67,7 +67,7 @@ export const validateCompletionRequest = (
 
 export const validateChatCompletionRequest = (
   request: unknown
-): ChatCompletionRequest => {
+): ValidatedChatCompletionRequest => {
   const validation = chatCompletionRequest.safeParse(request);
   if (validation.success) return validation.data;
   throw formatZodError({
@@ -79,7 +79,7 @@ export const validateChatCompletionRequest = (
 
 export const validateEmbeddingRequest = (
   request: unknown
-): EmbeddingRequest => {
+): ValidatedEmbeddingRequest => {
   const validation = embeddingRequest.safeParse(request);
   if (validation.success) return validation.data;
   throw formatZodError({
