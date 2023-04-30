@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import { z } from "zod";
 
 import {
@@ -7,14 +8,16 @@ import {
   embeddingRequest,
 } from "./schemas.js";
 
-export type CompletionRequest = z.input<typeof completionRequest>;
-export type ValidatedCompletionRequest = z.output<typeof completionRequest>;
-export type ChatCompletionRequest = z.input<typeof chatCompletionRequest>;
-export type ValidatedChatCompletionRequest = z.output<
-  typeof chatCompletionRequest
->;
-export type EmbeddingRequest = z.input<typeof embeddingRequest>;
-export type ValidatedEmbeddingRequest = z.output<typeof embeddingRequest>;
+export interface CompletionRequest extends z.input<typeof completionRequest> {}
+export interface ValidatedCompletionRequest
+  extends z.output<typeof completionRequest> {}
+export interface ChatCompletionRequest
+  extends z.input<typeof chatCompletionRequest> {}
+export interface ValidatedChatCompletionRequest
+  extends z.output<typeof chatCompletionRequest> {}
+export interface EmbeddingRequest extends z.input<typeof embeddingRequest> {}
+export interface ValidatedEmbeddingRequest
+  extends z.output<typeof embeddingRequest> {}
 
 export type CompletionResponse = z.infer<typeof completionResponse>;
 
