@@ -29,7 +29,9 @@ type Context = {
   urls: string[];
 };
 
-const prompts = new Prompts();
+
+const root = new URL("../..", import.meta.url);
+const prompts = new Prompts(root.pathname);
 
 const createDirectionsPrompt = (question: string) => {
   const names = Object.keys(knownParticipants).join(", ");
@@ -52,10 +54,16 @@ const createSummarizingPrompt = (question: string, contexts: Context[]) => {
 async function main() {
   config();
 
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  const client = new Client({
+    intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages],
+  });
 
   client.once(Events.ClientReady, () => {
     console.log("Ready!");
+  });
+
+  client.on(Events.MessageCreate, async (message) => {
+    console.log("message", message.content);
   });
 
   client.on(
