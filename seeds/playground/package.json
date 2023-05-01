@@ -1,0 +1,49 @@
+{
+  "name": "@polymath-ai/playground-seed",
+  "version": "0.0.1",
+  "description": "A playground for various experiments",
+  "exports": "./dist/src/index.js",
+  "type": "module",
+  "scripts": {
+    "test": "FORCE_COLOR=1 ava",
+    "build": "FORCE_COLOR=1 tsc --b",
+    "watch": "FORCE_COLOR=1 tsc --b --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polymath-ai/polymath-ai.git"
+  },
+  "files": [
+    "dist"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*.ts"
+    ],
+    "workerThreads": false,
+    "typescript": {
+      "rewritePaths": {
+        "./": "dist/"
+      },
+      "compile": false
+    }
+  },
+  "keywords": [],
+  "author": "The Polymath Crew",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/polymath-ai/polymath-ai/issues"
+  },
+  "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "devDependencies": {
+    "@ava/typescript": "^4.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.56.0",
+    "@polymath-ai/infra": "*",
+    "@polymath-ai/ai": "*",
+    "@types/node": "^18.16.3",
+    "ava": "^5.2.0",
+    "nodemon": "^2.0.22",
+    "typescript": "^5.0.4"
+  }
+}

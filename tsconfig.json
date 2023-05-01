@@ -10,6 +10,7 @@
     { "path": "core/client" },
     { "path": "core/types" },
     { "path": "core/ingest" },
-    { "path": "seeds/discord" }
+    { "path": "seeds/discord" },
+    { "path": "seeds/playground" }
   ]
 }
