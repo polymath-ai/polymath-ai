@@ -117,4 +117,9 @@ class OpenAI {
  * @returns The `OpenAI` API object that allows choosing a kind of
  * request to make.
  */
-export const openai = (apiKey: string): OpenAI => new OpenAI(apiKey);
+export const openai = (apiKey?: string): OpenAI => {
+  if (!apiKey) {
+    throw new Error("OpenAI API key is required");
+  }
+  return new OpenAI(apiKey);
+};

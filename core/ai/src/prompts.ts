@@ -9,7 +9,6 @@ export class Prompts {
   }
 
   get(name: string, params: Record<string, string> = {}) {
-    console.log("Prompt: ", { name, params });
     const filename = path.resolve(this.root, `${name}.txt`);
     const template = fs.readFileSync(filename, "utf8");
     return Object.entries(params).reduce(

@@ -3,10 +3,14 @@
   "version": "0.0.1",
   "description": "A playground for various experiments",
   "exports": "./dist/src/index.js",
+  "main": "./dist/src/index.js",
   "type": "module",
   "scripts": {
     "test": "FORCE_COLOR=1 ava",
     "build": "FORCE_COLOR=1 tsc --b",
+    "start": "FORCE_COLOR=1 npm run build && node .",
+    "register": "FORCE_COLOR=1 tsc -b && node dist/src/register.js",
+    "dev": "FORCE_COLOR=1 nodemon -w . -e ts,json,txt --exec 'npm run start'",
     "watch": "FORCE_COLOR=1 tsc --b --watch"
   },
   "repository": {
@@ -14,7 +18,8 @@
     "url": "git+https://github.com/polymath-ai/polymath-ai.git"
   },
   "files": [
-    "dist"
+    "dist",
+    "prompts"
   ],
   "ava": {
     "files": [
@@ -35,13 +40,17 @@
     "url": "https://github.com/polymath-ai/polymath-ai/issues"
   },
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
+  "dependencies": {
+    "@clack/prompts": "^0.6.3",
+    "@polymath-ai/ai": "*",
+    "dotenv": "^16.0.3"
+  },
   "devDependencies": {
     "@ava/typescript": "^4.0.0",
+    "@polymath-ai/infra": "*",
+    "@types/node": "^18.16.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
-    "@polymath-ai/infra": "*",
-    "@polymath-ai/ai": "*",
-    "@types/node": "^18.16.3",
     "ava": "^5.2.0",
     "nodemon": "^2.0.22",
     "typescript": "^5.0.4"
