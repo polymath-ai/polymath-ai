@@ -97,6 +97,8 @@ We try to place most of the code into sub-directories of the `src` directory, or
 
 One exception might be the [JS-to-TS bridge](core/infra/typescript.md#js-to-ts-bridge-for-cli), which is necessary to make the TypeScript CLI tools work.
 
+There is a convenient `seeds/blank` directory that contains the necessary files to start a new package. Copy this directory to a new place and rename it to the name of the package.
+
 ## Working with monorepo
 
 Because some packages use TypeScript, we need to make sure the code is built and ready to go before we use it.
