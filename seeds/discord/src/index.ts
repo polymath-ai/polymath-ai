@@ -6,7 +6,7 @@ import { Bit, EndpointArgs } from "@polymath-ai/types";
 
 import { questionAnswerCommand } from "./commands.js";
 import { AI } from "./ai.js";
-import { Prompts } from "./prompts.js";
+import { Prompts } from "@polymath-ai/ai";
 
 const REASONABLE_CONTEXT_WINDOW = 4000;
 const MAX_SOURCES_PER_PARTICIPANT = 3;

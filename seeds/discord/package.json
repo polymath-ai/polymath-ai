@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@polymath-ai/client": "*",
+    "@polymath-ai/ai": "*",
     "@polymath-ai/types": "*",
     "@polymath-ai/validation": "*",
     "discord.js": "^14.8.0",
