@@ -43,6 +43,7 @@
   "dependencies": {
     "@clack/prompts": "^0.6.3",
     "@polymath-ai/ai": "*",
+    "commander": "^10.0.1",
     "dotenv": "^16.0.3"
   },
   "devDependencies": {
