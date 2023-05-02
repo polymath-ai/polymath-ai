@@ -9,19 +9,11 @@ const root = new URL("../../", import.meta.url);
 const prompts = new Prompts(root.pathname);
 const QUIT_VALUE = "<quit>";
 
-const cycle = async (promptFile: string) => {
-  const question = (await text({
-    message: "Type a message or hit <Enter> to exit",
-    defaultValue: QUIT_VALUE,
-  })) as string;
-  if (question === QUIT_VALUE) {
-    const shouldQuit = await confirm({
-      message: "Are you sure you want to quit?",
-    });
-    return shouldQuit;
-  }
-
-  const prompt = prompts.get(promptFile, { question });
+const ask = async (
+  promptFile: string,
+  context: { question: string; context: string }
+): Promise<string> => {
+  const prompt = prompts.get(promptFile, context);
   const s = spinner();
   s.start("Generating text...");
   const response = await fetch(
@@ -33,15 +25,35 @@ const cycle = async (promptFile: string) => {
   const result = await response.json();
   const reply = result.choices[0].text.trim();
   s.stop(reply);
+  return reply;
+};
+
+const cycle = async (promptFiles: string[]) => {
+  const question = (await text({
+    message: "Type a message or hit <Enter> to exit",
+    defaultValue: QUIT_VALUE,
+  })) as string;
+  if (question === QUIT_VALUE) {
+    const shouldQuit = await confirm({
+      message: "Are you sure you want to quit?",
+    });
+    return shouldQuit;
+  }
+
+  let context = "";
+  for (const promptFile of promptFiles) {
+    console.log(`\n${promptFile}\n`);
+    context = await ask(promptFile, { question, context });
+  }
 };
 
 const program = new Command();
 program
   .command("cycle")
-  .argument("[prompt]", "The prompt file to use while cycling")
-  .action(async (prompt: string) => {
+  .argument("[prompt...]", "The prompt file to use while cycling")
+  .action(async (prompts: string[]) => {
     intro("Let's experiment.");
-    while (!(await cycle(prompt)));
+    while (!(await cycle(prompts)));
     outro("Awesome experimenting!");
   });
 program.parse();
