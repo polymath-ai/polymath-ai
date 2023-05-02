@@ -16,7 +16,7 @@ The actions can be one of the following:
   },
   {
     "action": "Defer", "arguments": [],
-    "why": "When none of the tools above would lead to satisfying answers"
+    "why": "When none of the actions above would lead to satisfying answers"
   }
 ]
 

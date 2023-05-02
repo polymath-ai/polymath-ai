@@ -42,7 +42,6 @@ const cycle = async (promptFiles: string[]) => {
 
   let context = "";
   for (const promptFile of promptFiles) {
-    console.log(`\n${promptFile}\n`);
     context = await ask(promptFile, { question, context });
   }
 };
