@@ -11,7 +11,7 @@ const QUIT_VALUE = "<quit>";
 
 const ask = async (
   promptFile: string,
-  context: { question: string; context: string }
+  context: Record<string, string>
 ): Promise<string> => {
   const prompt = prompts.get(promptFile, context);
   const s = spinner();

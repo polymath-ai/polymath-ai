@@ -11,7 +11,7 @@ The actions can be one of the following:
     "why": "Search for public information"
   },
   {
-    "action": "Polymath", "arguments": [ "user name", "user name", .. ],
+    "action": "Polymath", "arguments": [ "user name", "user name" ],
     "why": "Find personal AI of another user"
   },
   {
@@ -31,7 +31,8 @@ Respond in valid JSON of of the following structure:
       "critique": "Why this may not be the best approach to find the answer"
     }
   ],
-  "recommended": "name of the action that is recommended out" 
+  "recommended": "name of the action that is recommended out"
+  "explanation" "why this recommendation was made after comparing ideas"
 }
 
 INPUT:${context}
