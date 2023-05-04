@@ -9,7 +9,7 @@ Respond in valid JSON of the following structure:
   "subject": "description of subject",
   "object": [ "description of object", "description of object" ]
   "is": "description of the environment in the 'is' state",
-  "ought": "description of the enviornment after in the 'ought' state is reached"
+  "ought": "description of the enviornment after the 'ought' state is reached"
 }
 
 PROBLEM: ${question}
