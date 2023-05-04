@@ -4,7 +4,6 @@ import { openai, Prompts } from "@polymath-ai/ai";
 import { intro, text, outro, spinner, confirm } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";
-import { log } from "console";
 
 config();
 
