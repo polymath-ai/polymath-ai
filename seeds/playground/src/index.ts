@@ -1,11 +1,37 @@
+import fs from "fs";
+
 import { openai, Prompts } from "@polymath-ai/ai";
 import { intro, text, outro, spinner, confirm } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";
+import { log } from "console";
 
 config();
 
+class Logger {
+  private filename: string;
+  private lines: string[] = [];
+
+  constructor(filename: string) {
+    this.filename = filename;
+  }
+
+  log(message: string) {
+    this.lines.push(message);
+  }
+
+  async save() {
+    await new Promise<void>((resolve) => {
+      fs.appendFile(this.filename, this.lines.join("\n"), (err) => {
+        if (err) throw err;
+        resolve();
+      });
+    });
+  }
+}
+
 const root = new URL("../../", import.meta.url);
+const logger = new Logger(`${root.pathname}/experiment.log`);
 const prompts = new Prompts(root.pathname);
 const QUIT_VALUE = "<quit>";
 
@@ -29,6 +55,7 @@ const ask = async (
   s.start("Generating text...");
   const reply = await single(promptFile, context);
   s.stop(reply);
+  logger.log(`\npromptFile: ${promptFile}\n${reply}`);
   return reply;
 };
 
@@ -85,6 +112,7 @@ const cycle = async (promptFiles: string[]) => {
     });
     return shouldQuit;
   }
+  logger.log(`\nquestion: ${question}`);
 
   let context = "";
   for (const promptFile of promptFiles) {
@@ -100,6 +128,7 @@ program
     intro("Let's experiment.");
     while (!(await cycle(prompts)));
     outro("Awesome experimenting!");
+    await logger.save();
   });
 
 program
@@ -116,8 +145,7 @@ program
 
     await diamond(prompts[0], prompts[1], 5, { question });
     outro("Awesome diamonding!");
-  }); 
-
+    await logger.save();
+  });
 
 program.parse();
-
