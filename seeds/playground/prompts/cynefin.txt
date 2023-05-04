@@ -11,7 +11,6 @@ Complex space -- the solution to the problem is not known, and it is unclear if 
 Chaotic space -- consists of “stop the bleeding” and “hang on for your life” situations. Things are highly volatile and appear to be spiraling rapidly out of control. Cause and effect are impossible to determine and trying to do so will likely be unproductive. What used to work no longer does, and time is of the essence. Problems in Chaotic space feel like people or machines pushed beyond their breaking point, strong emotional context, something to escape from as quickly as possible.
 
 Resspond in valid JSON of the following structure:
-
 {
   "space": "Chaotic|Complex|Complicated|Obvious",
   "reasoning": "Why this problem belongs in this space" 
