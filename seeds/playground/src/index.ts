@@ -37,29 +37,30 @@ class Logger {
 }
 
 interface ICompleter {
-  ask(prompt: string): Request;
-  data(response: unknown): string;
+  request(prompt: string): Request;
+  response(response: unknown): string;
 }
 
 class Completer implements ICompleter {
-  request: OpenAIRequest<CompletionRequest>;
+  #request: OpenAIRequest<CompletionRequest>;
   constructor() {
-    this.request = openai(process.env.OPENAI_API_KEY).completion({
+    this.#request = openai(process.env.OPENAI_API_KEY).completion({
       model: "text-davinci-003",
     });
   }
 
-  ask(prompt: string) {
-    return this.request.prompt(prompt);
+  request(prompt: string) {
+    return this.#request.prompt(prompt);
   }
 
-  data(response: unknown): string {
-    return (response as CompletionResponse).choices[0].text?.trim() || "";
+  response(response: unknown): string {
+    const completionResponse = response as CompletionResponse;
+    return completionResponse.choices[0].text?.trim() || "";
   }
 }
 
 class ChatCompleter implements ICompleter {
-  ask(prompt: string) {
+  request(prompt: string) {
     const messages: {
       role: "system" | "user" | "assistant";
       content: string;
@@ -74,10 +75,9 @@ class ChatCompleter implements ICompleter {
     });
   }
 
-  data(response: unknown): string {
-    return (
-      (response as ChatCompletionResponse).choices[0].message?.content || ""
-    );
+  response(response: unknown): string {
+    const chatCompletionResponse = response as ChatCompletionResponse;
+    return chatCompletionResponse.choices[0].message?.content || "";
   }
 }
 
@@ -86,17 +86,6 @@ const logger = new Logger(`${root.pathname}/experiment.log`);
 const prompts = new Prompts(root.pathname);
 const QUIT_VALUE = "<quit>";
 
-const single = async (
-  completer: ICompleter,
-  promptFile: string,
-  context: Record<string, string>
-) => {
-  const prompt = prompts.get(promptFile, context);
-  const response = await fetch(completer.ask(prompt));
-  const result = await response.json();
-  return completer.data(result);
-};
-
 const ask = async (
   completer: ICompleter,
   promptFile: string,
@@ -104,7 +93,10 @@ const ask = async (
 ): Promise<string> => {
   const s = spinner();
   s.start("Generating text...");
-  const reply = await single(completer, promptFile, context);
+  const prompt = prompts.get(promptFile, context);
+  const response = await fetch(completer.request(prompt));
+  const result = await response.json();
+  const reply = completer.response(result);
   s.stop(reply);
   logger.log(`\npromptFile: ${promptFile}\n${reply}`);
   return reply;
@@ -122,11 +114,11 @@ const diamond = async (
   divergeSpinner.start("Generating divergent ideas ...");
   const responses = await Promise.all(
     Array.from({ length: spread }).map(() => {
-      return fetch(completer.ask(prompt));
+      return fetch(completer.request(prompt));
     })
   );
   const data = await Promise.all(responses.map((r) => r.json()));
-  const replyList = data.map((r) => completer.data(r));
+  const replyList = data.map((r) => completer.response(r));
   const replies = replyList
     .map((reply, i) => `== REPLY ${i} ==\n${reply}`)
     .join("\n");
@@ -135,9 +127,9 @@ const diamond = async (
   const convergeSpinner = spinner();
   convergeSpinner.start("Converging ...");
   prompt = prompts.get(convergePromptFile, { ...context, replies });
-  const response = await fetch(completer.ask(prompt));
+  const response = await fetch(completer.request(prompt));
   const result = await response.json();
-  const reply = completer.data(result);
+  const reply = completer.response(result);
   convergeSpinner.stop(reply);
   return reply;
 };
