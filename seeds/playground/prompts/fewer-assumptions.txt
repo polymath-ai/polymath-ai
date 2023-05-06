@@ -16,8 +16,8 @@ Respond in valid JSON of the following structure:
   "subjects": [
     {
       "name": "Name of an subject mentioned or implied in the question",
-      "assumption": "An assumption that you made when discerning this subject",
-      "critique": "How might this assumption be wrong?"
+      "assumption": "An assumption that you made when identifying this subject",
+      "critique": "How might this assumption be wrong?",
       "question": "A question that could be asked to test the assumption",
     }
   ],
@@ -25,7 +25,7 @@ Respond in valid JSON of the following structure:
     {
       "name": "Name of an object mentioned or implied in the question",
       "assumption": "An assumption that you made when discerning this object",
-      "critique": "How might this assumption be wrong?"
+      "critique": "How might this assumption be wrong?",
       "question": "A question that could be asked to test the assumption",
     }
   ],
