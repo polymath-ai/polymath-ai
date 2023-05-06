@@ -1,5 +1,5 @@
 {
-  "prompt": "../prompts/fewer-assumptions.txt",
+  "prompt": "../prompts/fewer-assumptions-boxed.txt",
   "structure": {
     "question": "The question that was asked",
     "context": "A few sentences describing the context in which the question was asked",

@@ -162,9 +162,7 @@ const reason = async (completer: ICompleter, config: string) => {
   const { prompt, structure } = JSON.parse(data);
   const promptURL = new URL(prompt, configUrl);
   const promptText = await fs.promises.readFile(promptURL, "utf8");
-  console.log(promptText);
 
-  //  logger.log(`\nconfig: ${promptFile}\n${reply}`);
   return "done";
 };
 
