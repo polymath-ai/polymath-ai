@@ -34,16 +34,17 @@ const logger = new Logger(`${root.pathname}/experiment.log`);
 const prompts = new Prompts(root.pathname);
 const QUIT_VALUE = "<quit>";
 
+const request = openai(process.env.OPENAI_API_KEY).completion({
+  model: "text-davinci-003",
+});
+
+const getData = (result: any) => result.choices[0].text.trim();
+
 const single = async (promptFile: string, context: Record<string, string>) => {
   const prompt = prompts.get(promptFile, context);
-  const response = await fetch(
-    openai(process.env.OPENAI_API_KEY).completion({
-      prompt,
-      model: "text-davinci-003",
-    })
-  );
+  const response = await fetch(request.prompt(prompt));
   const result = await response.json();
-  return result.choices[0].text.trim();
+  return getData(result);
 };
 
 const ask = async (
@@ -70,16 +71,11 @@ const diamond = async (
   divergeSpinner.start("Generating divergent ideas ...");
   const responses = await Promise.all(
     Array.from({ length: spread }).map(() => {
-      return fetch(
-        openai(process.env.OPENAI_API_KEY).completion({
-          prompt,
-          model,
-        })
-      );
+      return fetch(request.prompt(prompt));
     })
   );
   const data = await Promise.all(responses.map((r) => r.json()));
-  const replyList = data.map((d) => d.choices[0].text.trim());
+  const replyList = data.map(getData);
   const replies = replyList
     .map((reply, i) => `== REPLY ${i} ==\n${reply}`)
     .join("\n");
@@ -88,14 +84,9 @@ const diamond = async (
   const convergeSpinner = spinner();
   convergeSpinner.start("Converging ...");
   prompt = prompts.get(convergePromptFile, { ...context, replies });
-  const response = await fetch(
-    openai(process.env.OPENAI_API_KEY).completion({
-      prompt,
-      model,
-    })
-  );
+  const response = await fetch(request.prompt(prompt));
   const result = await response.json();
-  const reply = result.choices[0].text.trim();
+  const reply = getData(result);
   convergeSpinner.stop(reply);
   return reply;
 };
