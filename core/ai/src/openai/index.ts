@@ -49,7 +49,7 @@ export class CompletionStreamer<ResponseType>
   }
 }
 
-class OpenAIRequest<CompletionType> extends Request {
+export class OpenAIRequest<CompletionType> extends Request {
   #params: CompletionType;
 
   constructor(url: string, init: RequestInit, params: CompletionType) {

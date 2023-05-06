@@ -5,5 +5,5 @@ export type {
   CompletionResponse,
   ChatCompletionResponse,
 } from "./openai/types.js";
-export { CompletionStreamer, openai } from "./openai/index.js";
+export { CompletionStreamer, OpenAIRequest, openai } from "./openai/index.js";
 export { Prompts } from "./prompts.js";
