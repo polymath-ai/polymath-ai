@@ -153,7 +153,22 @@ const cycle = async (completer: ICompleter, promptFiles: string[]) => {
   }
 };
 
-const cycleBox = async (completer: ICompleter, box: string) => {
+const reason = async (completer: ICompleter, config: string) => {
+  logger.log(`\nconfig: ${config}`);
+
+  const configUrl = new URL(`${root.pathname}/boxes/${config}.json`);
+  const data = await fs.promises.readFile(configUrl, "utf8");
+
+  const { prompt, structure } = JSON.parse(data);
+  const promptURL = new URL(configUrl, prompt);
+  const promptText = await fs.promises.readFile(promptURL, "utf8");
+  console.log(promptText);
+
+  //  logger.log(`\nconfig: ${promptFile}\n${reply}`);
+  return "done";
+};
+
+const cycleBox = async (completer: ICompleter, config: string) => {
   const question = (await text({
     message: "Type a message or hit <Enter> to exit",
     defaultValue: QUIT_VALUE,
@@ -164,25 +179,25 @@ const cycleBox = async (completer: ICompleter, box: string) => {
     });
     return shouldQuit;
   }
-  logger.log(`\nquestion: ${question}`);
+  const s = spinner();
+  s.start("Reasoning...");
 
-  const configUrl = new URL(`${root.pathname}/boxes/${box}.json`);
-  const data = await fs.promises.readFile(configUrl, "utf8");
+  const reply = await reason(completer, config);
 
-  const { prompt, structure } = JSON.parse(data);
+  s.stop(reply);
 };
 
 const program = new Command();
 program.option("-c, --chat", "Use chat mode");
 
 program
-  .command("box")
-  .argument("[box]", "The reasoning box configuration to use")
-  .action(async (box: string) => {
+  .command("reason")
+  .argument("[config]", "The reasoning box configuration to use")
+  .action(async (config: string) => {
     const opts = program.opts();
     const completer = opts.chat ? new ChatCompleter() : new Completer();
     intro(`Let's reason. ${opts.chat ? "(uses chat)" : ""}`);
-    while (!(await cycleBox(completer, box)));
+    while (!(await cycleBox(completer, config)));
     outro("Awesome reasoning!");
     await logger.save();
   });
