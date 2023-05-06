@@ -156,11 +156,11 @@ const cycle = async (completer: ICompleter, promptFiles: string[]) => {
 const reason = async (completer: ICompleter, config: string) => {
   logger.log(`\nconfig: ${config}`);
 
-  const configUrl = new URL(`${root.pathname}/boxes/${config}.json`);
+  const configUrl = new URL(`./boxes/${config}.json`, root);
   const data = await fs.promises.readFile(configUrl, "utf8");
 
   const { prompt, structure } = JSON.parse(data);
-  const promptURL = new URL(configUrl, prompt);
+  const promptURL = new URL(prompt, configUrl);
   const promptText = await fs.promises.readFile(promptURL, "utf8");
   console.log(promptText);
 
