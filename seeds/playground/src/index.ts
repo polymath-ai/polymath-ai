@@ -153,8 +153,39 @@ const cycle = async (completer: ICompleter, promptFiles: string[]) => {
   }
 };
 
+const cycleBox = async (completer: ICompleter, box: string) => {
+  const question = (await text({
+    message: "Type a message or hit <Enter> to exit",
+    defaultValue: QUIT_VALUE,
+  })) as string;
+  if (question === QUIT_VALUE) {
+    const shouldQuit = await confirm({
+      message: "Are you sure you want to quit?",
+    });
+    return shouldQuit;
+  }
+  logger.log(`\nquestion: ${question}`);
+
+  const configUrl = new URL(`${root.pathname}/boxes/${box}.json`);
+  const data = await fs.promises.readFile(configUrl, "utf8");
+
+  const { prompt, structure } = JSON.parse(data);
+};
+
 const program = new Command();
 program.option("-c, --chat", "Use chat mode");
+
+program
+  .command("box")
+  .argument("[box]", "The reasoning box configuration to use")
+  .action(async (box: string) => {
+    const opts = program.opts();
+    const completer = opts.chat ? new ChatCompleter() : new Completer();
+    intro(`Let's reason. ${opts.chat ? "(uses chat)" : ""}`);
+    while (!(await cycleBox(completer, box)));
+    outro("Awesome reasoning!");
+    await logger.save();
+  });
 
 program
   .command("cycle")
