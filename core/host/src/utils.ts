@@ -33,12 +33,12 @@ export function cosineSimilarity(
 
 export function decodeEmbedding(data: Base64Embedding): EmbeddingVector {
   return Array.from(
-    new Float32Array(new Uint8Array(Buffer.from(data, "base64")).buffer)
+    new Float64Array(new Uint8Array(Buffer.from(data, "base64")).buffer)
   );
 }
 
 export function encodeEmbedding(data: EmbeddingVector): Base64Embedding {
-  return Buffer.from(new Float32Array(data).buffer).toString("base64");
+  return Buffer.from(new Float64Array(data).buffer).toString("base64");
 }
 
 export const fromObject = (data: Record<string, unknown>): AskOptions => {

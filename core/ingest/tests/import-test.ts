@@ -3,7 +3,6 @@ import { Ingest, IngestArguments } from '../src/main.js';
 
 test.skip("init import with custom module", async (t) => {
   const importer = new Ingest();
-  console.log(importer);
 
   const args: string[] = [
     "../../dist/test-data/custom-module/test.js",
