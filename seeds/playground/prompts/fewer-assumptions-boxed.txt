@@ -2,7 +2,7 @@ Given a question, imagine the context in which the question was asked. Try to ma
 
 Known facts:
 - the question is being asked by an individual to some problem that they have;
-- the context surrounding the individual and the question is complex and contains several subject and objects;
+- the context surrounding the individual and the question is complex and contains several subjects and objects;
 - subjects are other individuals that are mentioned in the question;
 - objects are things or concepts that are mentioned in the question.
 
