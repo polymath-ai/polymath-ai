@@ -162,10 +162,11 @@ type JSONValue =
   | { [x: string]: JSONValue }
   | Array<JSONValue>;
 
+// Because literally that's what it is.
 type Schemish = JSONValue;
 
 // TODO: This is not a great converter. But it'll do for now.
-const toSchemish = (data: unknown) => {
+const toSchemish = (schema: Schema) => {
   const walker = (schema: Schema): Schemish => {
     if (schema.type === "string") {
       return schema.description || "";
@@ -188,12 +189,14 @@ const toSchemish = (data: unknown) => {
     );
   };
 
-  const schema = data as Schema;
-
   return walker(schema);
 };
 
-const reason = async (completer: ICompleter, config: string) => {
+const reason = async (
+  completer: ICompleter,
+  question: string,
+  config: string
+) => {
   logger.log(`\nconfig: ${config}`);
 
   const configUrl = new URL(`./boxes/${config}.json`, root);
@@ -201,11 +204,25 @@ const reason = async (completer: ICompleter, config: string) => {
 
   const { prompt, schema } = JSON.parse(data);
   const promptURL = new URL(prompt, configUrl);
-  const promptText = await fs.promises.readFile(promptURL, "utf8");
-  const schemish = toSchemish(schema);
-  console.log(schemish);
+  const preamble = await fs.promises.readFile(promptURL, "utf8");
+  const schemish = JSON.stringify(toSchemish(schema), null, 2);
 
-  return "done";
+  const box = prompts.get("prompts/proto-box", {
+    preamble,
+    schemish,
+    question,
+  });
+
+  const response = await fetch(completer.request(box));
+  const result = await response.json();
+  const reply = completer.response(result);
+
+  const output = JSON.parse(reply);
+  const validator = new Validator();
+  const validationResult = validator.validate(output, schema);
+  return `${
+    validationResult.valid ? "Valid" : "Invalid"
+  } JSON response:\n${reply}`;
 };
 
 const cycleBox = async (completer: ICompleter, config: string) => {
@@ -222,7 +239,7 @@ const cycleBox = async (completer: ICompleter, config: string) => {
   const s = spinner();
   s.start("Reasoning...");
 
-  const reply = await reason(completer, config);
+  const reply = await reason(completer, question, config);
 
   s.stop(reply);
 };
