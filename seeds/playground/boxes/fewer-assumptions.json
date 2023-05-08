@@ -1,23 +1,60 @@
 {
   "prompt": "../prompts/fewer-assumptions-boxed.txt",
-  "structure": {
-    "question": "The question that was asked",
-    "context": "A few sentences describing the context in which the question was asked",
-    "subjects": [
-      {
-        "name": "Name of an subject mentioned or implied in the question",
-        "assumption": "An assumption that you made when identifying this subject",
-        "critique": "How might this assumption be wrong?",
-        "question": "A question that could be asked to test the assumption"
+  "schema": {
+    "type": "object",
+    "properties": {
+      "context": {
+        "type": "string",
+        "description": "A few sentences describing the context in which the question was asked"
+      },
+      "subjects": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of an subject mentioned or implied in the question"
+            },
+            "assumption": {
+              "type": "string",
+              "description": "An assumption that you made when identifying this subject"
+            },
+            "critique": {
+              "type": "string",
+              "description": "How might this assumption be wrong?"
+            },
+            "question": {
+              "type": "string",
+              "description": "A question that could be asked to test the assumption"
+            }
+          }
+        }
+      },
+      "objects": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Name of an object mentioned or implied in the question"
+            },
+            "assumption": {
+              "type": "string",
+              "description": "An assumption that you made when discerning this object"
+            },
+            "critique": {
+              "type": "string",
+              "description": "How might this assumption be wrong?"
+            },
+            "question": {
+              "type": "string",
+              "description": "A question that could be asked to test the assumption"
+            }
+          }
+        }
       }
-    ],
-    "objects": [
-      {
-        "name": "Name of an object mentioned or implied in the question",
-        "assumption": "An assumption that you made when discerning this object",
-        "critique": "How might this assumption be wrong?",
-        "question": "A question that could be asked to test the assumption"
-      }
-    ]
+    }
   }
 }

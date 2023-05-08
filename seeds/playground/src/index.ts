@@ -11,6 +11,8 @@ import {
 import { intro, text, outro, spinner, confirm } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";
+import { Validator } from "jsonschema";
+import type { Schema } from "jsonschema";
 
 config();
 
@@ -153,15 +155,55 @@ const cycle = async (completer: ICompleter, promptFiles: string[]) => {
   }
 };
 
+type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | Array<JSONValue>;
+
+type Schemish = JSONValue;
+
+// TODO: This is not a great converter. But it'll do for now.
+const toSchemish = (data: unknown) => {
+  const walker = (schema: Schema): Schemish => {
+    if (schema.type === "string") {
+      return schema.description || "";
+    }
+    if (schema.type === "object") {
+      const result: Schemish = {};
+      const properties = schema.properties as Record<string, Schema>;
+      for (const [name, property] of Object.entries(properties)) {
+        result[name] = walker(property);
+      }
+      return result;
+    }
+    if (schema.type === "array") {
+      const items = (schema.items as Schema) || {};
+      return [walker(items)];
+    }
+    console.log(schema);
+    throw new Error(
+      "I am just a simple Schemish converter. I don't understand your fancy types and formats. Yet."
+    );
+  };
+
+  const schema = data as Schema;
+
+  return walker(schema);
+};
+
 const reason = async (completer: ICompleter, config: string) => {
   logger.log(`\nconfig: ${config}`);
 
   const configUrl = new URL(`./boxes/${config}.json`, root);
   const data = await fs.promises.readFile(configUrl, "utf8");
 
-  const { prompt, structure } = JSON.parse(data);
+  const { prompt, schema } = JSON.parse(data);
   const promptURL = new URL(prompt, configUrl);
   const promptText = await fs.promises.readFile(promptURL, "utf8");
+  const schemish = toSchemish(schema);
+  console.log(schemish);
 
   return "done";
 };
