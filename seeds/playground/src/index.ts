@@ -1,18 +1,12 @@
 import fs from "fs";
 
-import {
-  ChatCompletionResponse,
-  CompletionRequest,
-  CompletionResponse,
-  openai,
-  OpenAIRequest,
-  Prompts,
-} from "@polymath-ai/ai";
+import { Prompts } from "@polymath-ai/ai";
 import { intro, text, outro, spinner, confirm } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";
 import { Validator } from "jsonschema";
 import type { Schema } from "jsonschema";
+import { ChatCompleter, Completer, ICompleter } from "./completers.js";
 
 config();
 
@@ -38,50 +32,6 @@ class Logger {
   }
 }
 
-interface ICompleter {
-  request(prompt: string): Request;
-  response(response: unknown): string;
-}
-
-class Completer implements ICompleter {
-  #request: OpenAIRequest<CompletionRequest>;
-  constructor() {
-    this.#request = openai(process.env.OPENAI_API_KEY).completion({
-      model: "text-davinci-003",
-    });
-  }
-
-  request(prompt: string) {
-    return this.#request.prompt(prompt);
-  }
-
-  response(response: unknown): string {
-    const completionResponse = response as CompletionResponse;
-    return completionResponse.choices[0].text?.trim() || "";
-  }
-}
-
-class ChatCompleter implements ICompleter {
-  request(prompt: string) {
-    const messages: {
-      role: "system" | "user" | "assistant";
-      content: string;
-    }[] = [];
-    messages.push({
-      role: "user",
-      content: prompt,
-    });
-    return openai(process.env.OPENAI_API_KEY).chatCompletion({
-      model: "gpt-4",
-      messages,
-    });
-  }
-
-  response(response: unknown): string {
-    const chatCompletionResponse = response as ChatCompletionResponse;
-    return chatCompletionResponse.choices[0].message?.content || "";
-  }
-}
 
 const root = new URL("../../", import.meta.url);
 const logger = new Logger(`${root.pathname}/experiment.log`);
