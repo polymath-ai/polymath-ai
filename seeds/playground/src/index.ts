@@ -4,10 +4,9 @@ import { Prompts } from "@polymath-ai/ai";
 import { intro, text, outro, spinner, confirm } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";
-import { Validator } from "jsonschema";
-import type { Schema } from "jsonschema";
 import { ChatCompleter, Completer, ICompleter } from "./completers.js";
 import { Logger } from "./logger.js";
+import { SchemishConverter } from "./schemish.js";
 
 config();
 
@@ -83,43 +82,6 @@ const cycle = async (completer: ICompleter, promptFiles: string[]) => {
   }
 };
 
-type JSONValue =
-  | string
-  | number
-  | boolean
-  | { [x: string]: JSONValue }
-  | Array<JSONValue>;
-
-// Because literally that's what it is.
-type Schemish = JSONValue;
-
-// TODO: This is not a great converter. But it'll do for now.
-const toSchemish = (schema: Schema) => {
-  const walker = (schema: Schema): Schemish => {
-    if (schema.type === "string") {
-      return schema.description || "";
-    }
-    if (schema.type === "object") {
-      const result: Schemish = {};
-      const properties = schema.properties as Record<string, Schema>;
-      for (const [name, property] of Object.entries(properties)) {
-        result[name] = walker(property);
-      }
-      return result;
-    }
-    if (schema.type === "array") {
-      const items = (schema.items as Schema) || {};
-      return [walker(items)];
-    }
-    console.log(schema);
-    throw new Error(
-      "I am just a simple Schemish converter. I don't understand your fancy types and formats. Yet."
-    );
-  };
-
-  return walker(schema);
-};
-
 const reason = async (
   completer: ICompleter,
   question: string,
@@ -133,7 +95,9 @@ const reason = async (
   const { prompt, schema } = JSON.parse(data);
   const promptURL = new URL(prompt, configUrl);
   const preamble = await fs.promises.readFile(promptURL, "utf8");
-  const schemish = JSON.stringify(toSchemish(schema), null, 2);
+
+  const converter = new SchemishConverter(schema);
+  const schemish = converter.convert();
 
   const box = prompts.get("prompts/proto-box", {
     preamble,
@@ -146,11 +110,8 @@ const reason = async (
   const reply = completer.response(result);
 
   const output = JSON.parse(reply);
-  const validator = new Validator();
-  const validationResult = validator.validate(output, schema);
-  return `${
-    validationResult.valid ? "Valid" : "Invalid"
-  } JSON response:\n${reply}`;
+  const valid = converter.validate(output);
+  return `${valid ? "Valid" : "Invalid"} JSON response:\n${reply}`;
 };
 
 const cycleBox = async (completer: ICompleter, config: string) => {
