@@ -7,31 +7,9 @@ import { Command } from "commander";
 import { Validator } from "jsonschema";
 import type { Schema } from "jsonschema";
 import { ChatCompleter, Completer, ICompleter } from "./completers.js";
+import { Logger } from "./logger.js";
 
 config();
-
-class Logger {
-  private filename: string;
-  private lines: string[] = [];
-
-  constructor(filename: string) {
-    this.filename = filename;
-  }
-
-  log(message: string) {
-    this.lines.push(message);
-  }
-
-  async save() {
-    await new Promise<void>((resolve) => {
-      fs.appendFile(this.filename, this.lines.join("\n"), (err) => {
-        if (err) throw err;
-        resolve();
-      });
-    });
-  }
-}
-
 
 const root = new URL("../../", import.meta.url);
 const logger = new Logger(`${root.pathname}/experiment.log`);
