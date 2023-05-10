@@ -87,7 +87,7 @@ const reason = async (
   question: string,
   config: string
 ) => {
-  logger.log(`\nconfig: ${config}`);
+  logger.log(`\n\nreasoning config: ${config}`);
 
   const configUrl = new URL(`./boxes/${config}.json`, root);
   const data = await fs.promises.readFile(configUrl, "utf8");
@@ -111,6 +111,7 @@ const reason = async (
 
   const output = JSON.parse(reply);
   const valid = converter.validate(output);
+  logger.log(`valid: ${valid}\nreply: ${reply}`);
   return `${valid ? "Valid" : "Invalid"} JSON response:\n${reply}`;
 };
 
