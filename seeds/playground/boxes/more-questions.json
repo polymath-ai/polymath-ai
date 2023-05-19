@@ -1,0 +1,23 @@
+{
+  "prompt": "../prompts/more-questions-boxed.txt",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "problem": {
+        "type": "string",
+        "description": "Succinct description of the problem that the question is trying to solve, presented as a statement, not a question"
+      },
+      "context": {
+        "type": "string",
+        "description": "A few sentences describing the context in which the question was asked"
+      },
+      "questions": {
+        "type": "array",
+        "items": {
+          "type": "string",
+          "description": "A clarifying question that could be asked to better understand the problem or context"
+        }
+      }
+    }
+  }
+}
