@@ -112,7 +112,7 @@ const reason = async (
   const output = JSON.parse(reply);
   const valid = converter.validate(output);
   logger.log(`valid: ${valid}\nreply: ${reply}`);
-  return `${valid ? "Valid" : "Invalid"} JSON response:\n${reply}`;
+  return `${valid ? "Valid" : "Invalid"} Response:\n${reply}`;
 };
 
 const cycleBox = async (completer: ICompleter, config: string) => {

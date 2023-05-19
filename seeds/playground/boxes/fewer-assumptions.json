@@ -3,6 +3,10 @@
   "schema": {
     "type": "object",
     "properties": {
+      "problem": {
+        "type": "string",
+        "description": "Succinct description of the problem that the question is trying to solve"
+      },
       "context": {
         "type": "string",
         "description": "A few sentences describing the context in which the question was asked"
@@ -16,17 +20,25 @@
               "type": "string",
               "description": "Name of an subject mentioned or implied in the question"
             },
-            "assumption": {
-              "type": "string",
-              "description": "An assumption that you made when identifying this subject"
-            },
-            "critique": {
-              "type": "string",
-              "description": "How might this assumption be wrong?"
-            },
-            "question": {
-              "type": "string",
-              "description": "A question that could be asked to test the assumption"
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "assumption": {
+                    "type": "string",
+                    "description": "An assumption that you made when identifying this subject"
+                  },
+                  "critique": {
+                    "type": "string",
+                    "description": "How might this assumption be wrong?"
+                  },
+                  "question": {
+                    "type": "string",
+                    "description": "A question that could be asked to test the assumption"
+                  }
+                }
+              }
             }
           }
         }
@@ -40,17 +52,25 @@
               "type": "string",
               "description": "Name of an object mentioned or implied in the question"
             },
-            "assumption": {
-              "type": "string",
-              "description": "An assumption that you made when discerning this object"
-            },
-            "critique": {
-              "type": "string",
-              "description": "How might this assumption be wrong?"
-            },
-            "question": {
-              "type": "string",
-              "description": "A question that could be asked to test the assumption"
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "assumption": {
+                    "type": "string",
+                    "description": "An assumption that you made when identifying this object"
+                  },
+                  "critique": {
+                    "type": "string",
+                    "description": "How might this assumption be wrong?"
+                  },
+                  "question": {
+                    "type": "string",
+                    "description": "A question that could be asked to test the assumption"
+                  }
+                }
+              }
             }
           }
         }
