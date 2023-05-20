@@ -1,7 +1,8 @@
 import fs from "fs";
+import vm from "node:vm";
 
 import { Prompts } from "@polymath-ai/ai";
-import { intro, text, outro, spinner, confirm } from "@clack/prompts";
+import { intro, text, outro, spinner, confirm, log } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";
 import { ChatCompleter, Completer, ICompleter } from "./completers.js";
@@ -115,6 +116,13 @@ const reason = async (
   return `${valid ? "Valid" : "Invalid"} Response:\n${reply}`;
 };
 
+const generateCode = async (completer: ICompleter, question: string) => {
+  const prompt = prompts.get("prompts/code", { question });
+  const response = await fetch(completer.request(prompt));
+  const result = await response.json();
+  return completer.response(result);
+};
+
 const cycleBox = async (completer: ICompleter, config: string) => {
   const question = (await text({
     message: "Type a message or hit <Enter> to exit",
@@ -178,5 +186,66 @@ program
     outro("Awesome diamonding!");
     await logger.save();
   });
+
+program.command("code").action(async () => {
+  const opts = program.opts();
+  const completer = opts.chat ? new ChatCompleter() : new Completer();
+  intro(`Let's run some code. ${opts.chat ? "(uses chat)" : ""}`);
+  const question = (await text({
+    message: "Type a message or hit <Enter> to exit",
+    defaultValue: QUIT_VALUE,
+  })) as string;
+  if (question === QUIT_VALUE) return;
+  const s = spinner();
+  s.start("Generating code...");
+  const code = await generateCode(completer, question);
+  s.stop(code);
+  const context = {
+    search: async (s: string) => {
+      log.step(`search for: ${s}`);
+      return [
+        {
+          url: "https://polymath.glazkov.com/",
+          title: "Polymath",
+          shippet: "A polymath is a person with expertise in multiple domains",
+        },
+      ];
+    },
+    weather: async (s: string) => {
+      log.step(`asked for weather: ${s}`);
+      return "The weather will be nice tomorrow.";
+    },
+    remember: (s: string) => {
+      log.step(`remembering: ${s}`);
+    },
+    clarify: (s: string[]) => {
+      log.step(`asked to clarify: ${s.join(", ")}`);
+    },
+    answer: (s: string) => {
+      log.step(`answered: ${s}`);
+    },
+  };
+  const wrappedCode = `(async () => {
+    ${code}
+    await getAnswer(this);
+  })();`;
+  try {
+    await vm.runInNewContext(wrappedCode, context);
+  } catch (e) {
+    const error = (e as Error).message;
+    const fixSpinner = spinner();
+    log.error(`Error generated: ${error}`);
+    fixSpinner.start("Fixing code...");
+    const prompt = prompts.get("prompts/fix-code-errors", {
+      code,
+      error,
+    });
+    const response = await fetch(completer.request(prompt));
+    const result = await response.json();
+    const fixedCode = completer.response(result);
+    fixSpinner.stop(fixedCode);
+  }
+  outro("We did it!");
+});
 
 program.parse();
