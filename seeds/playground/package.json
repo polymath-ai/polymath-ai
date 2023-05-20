@@ -10,7 +10,7 @@
     "build": "FORCE_COLOR=1 tsc --b",
     "start": "FORCE_COLOR=1 npm run build && node .",
     "register": "FORCE_COLOR=1 tsc -b && node dist/src/register.js",
-    "dev": "FORCE_COLOR=1 nodemon -w . -e ts,json,txt --exec 'npm run start'",
+    "dev": "FORCE_COLOR=1 nodemon -w . -e ts,json,txt,md --exec 'npm run start'",
     "watch": "FORCE_COLOR=1 tsc --b --watch"
   },
   "repository": {

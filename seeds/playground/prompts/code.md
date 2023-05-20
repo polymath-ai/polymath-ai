@@ -1,0 +1,1 @@
+Analyze the question being asked and, instead of answering the question, write a JavaScript function that will answer it. The function will take in a single parameter, named `context`, and it
