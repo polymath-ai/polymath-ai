@@ -1,5 +1,5 @@
 {
-  "prompt": "../prompts/more-questions-boxed.txt",
+  "prompt": "../prompts/more-questions-boxed.md",
   "schema": {
     "type": "object",
     "properties": {
