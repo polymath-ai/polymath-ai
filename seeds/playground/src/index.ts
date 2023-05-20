@@ -8,6 +8,7 @@ import { ChatCompleter, Completer, ICompleter } from "./completers.js";
 import { Logger } from "./logger.js";
 import { SchemishConverter } from "./schemish.js";
 import { Coder } from "./coder.js";
+import { Web } from "./web.js";
 
 config();
 
@@ -231,6 +232,17 @@ program.command("code").action(async () => {
     fixSpinner.stop(fixedCode);
   }
   outro("We did it!");
+});
+
+program.command("web").action(async () => {
+  const port = 3000;
+  const web = new Web(port);
+  intro(`Let's serve some web`);
+  const s = spinner();
+  s.start(`Serving on http://localhost:${port}`);
+  await web.serve();
+  s.stop("Done!");
+  outro("Excellent web serving!");
 });
 
 program.parse();
