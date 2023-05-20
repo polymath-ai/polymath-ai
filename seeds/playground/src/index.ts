@@ -1,5 +1,4 @@
 import fs from "fs";
-import vm from "node:vm";
 
 import { Prompts } from "@polymath-ai/ai";
 import { intro, text, outro, spinner, confirm, log } from "@clack/prompts";
@@ -8,6 +7,7 @@ import { Command } from "commander";
 import { ChatCompleter, Completer, ICompleter } from "./completers.js";
 import { Logger } from "./logger.js";
 import { SchemishConverter } from "./schemish.js";
+import { Coder } from "./coder.js";
 
 config();
 
@@ -116,13 +116,6 @@ const reason = async (
   return `${valid ? "Valid" : "Invalid"} Response:\n${reply}`;
 };
 
-const generateCode = async (completer: ICompleter, question: string) => {
-  const prompt = prompts.get("prompts/code", { question });
-  const response = await fetch(completer.request(prompt));
-  const result = await response.json();
-  return completer.response(result);
-};
-
 const cycleBox = async (completer: ICompleter, config: string) => {
   const question = (await text({
     message: "Type a message or hit <Enter> to exit",
@@ -196,53 +189,45 @@ program.command("code").action(async () => {
     defaultValue: QUIT_VALUE,
   })) as string;
   if (question === QUIT_VALUE) return;
+  const coder = new Coder(prompts, completer);
   const s = spinner();
   s.start("Generating code...");
-  const code = await generateCode(completer, question);
+  const code = await coder.generate("prompts/code", question);
   s.stop(code);
-  const context = {
-    search: async (s: string) => {
-      log.step(`search for: ${s}`);
-      return [
-        {
-          url: "https://polymath.glazkov.com/",
-          title: "Polymath",
-          shippet: "A polymath is a person with expertise in multiple domains",
-        },
-      ];
-    },
-    weather: async (s: string) => {
-      log.step(`asked for weather: ${s}`);
-      return "The weather will be nice tomorrow.";
-    },
-    remember: (s: string) => {
-      log.step(`remembering: ${s}`);
-    },
-    clarify: (s: string[]) => {
-      log.step(`asked to clarify: ${s.join(", ")}`);
-    },
-    answer: (s: string) => {
-      log.step(`answered: ${s}`);
-    },
-  };
-  const wrappedCode = `(async () => {
-    ${code}
-    await getAnswer(this);
-  })();`;
   try {
-    await vm.runInNewContext(wrappedCode, context);
+    const context = {
+      search: async (s: string) => {
+        log.step(`search for: ${s}`);
+        return [
+          {
+            url: "https://polymath.glazkov.com/",
+            title: "Polymath",
+            shippet:
+              "A polymath is a person with expertise in multiple domains",
+          },
+        ];
+      },
+      weather: async (s: string) => {
+        log.step(`asked for weather: ${s}`);
+        return "The weather will be nice tomorrow.";
+      },
+      remember: (s: string) => {
+        log.step(`remembering: ${s}`);
+      },
+      clarify: (s: string[]) => {
+        log.step(`asked to clarify: ${s.join(", ")}`);
+      },
+      answer: (s: string) => {
+        log.step(`answered: ${s}`);
+      },
+    };
+    await coder.run(code, context);
   } catch (e) {
     const error = (e as Error).message;
+    log.error(`Found errors in generated code: ${error}`);
     const fixSpinner = spinner();
-    log.error(`Error generated: ${error}`);
     fixSpinner.start("Fixing code...");
-    const prompt = prompts.get("prompts/fix-code-errors", {
-      code,
-      error,
-    });
-    const response = await fetch(completer.request(prompt));
-    const result = await response.json();
-    const fixedCode = completer.response(result);
+    const fixedCode = await coder.fix(code, error);
     fixSpinner.stop(fixedCode);
   }
   outro("We did it!");
