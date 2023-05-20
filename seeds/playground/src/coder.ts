@@ -3,6 +3,10 @@ import vm, { Context } from "node:vm";
 import { Prompts } from "@polymath-ai/ai";
 import { ICompleter } from "./completers.js";
 
+// Possible problems with LLM-generated code:
+// - the code is wrong (wrong approach/algo, etc.)
+// - code doesn't run (throws an error, etc.)
+
 export class Coder {
   private prompts: Prompts;
   private completer: ICompleter;
