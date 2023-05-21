@@ -22,8 +22,8 @@ class PlaceholderWidget extends WidgetType {
   toDOM() {
     const span = document.createElement("span");
     span.style.cssText = `
-    border: 1px solid blue;
-    border-radius: 4px;
+    border: none;
+    border-radius: 3px;
     padding: 0 3px;
     background: lightblue;`;
     span.textContent = this.name;
@@ -32,28 +32,6 @@ class PlaceholderWidget extends WidgetType {
   ignoreEvent() {
     return false;
   }
-}
-
-function _optionalChain(ops: any) {
-  let lastAccessLHS: any = undefined;
-  let value = ops[0];
-  let i = 1;
-  while (i < ops.length) {
-    const op = ops[i];
-    const fn = ops[i + 1];
-    i += 2;
-    if ((op === "optionalAccess" || op === "optionalCall") && value == null) {
-      return undefined;
-    }
-    if (op === "access" || op === "optionalAccess") {
-      lastAccessLHS = value;
-      value = fn(value);
-    } else if (op === "call" || op === "optionalCall") {
-      value = fn((...args: any[]) => value.call(lastAccessLHS, ...args));
-      lastAccessLHS = undefined;
-    }
-  }
-  return value;
 }
 
 const placeholders = ViewPlugin.fromClass(
@@ -74,17 +52,7 @@ const placeholders = ViewPlugin.fromClass(
     decorations: (instance) => instance.placeholders,
     provide: (plugin) =>
       EditorView.atomicRanges.of((view) => {
-        return (
-          _optionalChain([
-            view,
-            "access",
-            (_: any) => _.plugin,
-            "call",
-            (_2: any) => _2(plugin),
-            "optionalAccess",
-            (_3: any) => _3.placeholders,
-          ]) || Decoration.none
-        );
+        return view.plugin(plugin)?.placeholders || Decoration.none;
       }),
   }
 );
