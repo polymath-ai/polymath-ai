@@ -1,5 +1,17 @@
 <!DOCTYPE html>
+<script type="importmap">
+{
+  "imports": {
+    "zod": "/zod/index.mjs"
+  }
+}
+</script>
 <script type="module" src="/scripts/prompt.js"></script>
+<script type="module" src="/scripts/input.js"></script>
+<script type="module">
+  import { openai } from '/openai/index.js';
+  console.log(openai);
+</script>
 <llm-prompt>Analyze the question being asked and, instead of answering the question, write an asynchronous JavaScript function named `getAnswer` that will make progress towards answering the question. It does not need to try to answer the question completely. As long as progress was made, the function can exit.
 
   The function can make progress in three ways:

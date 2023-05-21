@@ -1,7 +1,7 @@
 import { Validator } from "jsonschema";
 import type { Schema } from "jsonschema";
 
-type JSONValue =
+export type JSONValue =
   | string
   | number
   | boolean

@@ -1,15 +1,9 @@
 export class LlmInput extends HTMLElement {
+  name: string | null;
+
   constructor() {
     super();
-    const root = this.attachShadow({ mode: "open" });
-    root.innerHTML = `
-      <style>
-        :host {
-          display: block;
-        }
-      </style>
-      <slot></slot>
-    `;
+    this.name = this.getAttribute("name");
   }
 }
 
