@@ -4,6 +4,7 @@ export default {
   output: {
     file: "./dist/web/everything.js",
     format: "es",
+    inlineDynamicImports: true,
   },
   plugins: [nodeResolve()],
 };

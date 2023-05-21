@@ -9,6 +9,9 @@ export class LlmInput extends HTMLElement {
   asPromptPart(params: Record<string, string>): string {
     const name = this.name || "";
     const value = params[name] || "";
+    if (value === "") {
+      return `\${${name}}`;
+    }
     return value;
   }
 }
