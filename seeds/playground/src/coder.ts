@@ -1,6 +1,6 @@
 import vm, { Context } from "node:vm";
 
-import { Prompts } from "@polymath-ai/ai";
+import { Prompts } from "./prompts.js";
 import { ICompleter } from "./completers.js";
 
 // Possible problems with LLM-generated code:

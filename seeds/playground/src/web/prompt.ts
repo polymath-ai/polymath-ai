@@ -1,7 +1,15 @@
-import { JSONValue } from "../schemish.js";
+import { markdown } from "@codemirror/lang-markdown";
+import { openai } from "@polymath-ai/ai";
+import { EditorView, basicSetup } from "codemirror";
+
+const OPENAI_API_KEY = localStorage.getItem("OPENAI_API_KEY") || "";
+
+interface IPromptPart {
+  asPromptPart(params: Record<string, string>): string;
+  textContent: string;
+}
 
 export class LlmPrompt extends HTMLElement {
-  has: JSONValue = [];
   constructor() {
     super();
     const root = this.attachShadow({ mode: "open" });
@@ -11,18 +19,34 @@ export class LlmPrompt extends HTMLElement {
           display: block;
         }
       </style>
-      <slot></slot>
-    `;
-    const slot = root.querySelector("slot");
-    slot?.addEventListener("slotchange", () => {
-      this.has = Array.from(slot.assignedNodes()).map((node: Node) => {
-        if (node.nodeType === Node.TEXT_NODE) {
-          return node.textContent as JSONValue;
-        }
-        return node as unknown as JSONValue;
-      });
-      console.log("slotchange", this.has);
+      <div id="editor"></div>`;
+    const editor = new EditorView({
+      doc: "TEST",
+      extensions: [basicSetup, markdown()],
+      parent: root.getElementById("editor") || undefined,
     });
+  }
+
+  assemblePrompt(params: Record<string, string> = {}) {
+    return Array.from(this.childNodes)
+      .map((child) => {
+        const part = child as unknown as IPromptPart;
+        return part.asPromptPart ? part.asPromptPart(params) : part.textContent;
+      })
+      .join("")
+      .trim();
+  }
+
+  async run(params: Record<string, string> = {}) {
+    const prompt = this.assemblePrompt(params);
+    const response = await fetch(
+      openai(OPENAI_API_KEY).completion({
+        model: "text-davinci-003",
+        prompt: prompt,
+      })
+    );
+    const result = await response.json();
+    return result.choices[0].text?.trim() || "";
   }
 }
 

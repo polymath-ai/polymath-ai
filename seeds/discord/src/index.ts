@@ -6,7 +6,7 @@ import { Bit, EndpointArgs } from "@polymath-ai/types";
 
 import { questionAnswerCommand } from "./commands.js";
 import { AI } from "./ai.js";
-import { Prompts } from "@polymath-ai/ai";
+import { Prompts } from "./prompts.js";
 
 const REASONABLE_CONTEXT_WINDOW = 4000;
 const MAX_SOURCES_PER_PARTICIPANT = 3;
@@ -28,7 +28,6 @@ type Context = {
   context: string;
   urls: string[];
 };
-
 
 const root = new URL("../..", import.meta.url);
 const prompts = new Prompts(root.pathname);

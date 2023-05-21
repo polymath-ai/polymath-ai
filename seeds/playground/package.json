@@ -7,7 +7,8 @@
   "type": "module",
   "scripts": {
     "test": "FORCE_COLOR=1 ava",
-    "build": "FORCE_COLOR=1 tsc --b",
+    "build": "FORCE_COLOR=1 tsc --b && npm run build:rollup",
+    "build:rollup": "rollup -c",
     "start": "FORCE_COLOR=1 npm run build && node .",
     "register": "FORCE_COLOR=1 tsc -b && node dist/src/register.js",
     "dev": "FORCE_COLOR=1 nodemon -w . -e ts,json,txt,md --exec 'npm run start'",
@@ -42,7 +43,9 @@
   "homepage": "https://github.com/polymath-ai/polymath-ai#readme",
   "dependencies": {
     "@clack/prompts": "^0.6.3",
+    "@codemirror/lang-markdown": "^6.1.1",
     "@polymath-ai/ai": "*",
+    "codemirror": "^6.0.1",
     "commander": "^10.0.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
@@ -51,11 +54,13 @@
   "devDependencies": {
     "@ava/typescript": "^4.0.0",
     "@polymath-ai/infra": "*",
+    "@rollup/plugin-node-resolve": "^15.0.2",
     "@types/node": "^18.16.3",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
     "ava": "^5.2.0",
     "nodemon": "^2.0.22",
+    "rollup": "^3.22.1",
     "typescript": "^5.0.4"
   }
 }

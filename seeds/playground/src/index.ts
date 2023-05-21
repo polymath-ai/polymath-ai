@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { Prompts } from "@polymath-ai/ai";
+import { Prompts } from "./prompts.js";
 import { intro, text, outro, spinner, confirm, log } from "@clack/prompts";
 import { config } from "dotenv";
 import { Command } from "commander";

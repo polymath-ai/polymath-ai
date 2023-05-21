@@ -2,19 +2,23 @@ import path from "path";
 
 import express from "express";
 
-const ASSETS_FOLDER = "assets";
-const ASSETS_PATH = path.resolve(ASSETS_FOLDER);
+const ASSETS_PATH = path.resolve("assets");
 
-const SCRIPTS_FOLDER = "scripts";
-const SCIPTS_PATH = path.resolve("dist/src/web");
-
-const AI_FOLDER = "openai";
-const AI_PATH = path.resolve(
-  "../../node_modules/@polymath-ai/ai/dist/src/openai"
-);
-
-const ZOD_FOLDER = "zod";
-const ZOD_PATH = path.resolve("../../node_modules/zod/lib");
+const dirs = {
+  assets: ASSETS_PATH,
+  scripts: path.resolve("dist/web"),
+  openai: path.resolve("../../node_modules/@polymath-ai/ai/dist/src/openai"),
+  zod: path.resolve("../../node_modules/zod/lib"),
+  codemirror: path.resolve("../../node_modules/codemirror/dist"),
+  "codemirror-markdown": path.resolve(
+    "../../node_modules/@codemirror/lang-markdown/dist"
+  ),
+  "codemirror-state": path.resolve("../../node_modules/@codemirror/state/dist"),
+  "codemirror-view": path.resolve("../../node_modules/@codemirror/view/dist"),
+  "codemirror-language": path.resolve(
+    "../../node_modules/@codemirror/language/dist"
+  ),
+};
 
 export class Web {
   private port: number;
@@ -23,10 +27,9 @@ export class Web {
   }
   async serve(): Promise<void> {
     const app = express();
-    app.use(`/${ASSETS_FOLDER}`, express.static(ASSETS_PATH));
-    app.use(`/${SCRIPTS_FOLDER}`, express.static(SCIPTS_PATH));
-    app.use(`/${AI_FOLDER}`, express.static(AI_PATH));
-    app.use(`/${ZOD_FOLDER}`, express.static(ZOD_PATH));
+    Object.entries(dirs).forEach(([name, dir]) => {
+      app.use(`/${name}`, express.static(dir));
+    });
     app.all("/", function (req, res) {
       res.sendFile("index.html", { root: ASSETS_PATH });
     });
