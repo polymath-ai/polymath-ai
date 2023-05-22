@@ -1,20 +1,24 @@
 <!DOCTYPE html>
 <style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
   :not(:defined) {
     visibility: hidden;
   }
+
+  ai-playground {
+    height: 600px;
+  }
 </style>
 <script type="module" src="/scripts/everything.js"></script>
-<script type="module">
-  document.querySelector("button").addEventListener("click", async () => {
-    const playground = document.querySelector("ai-playground");
-    const response = await playground.run({
-      question: "Will it rain tomorrow?",
-    });
-    console.log(response);
-  });
-</script>
-<button>RUN</button>
 <ai-playground>
   <!-- prettier-ignore -->
   <ai-prompt>Analyze the question being asked and, instead of answering the question, write an asynchronous JavaScript function named `getAnswer` that will make progress towards answering the question. It does not need to try to answer the question completely. As long as progress was made, the function can exit.

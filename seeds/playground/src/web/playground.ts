@@ -74,10 +74,57 @@ export class Playground extends HTMLElement {
     const root = this.attachShadow({ mode: "open" });
     root.innerHTML = `
       <style>
-        :host {
-          display: block;
+        * {
+          box-sizing: border-box;
         }
-      </style>`;
+        :host {
+          display: flex;
+        }
+        #playground {
+          display: flex;
+          flex-direction: column;
+        }
+        #panels { 
+          display: flex;
+          flex-direction: row;
+          overflow: auto;
+        }
+
+        /* .cm-editor { height: 500px; } */
+        .cm-scroller { overflow: auto }
+
+        #editor {
+          display: flex;
+        }
+
+        #editor, pre {
+          flex: 0.5;
+          width: 50%;
+        }
+
+        pre {
+          overflow: auto;
+        }
+      </style>
+      <div id="playground">
+        <div id="panels">
+          <div id="editor"></div>
+          <pre><code id="output"></code></pre>
+        </div>
+        <div id="controls">
+          <button id="run">Run</button>
+        </div>
+      </div>`;
+    const runButton = root.getElementById("run") as HTMLButtonElement;
+    const outputElement = root.getElementById("output") as HTMLElement;
+    runButton.addEventListener("click", async () => {
+      runButton.disabled = true;
+      const response = await this.run({
+        question: "Will it rain tomorrow?",
+      });
+      outputElement.textContent = response;
+      runButton.disabled = false;
+    });
   }
 
   connectedCallback() {
@@ -87,6 +134,8 @@ export class Playground extends HTMLElement {
       console.error("No prompt found.");
       return;
     }
+    const editorElement =
+      (this.shadowRoot?.querySelector("#editor") as HTMLElement) || undefined;
     new EditorView({
       doc: prompt.assemblePrompt({}),
       extensions: [
@@ -98,8 +147,7 @@ export class Playground extends HTMLElement {
           codeLanguages: languages,
         }),
       ],
-
-      parent: this.shadowRoot || undefined,
+      parent: editorElement,
     });
   }
 
