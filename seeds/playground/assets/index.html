@@ -1,16 +1,23 @@
 <!DOCTYPE html>
+<style>
+  :not(:defined) {
+    visibility: hidden;
+  }
+</style>
 <script type="module" src="/scripts/everything.js"></script>
 <script type="module">
-  document.querySelector('button').addEventListener('click', async () => {
-    const prompt = document.querySelector('llm-prompt');
-    const response = await prompt.run({
-      question: "Will it rain tomorrow?"
+  document.querySelector("button").addEventListener("click", async () => {
+    const playground = document.querySelector("ai-playground");
+    const response = await playground.run({
+      question: "Will it rain tomorrow?",
     });
     console.log(response);
   });
 </script>
 <button>RUN</button>
-<llm-prompt>Analyze the question being asked and, instead of answering the question, write an asynchronous JavaScript function named `getAnswer` that will make progress towards answering the question. It does not need to try to answer the question completely. As long as progress was made, the function can exit.
+<ai-playground>
+  <!-- prettier-ignore -->
+  <ai-prompt>Analyze the question being asked and, instead of answering the question, write an asynchronous JavaScript function named `getAnswer` that will make progress towards answering the question. It does not need to try to answer the question completely. As long as progress was made, the function can exit.
 
   The function can make progress in three ways:
   
@@ -34,5 +41,6 @@
   
   - `context.answer(message)`: returns void. Use this method to provide the answer to the original question. The `message` argument must should be a string.
   
-  QUESTION: <llm-input name="question"></llm-input>
-  RESPONSE:</llm-prompt>
+  QUESTION: <ai-input name="question"></ai-input>
+  RESPONSE:</ai-prompt>
+</ai-playground>

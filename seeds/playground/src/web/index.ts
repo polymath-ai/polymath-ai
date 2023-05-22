@@ -1,2 +1,3 @@
-export { LlmInput } from "./input.js";
-export { LlmPrompt } from "./prompt.js";
+export { Input } from "./input.js";
+export { Prompt } from "./prompt.js";
+export { Playground } from "./playground.js";

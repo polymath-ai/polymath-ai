@@ -1,4 +1,4 @@
-export class LlmInput extends HTMLElement {
+export class Input extends HTMLElement {
   name: string | null;
 
   constructor() {
@@ -16,4 +16,4 @@ export class LlmInput extends HTMLElement {
   }
 }
 
-customElements.define("llm-input", LlmInput);
+customElements.define("ai-input", Input);
