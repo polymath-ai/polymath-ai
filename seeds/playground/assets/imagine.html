@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<ai-group>
+  <ai-completion prompt="./prompts/summarize.md">
+    <ai-memory name="context"></ai-memory>
+    <ai-input name="question"></ai-input>
+  </ai-completion>
+</ai-group>
+
+<!-- the group has an entry point and an exit point. -->
+<!-- nesting is the chaining equivalent? seems like the easiest way to communicate structure -->
+<ai-group>
+  <ai-completion path="code" prompt="./prompts/code.md">
+    <!-- default name="memory" -->
+    <ai-memory></ai-memory>
+    <ai-input name="question"></ai-input>
+    <!-- the router of some sort: you give it a signal (a string), 
+      and it picks the next step. So.. steps are likely defined as paths.
+      -->
+    <!-- TODO: how do I wire this to be used as output? -->
+    <ai-route onrouterequest="route()">
+      <!-- in case of an error, we try to fix code -->
+      <ai-completion path="error" prompt="./prompts/fix-code.md">
+        <ai-input name="code"></ai-input>
+        <ai-pass name="error"></ai-pass>
+      </ai-completion>
+      <ai-output path="success"></ai-output>
+      <!-- when successful, we return control back to the invoker of the group -->
+    </ai-route>
+  </ai-completion>
+  <script>
+    // Naaah. This is not how it works.
+    document.querySelector("#code").addEventListener("completion", (e) => {
+      const code = e.result;
+      // TOOD: implement runCode
+      result = runCode(code);
+      if (!result.ok) {
+        // feed it to "fix-code" completion
+        document.querySelector("#fix-code");
+      }
+    });
+  </script>
+</ai-group>
