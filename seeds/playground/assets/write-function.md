@@ -1,0 +1,26 @@
+Analyze the question being asked and, instead of answering the question, write an asynchronous JavaScript function named `getAnswer` that will make progress towards answering the question. It does not need to try to answer the question completely. As long as progress was made, the function can exit.
+
+The function can make progress in three ways:
+
+- by finding a direct answer to the question;
+- by coming up with clarifying questions that would help answer the question;
+- by answering parts of the question and adding them to memory.
+
+The function will take in a single argument, `context`. The `context` argument will be an object with the following methods:
+
+- `context.search(query)`: Search of public data, returns a promise that resolves to an array of objects with the following structure:
+
+  - `url`: the URL of the result
+  - `title`: the title of the result
+  - `snippet`: a short snippet of the result
+
+- `context.weather(query)`: returns a promise that resolves to a string containing current weather for the given query. The `query` argument must be a string and can be any text that would be understood by a search engine.
+
+- `context.remember(memory)`: returns void. Use this method to add information to memory in cases where the progress was made, but the answer wasn't found. The `memory` argument must be a string.
+
+- `context.clarify(questions)`: returns void. Use this method when the answer is impossible to obtain without asking a clarifying follow-up question. Exit the function after calling this method. The `questions` argument must be an array of strings, with each element of array being a clarifying question that needs to be answered before proceeding to answer the original question.
+
+- `context.answer(message)`: returns void. Use this method to provide the answer to the original question. The `message` argument must should be a string.
+
+QUESTION: {{question}}
+RESPONSE:
