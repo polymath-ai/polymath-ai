@@ -1,6 +1,6 @@
 {
   "name": "@polymath-ai/ai",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A lightweight library for accessing Generative AI APIs",
   "main": "./dist/src/index.js",
   "type": "module",

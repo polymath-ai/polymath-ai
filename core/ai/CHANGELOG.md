@@ -1,5 +1,11 @@
 # @polymath-ai/ai
 
+## 0.0.5
+
+### Patch Changes
+
+- @polymath-ai/ai can now run in browser.
+
 ## 0.0.4
 
 ### Patch Changes
